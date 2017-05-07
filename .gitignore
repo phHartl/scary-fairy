@@ -17,6 +17,17 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
+.idea/*
+_ReSharper.Caches*
+*.csproj
+*.meta
+Library/*
+ProjectSettings/*
+obj/*
+Temp/*
+*.sln
+*.suo
+
 
 
 # Unity3D generated meta files
