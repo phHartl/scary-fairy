@@ -18,11 +18,17 @@ public class PlayerMovement : MonoBehaviour {
 	private float axisHorizontal;
 
     // Use this for initialization
-    void Start()
-    {
+	void Awake()
+	{
 		rb = GetComponent <Rigidbody2D>();
-		players = GameObject.FindGameObjectsWithTag ("Player");
-    }
+	}
+
+	void Start()
+	{
+
+		players = GameObject.FindGameObjectsWithTag ("Player2");
+		Debug.Log (players.Length);
+	}
 
     // Update is called once per frame
     void Update()
@@ -39,15 +45,16 @@ public class PlayerMovement : MonoBehaviour {
         {
 			for (int i = 0; i < players.Length; i++) 
 			{
-				if (players [i] != this) 
+				
 				{
 					currentDistance = (players [i].transform.position.x - transform.position.x);
-
-					if (Mathf.Abs (currentDistance) < maxHorizontalDistance) 
-					{
+					Debug.Log ("current X Distance: "+currentDistance);
+					//movement possible if under distance threshold or moving towards other player
+					if (Mathf.Abs (currentDistance) < maxHorizontalDistance || (currentDistance > 0 && axisHorizontal > 0) || (currentDistance < 0 && axisHorizontal < 0)) 
+					{ 
 						horizontalMovement = new Vector3 (axisHorizontal * moveSpeed * Time.deltaTime, 0, 0);
 					} 
-					else if ((currentDistance < 0 && axisHorizontal > -0.5f) || (currentDistance > 0 && axisHorizontal < 0.5f) ) 
+					else
 					{
 						horizontalMovement = new Vector3(0,0,0);
 					} 
@@ -63,12 +70,14 @@ public class PlayerMovement : MonoBehaviour {
 
 				if (players [i] != this) {
 					currentDistance = (players [i].transform.position.y - transform.position.y);
-
-					if (Mathf.Abs (currentDistance) < maxVerticalDistance) 
+					Debug.Log ("current Y Distance: "+currentDistance);
+					//movement possible if under distance threshold or moving towards other player
+					if (Mathf.Abs (currentDistance) < maxVerticalDistance || (currentDistance > 0 && axisVertical > 0) || (currentDistance < 0 && axisVertical < 0)) 
 					{
 						verticalMovement = new Vector3 (0, axisVertical * moveSpeed * Time.deltaTime, 0);
 					} 
-					else if ((currentDistance < 0 && axisVertical > -0.5f) || (currentDistance > 0 && axisVertical < 0.5f) ) {
+					else 
+					{
 						verticalMovement = new Vector3 (0, 0, 0);
 					} 
 				}
