@@ -11,9 +11,9 @@ public class Player2Movement : MonoBehaviour {
 	private Rigidbody2D rb;
 	private float currentDistance;
 	private GameObject[] players;
-	private Vector3 horizontalMovement;
-	private Vector3 verticalMovement;
-	private Vector3 newPos;
+	private Vector2 horizontalMovement;
+	private Vector2 verticalMovement;
+	private Vector2 newPos;
 	private float axisVertical;
 	private float axisHorizontal;
 
@@ -31,11 +31,10 @@ public class Player2Movement : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		horizontalMovement = new Vector3(0,0,0);
-		verticalMovement = new Vector3(0,0,0);
-		axisHorizontal = 0;
-		axisVertical = 0;
+		horizontalMovement = new Vector2(0,0);
+		verticalMovement = new Vector2(0,0);
 		newPos = new Vector2(0,0);
+
 		axisHorizontal = Input.GetAxisRaw ("Horizontalp2");
 		axisVertical = Input.GetAxisRaw ("Verticalp2");
 
@@ -43,17 +42,18 @@ public class Player2Movement : MonoBehaviour {
 		{
 			for (int i = 0; i < players.Length; i++) 
 			{
-				if (players [i] != this) 
+
 				{
 					currentDistance = (players [i].transform.position.x - transform.position.x);
-					Debug.Log ("current X2 Distance: "+currentDistance);
+
+					//movement possible if player below distance threshold or moving towards other player
 					if (Mathf.Abs (currentDistance) < maxHorizontalDistance || (currentDistance > 0 && axisHorizontal > 0) || (currentDistance < 0 && axisHorizontal < 0)) 
 					{ 
-						horizontalMovement = new Vector3 (axisHorizontal * moveSpeed * Time.deltaTime, 0, 0);
+						horizontalMovement = new Vector2 (axisHorizontal * moveSpeed * Time.deltaTime, 0);
 					} 
 					else
 					{
-						horizontalMovement = new Vector3(0,0,0);
+						horizontalMovement = new Vector2(0,0);
 					} 
 				}
 			}
@@ -65,22 +65,24 @@ public class Player2Movement : MonoBehaviour {
 		{
 			for (int i = 0; i < players.Length; i++) {
 
-				if (players [i] != this) {
+				if (players [i] != this) 
+				{
 					currentDistance = (players [i].transform.position.y - transform.position.y);
-					Debug.Log ("current Y2 Distance: "+currentDistance);
+
+					//movement possible if player below distance threshold or moving towards other player
 					if (Mathf.Abs (currentDistance) < maxVerticalDistance || (currentDistance > 0 && axisVertical > 0) || (currentDistance < 0 && axisVertical < 0)) 
 					{
-						verticalMovement = new Vector3 (0, axisVertical * moveSpeed * Time.deltaTime, 0);
+						verticalMovement = new Vector2 (0, axisVertical * moveSpeed * Time.deltaTime);
 					} 
 					else 
 					{
-						verticalMovement = new Vector3 (0, 0, 0);
+						verticalMovement = new Vector2 (0, 0);
 					} 
 				}
 			}
 		}
 
-		newPos = (Vector2) rb.position + (Vector2) horizontalMovement + (Vector2) verticalMovement;
+		newPos = rb.position + horizontalMovement + verticalMovement;
 		rb.MovePosition (newPos);
 
 	}
@@ -89,4 +91,3 @@ public class Player2Movement : MonoBehaviour {
 
 	}
 }
-

@@ -20,7 +20,7 @@ ExportedObj/
 .idea/*
 _ReSharper.Caches*
 *.csproj
-*.meta
+*.metaLibrary
 Library/*
 ProjectSettings/*
 obj/*
