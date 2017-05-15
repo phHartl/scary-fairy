@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MovingObj : MonoBehaviour
+public abstract class MovingObj : MonoBehaviour
 {
-	protected float moveSpeed;
+	public float moveSpeed;
 	public LayerMask collisionLayer;
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
@@ -24,7 +24,7 @@ public class MovingObj : MonoBehaviour
 	
 	// Update is called once per frame
 	protected void Update () {
-		
+		rb2D.MovePosition(Move());
 	}
 
 	protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
