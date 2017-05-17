@@ -23,7 +23,8 @@ public class MovingObj : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	protected void Update () {
+	protected void Update ()
+	{
 		rb2D.MovePosition(Move());
 	}
 
