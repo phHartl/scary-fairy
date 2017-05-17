@@ -29,33 +29,33 @@ public class Player : MovingObj
 
     protected override Vector2 Move()
     {
-        horizontalMovement = new Vector2(0, 0);
-        verticalMovement = new Vector2(0, 0);
         float axisH = Input.GetAxisRaw(axisHorizontal);
         float axisV = Input.GetAxisRaw(axisVertical);
         float nextDistance;
 
         if (axisH > 0.5f || axisH < -0.5f)
         {
+            horizontalMovement = new Vector2(axisH * moveSpeed * Time.deltaTime, 0);
             currentDistance = Vector2.Distance(rb2D.position, CameraControl.camPosition);
-            nextDistance = Vector2.Distance(rb2D.position + new Vector2(axisH * moveSpeed * Time.deltaTime, 0),
+            nextDistance = Vector2.Distance(rb2D.position + horizontalMovement,
                 CameraControl.camPosition); 
 
-            if (Mathf.Abs(currentDistance) < maxHorizontalDistance || Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance))
+            if (!(Mathf.Abs(currentDistance) < maxHorizontalDistance) || !(Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance)))
             {
-                horizontalMovement = new Vector2(axisH * moveSpeed * Time.deltaTime, 0);
+                horizontalMovement = Vector2.zero;
             }
         }
 
         if (axisV > 0.5f || axisV < -0.5f)
         {
+            verticalMovement = new Vector2(0, axisV * moveSpeed * Time.deltaTime);
             currentDistance = Vector2.Distance(rb2D.position, CameraControl.camPosition);
-            nextDistance = Vector2.Distance(rb2D.position + new Vector2(0,axisV * moveSpeed * Time.deltaTime),
+            nextDistance = Vector2.Distance(rb2D.position + verticalMovement,
                 CameraControl.camPosition);
             //movement possible if player below distance threshold or moving towards other player
-            if (Mathf.Abs(currentDistance) < maxVerticalDistance || Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance))
+            if (!(Mathf.Abs(currentDistance) < maxVerticalDistance) || !(Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance)))
             {
-                verticalMovement = new Vector2(0, axisV * moveSpeed * Time.deltaTime);
+                verticalMovement = Vector2.zero;
             }
         }
         newPos = rb2D.position + horizontalMovement + verticalMovement;
