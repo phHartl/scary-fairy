@@ -29,6 +29,7 @@ public class Player : MovingObj
 
     protected override Vector2 Move()
     {
+        currentDistance = 0;
         horizontalMovement = new Vector2(0, 0);
         verticalMovement = new Vector2(0, 0);
         float axisH = Input.GetAxisRaw(axisHorizontal);
@@ -37,11 +38,11 @@ public class Player : MovingObj
 
         if (axisH > 0.5f || axisH < -0.5f)
         {
-            currentDistance = Vector2.Distance(rb2D.position, CameraControl.camPosition);
+            currentDistance = rb2D.position.x - CameraControl.camPosition.x;
             nextDistance = Vector2.Distance(rb2D.position + new Vector2(axisH * moveSpeed * Time.deltaTime, 0),
                 CameraControl.camPosition); 
 
-            if (Mathf.Abs(currentDistance) < maxHorizontalDistance || Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance))
+            if (Mathf.Abs(currentDistance) < maxHorizontalDistance || (currentDistance > 0 && axisH < 0) || (currentDistance < 0 && axisH > 0))
             {
                 horizontalMovement = new Vector2(axisH * moveSpeed * Time.deltaTime, 0);
             }
@@ -49,11 +50,9 @@ public class Player : MovingObj
 
         if (axisV > 0.5f || axisV < -0.5f)
         {
-            currentDistance = Vector2.Distance(rb2D.position, CameraControl.camPosition);
-            nextDistance = Vector2.Distance(rb2D.position + new Vector2(0,axisV * moveSpeed * Time.deltaTime),
-                CameraControl.camPosition);
+            currentDistance = rb2D.position.y - CameraControl.camPosition.y;
             //movement possible if player below distance threshold or moving towards other player
-            if (Mathf.Abs(currentDistance) < maxVerticalDistance || Mathf.Abs(currentDistance) > Mathf.Abs(nextDistance))
+            if (Mathf.Abs(currentDistance) < maxVerticalDistance || (currentDistance > 0 && axisV < 0) || (currentDistance < 0 && axisV > 0)) 
             {
                 verticalMovement = new Vector2(0, axisV * moveSpeed * Time.deltaTime);
             }
