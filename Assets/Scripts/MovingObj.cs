@@ -9,7 +9,7 @@ public class MovingObj : MonoBehaviour
 	public LayerMask collisionLayer;
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
-	private int _hitpoints;
+	protected int _hitpoints;
 	private int _damage;
 	protected Vector2 newPos;
 
@@ -23,7 +23,7 @@ public class MovingObj : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	protected void Update ()
+	protected void FixedUpdate ()
 	{
 		rb2D.MovePosition(Move());
 	}
@@ -33,13 +33,18 @@ public class MovingObj : MonoBehaviour
 		return newPos;
 	}
 
-	protected void OnDie() //Report back to Gamemanager
+	protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
-
-	}
+        Destroy(hit);
+    }
 
 	private void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
 	{
-		throw new System.NotImplementedException();
-	}
+        print(this + " collided with other Object: " + other.gameObject.name);
+        this._hitpoints -= 20;
+        if (this._hitpoints <= 0)
+        {
+            OnDie(this.gameObject);
+        }
+    }
 }

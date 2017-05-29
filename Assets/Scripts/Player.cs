@@ -22,9 +22,9 @@ public class Player : MovingObj
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
     }
 
     protected override Vector2 Move()
