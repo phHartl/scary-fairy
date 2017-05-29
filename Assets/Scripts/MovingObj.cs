@@ -10,7 +10,7 @@ public class MovingObj : MonoBehaviour
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
 	protected int _hitpoints;
-	private int _damage;
+	protected int _damage;
 	protected Vector2 newPos;
 
 
