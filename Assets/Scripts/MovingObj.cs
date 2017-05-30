@@ -41,10 +41,13 @@ public class MovingObj : MonoBehaviour
 	private void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
 	{
         print(this + " collided with other Object: " + other.gameObject.name);
-        this._hitpoints -= 20;
-        if (this._hitpoints <= 0)
+        if (this.gameObject.tag == "CasualEnemy")
         {
-            OnDie(this.gameObject);
+            this._hitpoints -= 50;
+            if (this._hitpoints <= 0)
+            {
+                OnDie(this.gameObject);
+            }
         }
     }
 }

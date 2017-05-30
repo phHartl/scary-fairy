@@ -16,7 +16,7 @@ public class CasualEnemy : Npc {
         this._damage = 69;
 
         //movespeed placeholder
-        this.moveSpeed = 69;
+        this.moveSpeed = 0;
     }
 
     // Update is called once per frame
@@ -28,6 +28,6 @@ public class CasualEnemy : Npc {
     // Pathfinding has yet to be implemented (I think there is a Unity-Plugin that can be used for pathfinding)
     protected override Vector2 Move()
     {
-        return base.Move();
+        return rb2D.position;
     }
 }
