@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class CasualEnemy : Npc {
 
+    private Animator animator;
+
     // Use this for initialization
     void Start()
     {
         base.Start();
+        animator = GetComponent<Animator>();
 
         // hitpoints placeholder
         this._hitpoints = 169;
@@ -29,5 +32,10 @@ public class CasualEnemy : Npc {
     protected override Vector2 Move()
     {
         return rb2D.position;
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D other) {
+        base.OnCollisionEnter2D(other);
+        animator.Play("hit", -1);
     }
 }
