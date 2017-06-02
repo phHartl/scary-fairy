@@ -19,12 +19,15 @@ public class Player : MovingObj
         base.Start();
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         base.FixedUpdate();
+        animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));
+        animator.SetFloat("MoveY", Input.GetAxisRaw(axisVertical));
     }
 
     protected override Vector2 Move()
