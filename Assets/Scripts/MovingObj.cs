@@ -12,7 +12,6 @@ public class MovingObj : MonoBehaviour
 	protected int _hitpoints;
 	protected int _damage;
 	protected Vector2 newPos;
-    protected Animator animator;
 
 
 
@@ -39,16 +38,13 @@ public class MovingObj : MonoBehaviour
         Destroy(hit);
     }
 
-	protected virtual void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
+	private void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
 	{
         print(this + " collided with other Object: " + other.gameObject.name);
-        if (this.gameObject.tag == "CasualEnemy")
+        this._hitpoints -= 20;
+        if (this._hitpoints <= 0)
         {
-            this._hitpoints -= 50;
-            if (this._hitpoints <= 0)
-            {
-                OnDie(this.gameObject);
-            }
+            OnDie(this.gameObject);
         }
     }
 }

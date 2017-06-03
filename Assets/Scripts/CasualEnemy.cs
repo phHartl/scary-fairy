@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class CasualEnemy : Npc {
 
-    private Animator animator;
-
     // Use this for initialization
     void Start()
     {
         base.Start();
-        animator = GetComponent<Animator>();
 
         // hitpoints placeholder
         this._hitpoints = 169;
@@ -19,7 +16,7 @@ public class CasualEnemy : Npc {
         this._damage = 69;
 
         //movespeed placeholder
-        this.moveSpeed = 0;
+        this.moveSpeed = 69;
     }
 
     // Update is called once per frame
@@ -31,11 +28,6 @@ public class CasualEnemy : Npc {
     // Pathfinding has yet to be implemented (I think there is a Unity-Plugin that can be used for pathfinding)
     protected override Vector2 Move()
     {
-        return rb2D.position;
-    }
-
-    protected override void OnCollisionEnter2D(Collision2D other) {
-        base.OnCollisionEnter2D(other);
-        animator.Play("hit", -1);
+        return base.Move();
     }
 }
