@@ -8,12 +8,15 @@ public class Player : MovingObj
     public float maxHorizontalDistance = 12.0f;
     public float currentDistance;
     private GameObject[] players = new GameObject[2];
+    private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
     public string axisVertical;
     public string axisHorizontal;
-    private bool playerMoving;
     private Vector2 lastMove;
+    private int currentDir;
+    private float attackCD = 0.3f;
+    private float attackTimer = 0;
 
     // Use this for initialization
     void Start()
@@ -22,24 +25,29 @@ public class Player : MovingObj
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
         animator = GetComponent<Animator>();
+        attackColliders = GetComponentsInChildren<BoxCollider2D>();
+        disableAttackColliders();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         base.FixedUpdate();
+    }
+
+     protected override void Update ()
+    {
         animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));
         animator.SetFloat("MoveY", Input.GetAxisRaw(axisVertical));
-        animator.SetBool("PlayerMoving", playerMoving);
-        animator.SetFloat("LastMoveX",lastMove.x);
+        animator.SetBool("PlayerMoving", isMoving);
+        animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
-            
+        Attack();
     }
 
     protected override Vector2 Move()
     {
-        playerMoving = false;
-        currentDistance = 0;
+        isMoving = false;
         horizontalMovement = new Vector2(0, 0);
         verticalMovement = new Vector2(0, 0);
         float axisH = Input.GetAxisRaw(axisHorizontal);
@@ -55,8 +63,16 @@ public class Player : MovingObj
             if (Mathf.Abs(currentDistance) < maxHorizontalDistance || (currentDistance > 0 && axisH < 0) || (currentDistance < 0 && axisH > 0))
             {
                 horizontalMovement = new Vector2(axisH * moveSpeed * Time.deltaTime, 0);
-                playerMoving = true;
+                isMoving = true;
                 lastMove = new Vector2(axisH, 0);
+                if (axisH > 0)
+                {
+                    currentDir = 2;
+                }
+                else
+                {
+                    currentDir = 4;
+                }
             }
         }
 
@@ -64,14 +80,61 @@ public class Player : MovingObj
         {
             currentDistance = rb2D.position.y - CameraControl.camPosition.y;
             //movement possible if player below distance threshold or moving towards other player
-            if (Mathf.Abs(currentDistance) < maxVerticalDistance || (currentDistance > 0 && axisV < 0) || (currentDistance < 0 && axisV > 0)) 
+            if (Mathf.Abs(currentDistance) < maxVerticalDistance || (currentDistance > 0 && axisV < 0) || (currentDistance < 0 && axisV > 0))
             {
                 verticalMovement = new Vector2(0, axisV * moveSpeed * Time.deltaTime);
-                playerMoving = true;
-                lastMove = new Vector2(0,axisV);
+                isMoving = true;
+                lastMove = new Vector2(0, axisV);
+                if (axisV > 0)
+                {
+                    currentDir = 1;
+                }
+                else
+                {
+                    currentDir = 3;
+                }
             }
         }
         newPos = rb2D.position + horizontalMovement + verticalMovement;
+        Debug.DrawLine(rb2D.position, rb2D.position + lastMove);
         return newPos;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (isAttacking == true && other.gameObject.tag.Equals("CasualEnemy"))
+        {
+            print("Enemy attacked");
+        }
+    }
+    private void disableAttackColliders()
+    {
+        for(int i = 1; i < attackColliders.Length; i++)
+        {
+            attackColliders[i].enabled = false;
+        }
+    }
+
+
+    private void Attack()
+    {
+        if (Input.GetKeyDown("f") && !isAttacking)
+        {
+            isAttacking = true;
+            attackTimer = attackCD;
+        }
+        if (isAttacking)
+        {
+            if (attackTimer > 0)
+            {
+                attackTimer -= Time.deltaTime;
+                attackColliders[currentDir].enabled = true;
+            }
+            else
+            {
+                isAttacking = false;
+                attackColliders[currentDir].enabled = false;
+            }
+        }
     }
 }

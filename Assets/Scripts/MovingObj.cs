@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MovingObj : MonoBehaviour
+public abstract class MovingObj : MonoBehaviour
 {
 	public float moveSpeed;
 	public LayerMask collisionLayer;
@@ -11,8 +11,11 @@ public class MovingObj : MonoBehaviour
 	protected BoxCollider2D boxCollider;
 	protected int _hitpoints;
 	protected int _damage;
+    protected bool isMoving;
+    protected bool isAttacking;
 	protected Vector2 newPos;
     protected Animator animator;
+    
 
 
 
@@ -29,26 +32,19 @@ public class MovingObj : MonoBehaviour
 		rb2D.MovePosition(Move());
 	}
 
-	protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
+    protected virtual void Update ()
+    {
+
+    }
+
+    protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
 	{
 		return newPos;
 	}
 
 	protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
-        Destroy(hit);
-    }
-
-	protected virtual void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
-	{
-        print(this + " collided with other Object: " + other.gameObject.name);
-        if (this.gameObject.tag == "CasualEnemy")
-        {
-            this._hitpoints -= 50;
-            if (this._hitpoints <= 0)
-            {
-                OnDie(this.gameObject);
-            }
-        }
+        Rigidbody2D hit1 = hit.GetComponent<Rigidbody2D>();
+        hit1.AddForce(Vector2.one *10, ForceMode2D.Impulse);
     }
 }
