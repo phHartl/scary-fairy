@@ -42,7 +42,12 @@ public abstract class MovingObj : MonoBehaviour
 		return newPos;
 	}
 
-	protected void OnDie(GameObject hit) //Report back to Gamemanager
+    private bool applyDamage(int damage)
+    {
+        return true; //If hitpoints are still over 0 return true, else return false an notify observer -> destroy gameObject
+    }
+
+    protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
         Rigidbody2D hit1 = hit.GetComponent<Rigidbody2D>();
         hit1.AddForce(Vector2.one *10, ForceMode2D.Impulse);

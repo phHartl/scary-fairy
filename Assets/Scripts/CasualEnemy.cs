@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class CasualEnemy : Npc {
 
+    UnityEngine.UI.Slider slider;
     // Use this for initialization
     void Start()
     {
         base.Start();
-        animator = GetComponent<Animator>();
+        slider = GetComponentInChildren<UnityEngine.UI.Slider>();
 
         // hitpoints placeholder
         this._hitpoints = 100;
@@ -29,7 +30,7 @@ public class CasualEnemy : Npc {
 
     protected override void Update()
     {
-        
+        slider.value = _hitpoints;
     }
 
     // Pathfinding has yet to be implemented (I think there is a Unity-Plugin that can be used for pathfinding)

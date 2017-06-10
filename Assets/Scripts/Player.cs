@@ -8,15 +8,12 @@ public class Player : MovingObj
     public float maxHorizontalDistance = 12.0f;
     public float currentDistance;
     private GameObject[] players = new GameObject[2];
-    private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
     public string axisVertical;
     public string axisHorizontal;
     private Vector2 lastMove;
-    private int currentDir;
-    private float attackCD = 0.3f;
-    private float attackTimer = 0;
+    protected int currentDir;
 
     // Use this for initialization
     void Start()
@@ -25,8 +22,6 @@ public class Player : MovingObj
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
         animator = GetComponent<Animator>();
-        attackColliders = GetComponentsInChildren<BoxCollider2D>();
-        disableAttackColliders();
     }
 
     // Update is called once per frame
@@ -42,7 +37,7 @@ public class Player : MovingObj
         animator.SetBool("PlayerMoving", isMoving);
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
-        Attack();
+
     }
 
     protected override Vector2 Move()
@@ -98,43 +93,5 @@ public class Player : MovingObj
         newPos = rb2D.position + horizontalMovement + verticalMovement;
         Debug.DrawLine(rb2D.position, rb2D.position + lastMove);
         return newPos;
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (isAttacking == true && other.gameObject.tag.Equals("CasualEnemy"))
-        {
-            print("Enemy attacked");
-        }
-    }
-    private void disableAttackColliders()
-    {
-        for(int i = 1; i < attackColliders.Length; i++)
-        {
-            attackColliders[i].enabled = false;
-        }
-    }
-
-
-    private void Attack()
-    {
-        if (Input.GetKeyDown("f") && !isAttacking)
-        {
-            isAttacking = true;
-            attackTimer = attackCD;
-        }
-        if (isAttacking)
-        {
-            if (attackTimer > 0)
-            {
-                attackTimer -= Time.deltaTime;
-                attackColliders[currentDir].enabled = true;
-            }
-            else
-            {
-                isAttacking = false;
-                attackColliders[currentDir].enabled = false;
-            }
-        }
     }
 }
