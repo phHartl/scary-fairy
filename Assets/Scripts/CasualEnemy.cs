@@ -36,6 +36,6 @@ public class CasualEnemy : Npc {
 
     protected override void OnCollisionEnter2D(Collision2D other) {
         base.OnCollisionEnter2D(other);
-        animator.Play("hit", -1);
+
     }
 }
