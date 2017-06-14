@@ -7,6 +7,8 @@ public class MeleePlayer : Player {
     private float attackCD = 0.3f;
     private float attackTimer = 0;
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
+    
+    public int damageOutput = 20;
 
     // Use this for initialization
     void Start () {
@@ -32,6 +34,8 @@ public class MeleePlayer : Player {
     {
         if (isAttacking == true && other.CompareTag("CasualEnemy"))
         {
+            CasualEnemy ce = other.GetComponent<CasualEnemy>();
+            ce.applyDamage(damageOutput);
             print("Enemy attacked");
         }
     }

@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 
-public class CasualEnemy : Npc {
+public class CasualEnemy : Npc
+{
 
     UnityEngine.UI.Slider slider;
-    public Vector2 targetPosition = new Vector3(28.6f,-30);
+    public Vector2 targetPosition = new Vector3(28.6f, -30);
 
     // Use this for initialization
     void Start()
@@ -47,5 +48,11 @@ public class CasualEnemy : Npc {
     protected override Vector2 Move()
     {
         return rb2D.position;
+    }
+
+    public void applyDamage(int damage)
+    {
+        _hitpoints -= damage;
+        print("Enemy took damage, health: " + _hitpoints);
     }
 }
