@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MovingObj : MonoBehaviour
+public abstract class MovingObj : MonoBehaviour
 {
 	public float moveSpeed;
 	public LayerMask collisionLayer;
@@ -11,8 +11,11 @@ public class MovingObj : MonoBehaviour
 	protected BoxCollider2D boxCollider;
 	protected int _hitpoints;
 	protected int _damage;
+    protected bool isMoving;
+    protected bool isAttacking;
 	protected Vector2 newPos;
     protected Animator animator;
+    
 
 
 
@@ -29,26 +32,26 @@ public class MovingObj : MonoBehaviour
 		rb2D.MovePosition(Move());
 	}
 
-	protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
+    protected virtual void Update ()
+    {
+        if (this._hitpoints <= 0)
+        {
+            OnDie(this.gameObject);
+        }
+    }
+
+    protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
 	{
 		return newPos;
 	}
 
-	protected void OnDie(GameObject hit) //Report back to Gamemanager
-	{
-        Destroy(hit);
+    private bool applyDamage(int damage)
+    {
+        return true; //If hitpoints are still over 0 return true, else return false an notify observer -> destroy gameObject
     }
 
-	protected virtual void OnCollisionEnter2D(Collision2D other) //Report back to Gamemanager, Damage? UI changed etc.
+    protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
-        print(this + " collided with other Object: " + other.gameObject.name);
-        if (this.gameObject.tag == "CasualEnemy")
-        {
-            this._hitpoints -= 50;
-            if (this._hitpoints <= 0)
-            {
-                OnDie(this.gameObject);
-            }
-        }
+        Destroy(hit);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Npc : MovingObj
+public abstract class Npc : MovingObj
 {
 
     // Use this for initialization
@@ -15,5 +15,10 @@ public class Npc : MovingObj
     void FixedUpdate()
     {
         base.FixedUpdate();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
     }
 }
