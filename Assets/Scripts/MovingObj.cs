@@ -34,7 +34,10 @@ public abstract class MovingObj : MonoBehaviour
 
     protected virtual void Update ()
     {
-
+        if (this._hitpoints <= 0)
+        {
+            OnDie(this.gameObject);
+        }
     }
 
     protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
@@ -49,7 +52,6 @@ public abstract class MovingObj : MonoBehaviour
 
     protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
-        Rigidbody2D hit1 = hit.GetComponent<Rigidbody2D>();
-        hit1.AddForce(Vector2.one *10, ForceMode2D.Impulse);
+        Destroy(hit);
     }
 }

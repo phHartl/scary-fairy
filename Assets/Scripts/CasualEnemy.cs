@@ -8,15 +8,13 @@ public class CasualEnemy : Npc
 {
 
     UnityEngine.UI.Slider slider;
-    public Vector2 targetPosition = new Vector3(28.6f, -30);
+ 
 
     // Use this for initialization
     void Start()
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-        Seeker seeker = GetComponent<Seeker>();
-        seeker.StartPath(transform.position, targetPosition, OnPathComplete);
 
         // hitpoints placeholder
         this._hitpoints = 100;
@@ -36,11 +34,12 @@ public class CasualEnemy : Npc
     // Update is called once per frame
     void FixedUpdate()
     {
-        base.FixedUpdate();
+       //    base.FixedUpdate();
     }
 
     protected override void Update()
     {
+        base.Update();
         slider.value = _hitpoints;
     }
 

@@ -19,6 +19,6 @@ public abstract class Npc : MovingObj
 
     protected override void Update()
     {
-        
+        base.Update();
     }
 }
