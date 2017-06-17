@@ -34,17 +34,7 @@ public class Player : MovingObj
         animator.SetBool("PlayerMoving", playerMoving);
         animator.SetFloat("LastMoveX",lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            animator.SetBool("PlayerAttack", true);
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            animator.SetBool("PlayerAttack", false);
-        }
-
-
-
+        
     }
 
     protected override Vector2 Move()
