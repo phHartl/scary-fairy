@@ -37,7 +37,7 @@ public class Player : MovingObj
         animator.SetBool("PlayerMoving", isMoving);
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
-
+        animator.SetBool("PlayerAttack", isAttacking);
     }
 
     protected override Vector2 Move()
