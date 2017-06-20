@@ -6,11 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public static GameManager instance = null;
-    private int level = 1;
-    private string[] levelPaths;
+    //levelNum: in welchem Level befinden wir uns gerade - wird inkrementiert wenn das Levelende erreicht wird
+    //und ein neues Level geladen werden soll
+    private int levelNum = 1;
 
     void Awake()
     {
+        // GameManager wird nicht zerstört wenn ein neues Level geladen wird
         if (instance == null)
             instance = this;
         else if (instance != this)
@@ -18,20 +20,21 @@ public class GameManager : MonoBehaviour {
 
         DontDestroyOnLoad(gameObject);
 
+        //lade erstes Level
         initGame();
     }
 
     void initGame()
     {
-        SceneManager.LoadScene(level);
+        //SceneManager.LoadScene lädt Level anhand deren Index in den Build Settings (strg + shift + B in Unity)
+        //auch anhand des Namens möglich
+        SceneManager.LoadScene(levelNum);
     }
 
-    // Use this for initialization
     void Start () {
 		
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		
 	}
