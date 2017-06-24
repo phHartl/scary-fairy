@@ -21,7 +21,6 @@ public class Player : MovingObj
         base.Start();
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
-        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
