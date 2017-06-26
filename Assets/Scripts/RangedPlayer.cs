@@ -6,9 +6,11 @@ public class RangedPlayer : Player {
 
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
+    private float attackCD = 0.01f;
+    private float attackTimer = 0;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         base.Start();
         this._damage = 10;
         animator = GetComponent<Animator>();
@@ -17,10 +19,7 @@ public class RangedPlayer : Player {
 	// Update is called once per frame
 	void Update () {
         base.Update();
-        if (Input.GetKeyDown("m"))
-        {
-            Attack();
-        }
+        Attack();
     }
 
     void FixedUpdate()
@@ -30,24 +29,40 @@ public class RangedPlayer : Player {
 
     void Attack()
     {
-        Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position,transform.rotation);
-        arrowClone.transform.SetParent(this.transform);
-        if (currentDir == 2)
+        if (Input.GetKeyDown("m") && !isAttacking)
         {
-            arrowClone.velocity = (transform.right * 10f);
+            isAttacking = true;
+            attackTimer = attackCD;
         }
-        if (currentDir == 3)
+        if (isAttacking)
         {
-            arrowClone.velocity = (-transform.up * 10f);
+            if (attackTimer > 0)
+            {
+                attackTimer -= Time.deltaTime;
+                Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation);
+                arrowClone.transform.SetParent(this.transform);
+                if (currentDir == 2)
+                {
+                    arrowClone.velocity = (transform.right * 10f);
+                }
+                if (currentDir == 3)
+                {
+                    arrowClone.velocity = (-transform.up * 10f);
+                }
+                if (currentDir == 4)
+                {
+                    arrowClone.velocity = (-transform.right * 10f);
+                }
+                if (currentDir == 1)
+                {
+                    arrowClone.velocity = (transform.up * 10f);
+                }
+                Destroy(arrowClone.gameObject, timeToTravel);
+            }
+            else
+            {
+                isAttacking = false;
+            }
         }
-        if (currentDir == 4)
-        {
-            arrowClone.velocity = (-transform.right * 10f);
-        }
-        if (currentDir == 1)
-        {
-            arrowClone.velocity = (transform.up * 10f);
-        }
-        Destroy(arrowClone.gameObject, timeToTravel);
     }
 }
