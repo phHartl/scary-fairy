@@ -38,6 +38,8 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
+        animator.SetBool("IceEnchantment", iceEnchantment);
+        animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
     protected override Vector2 Move()
@@ -94,4 +96,11 @@ public class Player : MovingObj
         Debug.DrawLine(rb2D.position, rb2D.position + lastMove);
         return newPos;
     }
+
+    public void activateIceEnchantment()
+    {
+        fireEnchantment = false;
+        iceEnchantment = true;
+    }
+
 }

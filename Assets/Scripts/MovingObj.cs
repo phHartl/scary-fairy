@@ -10,9 +10,13 @@ public abstract class MovingObj : MonoBehaviour
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
 	protected int _hitpoints;
+    protected int _basedamage;
 	protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
+    protected bool iceEnchantment;
+    protected bool fireEnchantment;
+    protected bool onEnchantmentCD;
 	protected Vector2 newPos;
     protected Animator animator;
     
@@ -52,6 +56,37 @@ public abstract class MovingObj : MonoBehaviour
 
     protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
-        Destroy(hit);
+        //Destroy(hit);
+        gameObject.SetActive(false);
+    }
+
+    public void activateFireEnchantment()
+    {
+        iceEnchantment = false;
+        fireEnchantment = true;
+        onEnchantmentCD = true;
+    }
+
+    public void activateIceEnchantment()
+    {
+        fireEnchantment = false;
+        iceEnchantment = true;
+        onEnchantmentCD = true;
+    }
+
+    public void resetEnchantments()
+    {
+        iceEnchantment = false;
+        fireEnchantment = false;
+    }
+
+    public void resetEnchantmentCooldown()
+    {
+        onEnchantmentCD = false;
+    }
+
+    public bool getOnEnchantmentCD()
+    {
+        return onEnchantmentCD;
     }
 }
