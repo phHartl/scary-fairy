@@ -43,7 +43,6 @@ public class CasualEnemy : Npc
         slider.value = _hitpoints;
     }
 
-    // Pathfinding has yet to be implemented (I think there is a Unity-Plugin that can be used for pathfinding)
     protected override Vector2 Move()
     {
         return rb2D.position;
