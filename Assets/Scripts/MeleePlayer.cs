@@ -36,6 +36,9 @@ public class MeleePlayer : Player {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
             ce.applyDamage(_damage);
             print("Enemy attacked");
+            Vector2 knockVector = ce.transform.position - this.transform.position;
+            knockVector = knockVector.normalized * 2;
+            ce.knockBack(knockVector);
         }
     }
 
