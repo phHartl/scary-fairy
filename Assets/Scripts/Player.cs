@@ -97,10 +97,25 @@ public class Player : MovingObj
         return newPos;
     }
 
-    public void activateIceEnchantment()
+    protected void OnTriggerEnter2D(Collider2D other)
     {
-        fireEnchantment = false;
-        iceEnchantment = true;
+        if (isAttacking == true && other.CompareTag("CasualEnemy"))
+        {
+            CasualEnemy ce = other.GetComponent<CasualEnemy>();
+            ce.applyDamage(_damage);
+            print("Enemy attacked");
+            if (iceEnchantment)
+            {
+                print("IceEnchanted Attack");
+            }
+            if (fireEnchantment)
+            {
+                print("FireEnchanted Attack");
+            }
+            if (!iceEnchantment && !fireEnchantment)
+            {
+                print("normal Attack");
+            }
+        }
     }
-
 }

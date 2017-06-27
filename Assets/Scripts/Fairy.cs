@@ -3,25 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fairy : MonoBehaviour {
+public class Fairy : Player {
 
     public MovingObj target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
-    public int damageAOE = 20;                      //Damage of Fairy AOE Attack
-    private float attackCD = 0.3f;                  //Duration between AOE Attacks
-    private float attackTimer = 0;
     private float enchantmentCD = 10f;              //Duration between enchantments
     private float enchantmentEffectTimer = 0;
     private float enchantmentEffectDuration = 5f;   //Duration of a single enchantment spell
     private float enchantmentTimer = 0;
-    private bool isAttacking = false;
     protected CircleCollider2D circleCollider;
 
  
     void Start () {
         circleCollider = GetComponent<CircleCollider2D>();
         circleCollider.enabled = false;
-	}
+        this.attackCD = 0.3f;
+        this.attackTimer = 0;
+        this._damage = 20; //Damage of Fairy AOE Attack
+        print(target);
+    }
 
 
     void LateUpdate () {
@@ -54,16 +54,9 @@ public class Fairy : MonoBehaviour {
         }
     }
 
-
-    //Damages enemies if they enter the fairy AOE and the fairy attacks
-    private void OnTriggerEnter2D(Collider2D other)
+    private new void FixedUpdate()
     {
-        if (isAttacking == true && other.CompareTag("CasualEnemy"))
-        {
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(damageAOE);
-            print("Enemy attacked");
-        }
+
     }
 
 

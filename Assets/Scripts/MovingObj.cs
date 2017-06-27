@@ -10,10 +10,11 @@ public abstract class MovingObj : MonoBehaviour
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
 	protected int _hitpoints;
-    protected int _basedamage;
 	protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
+    protected float attackCD;
+    protected float attackTimer;
     protected bool iceEnchantment;
     protected bool fireEnchantment;
     protected bool onEnchantmentCD;
@@ -51,7 +52,15 @@ public abstract class MovingObj : MonoBehaviour
 
     private bool applyDamage(int damage)
     {
-        return true; //If hitpoints are still over 0 return true, else return false an notify observer -> destroy gameObject
+        _hitpoints -= damage;
+        if(_hitpoints > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     protected void OnDie(GameObject hit) //Report back to Gamemanager
