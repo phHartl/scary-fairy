@@ -29,7 +29,7 @@ public class RangedPlayer : Player {
 
     void Attack()
     {
-        if (Input.GetKeyDown("m") && !isAttacking)
+        if (Input.GetKeyUp("m") && !isAttacking && !isMoving)
         {
             isAttacking = true;
             attackTimer = attackCD;
