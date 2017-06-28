@@ -6,7 +6,7 @@ public abstract class Npc : MovingObj
 {
 
     // #justKnockBackThings
-    public float speed = 5;
+    public int speed = 50;
 
     private Vector2 startMarker;
     private Vector2 endMarker;
@@ -32,7 +32,8 @@ public abstract class Npc : MovingObj
         base.Update();
         if (isKnockedBack)
         {
-            float distCovered = (Time.time - startTime) * 50;
+            // calculate a fraction of the path to travel in this frame, based on passed time and speed
+            float distCovered = (Time.time - startTime) * speed;
             float fracJourney = distCovered / journeyLength;
             if ((Vector2)transform.position == endMarker)
             {
@@ -45,6 +46,7 @@ public abstract class Npc : MovingObj
 
     public void knockBack(Vector2 force)
     {
+        // npc needs to travel from start to endmarker
         startTime = Time.time;
         startMarker = transform.position;
         endMarker = startMarker + force;
