@@ -32,14 +32,7 @@ public abstract class Npc : MovingObj
         base.Update();
         if (isKnockedBack)
         {
-            // calculate a fraction of the path to travel in this frame, based on passed time and speed
-            float distCovered = (Time.time - startTime) * speed;
-            float fracJourney = distCovered / journeyLength;
-            if ((Vector2)transform.position == endMarker)
-            {
-                isKnockedBack = false;
-            }
-            transform.position = Vector2.Lerp(startMarker, endMarker, fracJourney);
+            travelKnockBackPath();
         }
     }
 
@@ -52,5 +45,17 @@ public abstract class Npc : MovingObj
         endMarker = startMarker + force;
         journeyLength = Vector2.Distance(startMarker, endMarker);
         isKnockedBack = true;
+    }
+
+    private void travelKnockBackPath()
+    {
+        // calculate a fraction of the path to travel in this frame, based on passed time and speed
+        float distCovered = (Time.time - startTime) * speed;
+        float fracJourney = distCovered / journeyLength;
+        if ((Vector2)transform.position == endMarker)
+        {
+            isKnockedBack = false;
+        }
+        transform.position = Vector2.Lerp(startMarker, endMarker, fracJourney);
     }
 }
