@@ -8,6 +8,8 @@ public class MeleePlayer : Player {
     private float attackTimer = 0;
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
 
+    public float knockBackStrength = 2;
+
     // Use this for initialization
     void Start () {
         base.Start();
@@ -36,8 +38,8 @@ public class MeleePlayer : Player {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
             ce.applyDamage(_damage);
             print("Enemy attacked");
-            Vector2 knockVector = ce.transform.position - this.transform.position;
-            knockVector = knockVector.normalized * 2;
+            // knockVector = direction of knockBack times strength of knockback
+            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackStrength;
             ce.knockBack(knockVector);
         }
     }
