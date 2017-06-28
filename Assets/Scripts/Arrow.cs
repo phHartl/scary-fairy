@@ -6,10 +6,11 @@ public class Arrow : MonoBehaviour {
 
     public Rigidbody2D arrow;
 
-	// Use this for initialization
-	public Rigidbody2D createArrow(Vector3 position, Quaternion rotation)
+	// To create an arrow you need its position, rotation and the time it should travel (if we get an general object spawner this class can be a sub class)
+	public Rigidbody2D createArrow(Vector3 position, Quaternion rotation, float travelTime)
     {
         Rigidbody2D arrowClone = Instantiate(arrow, position, rotation);
+        Destroy(arrowClone.gameObject, travelTime);
         return arrowClone;
     }
 

@@ -2,24 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedPlayer : Player {
+public class RangedPlayer : Player
+{
 
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
-    private float attackCD = 0.01f;
-    private float attackTimer = 0;
+    private float attackCD = 0.5f;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         base.Start();
         this._damage = 10;
         animator = GetComponent<Animator>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         base.Update();
-        Attack();
+        if (Input.GetKeyDown("m") && !isOnCoolDown)
+        {
+            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
+        }
     }
 
     void FixedUpdate()
@@ -27,42 +32,33 @@ public class RangedPlayer : Player {
         base.FixedUpdate();
     }
 
-    void Attack()
+    //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
+    //This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
+    IEnumerator Attack()
     {
-        if (Input.GetKeyUp("m") && !isAttacking && !isMoving)
+        isAttacking = true;
+        Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
+        arrowClone.transform.SetParent(this.transform);
+        if (currentDir == 2)
         {
-            isAttacking = true;
-            attackTimer = attackCD;
+            arrowClone.velocity = (transform.right * 10f);
         }
-        if (isAttacking)
+        if (currentDir == 3)
         {
-            if (attackTimer > 0)
-            {
-                attackTimer -= Time.deltaTime;
-                Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation);
-                arrowClone.transform.SetParent(this.transform);
-                if (currentDir == 2)
-                {
-                    arrowClone.velocity = (transform.right * 10f);
-                }
-                if (currentDir == 3)
-                {
-                    arrowClone.velocity = (-transform.up * 10f);
-                }
-                if (currentDir == 4)
-                {
-                    arrowClone.velocity = (-transform.right * 10f);
-                }
-                if (currentDir == 1)
-                {
-                    arrowClone.velocity = (transform.up * 10f);
-                }
-                Destroy(arrowClone.gameObject, timeToTravel);
-            }
-            else
-            {
-                isAttacking = false;
-            }
+            arrowClone.velocity = (-transform.up * 10f);
         }
+        if (currentDir == 4)
+        {
+            arrowClone.velocity = (-transform.right * 10f);
+        }
+        if (currentDir == 1)
+        {
+            arrowClone.velocity = (transform.up * 10f);
+        }
+        isOnCoolDown = true;
+        yield return new WaitForSeconds(0.25f); //Waiting for animation
+        isAttacking = false; //After animation has finished, player isn't attacking anymore
+        yield return new WaitForSeconds(attackCD); //Waiting for the cooldown
+        isOnCoolDown = false;
     }
 }

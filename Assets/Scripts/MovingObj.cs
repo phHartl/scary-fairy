@@ -13,6 +13,7 @@ public abstract class MovingObj : MonoBehaviour
 	protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
+    protected bool isOnCoolDown;
 	protected Vector2 newPos;
     protected Animator animator;
     

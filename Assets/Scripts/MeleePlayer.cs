@@ -5,7 +5,6 @@ using UnityEngine;
 public class MeleePlayer : Player {
 
     private float attackCD = 0.3f;
-    private float attackTimer = 0;
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
 
     // Use this for initialization
@@ -26,7 +25,10 @@ public class MeleePlayer : Player {
     protected override void Update()
     {
         base.Update();
-        Attack();
+        if (Input.GetKeyDown("f") && !isOnCoolDown)
+        {
+            StartCoroutine(Attack()); //Coroutine is better here, an attack doesn't need to be done every frame
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -39,27 +41,18 @@ public class MeleePlayer : Player {
         }
     }
 
-
-    private void Attack()
+    //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
+    //This function enables the triggers attached to the player in dependence of which direction the player is facing
+    IEnumerator Attack()
     {
-        if (Input.GetKeyDown("f") && !isAttacking)
-        {
-            isAttacking = true;
-            attackTimer = attackCD;
-        }
-        if (isAttacking)
-        {
-            if (attackTimer > 0)
-            {
-                attackTimer -= Time.deltaTime;
-                attackColliders[currentDir].enabled = true;
-            }
-            else
-            {
-                isAttacking = false;
-                attackColliders[currentDir].enabled = false;
-            }
-        }
+        isAttacking = true;
+        attackColliders[currentDir].enabled = true;
+        isOnCoolDown = true;
+        yield return new WaitForSeconds(0.25f); //Wait for animation
+        isAttacking = false; //After animation has finished, player isn't attacking anymore
+        attackColliders[currentDir].enabled = false;
+        yield return new WaitForSeconds(attackCD); //Waiting for cooldown
+        isOnCoolDown = false;
     }
 
     private void disableAttackColliders()
