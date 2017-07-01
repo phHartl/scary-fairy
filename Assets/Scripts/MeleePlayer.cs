@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class MeleePlayer : Player {
 
-    private float attackCD = 0.3f;
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         base.Start();
         animator = GetComponent<Animator>();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         disableAttackColliders();
         this._hitpoints = 100;
+        this.attackCD = 0.5f;
         this._damage = 20;
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        base.FixedUpdate();
-	}
+    }
 
     protected override void Update()
     {
@@ -44,7 +40,8 @@ public class MeleePlayer : Player {
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function enables the triggers attached to the player in dependence of which direction the player is facing
     IEnumerator Attack()
-    {
+{
+        checkForEnchantment();
         isAttacking = true;
         attackColliders[currentDir].enabled = true;
         isOnCoolDown = true;
@@ -60,6 +57,21 @@ public class MeleePlayer : Player {
         for (int i = 1; i < attackColliders.Length; i++)
         {
             attackColliders[i].enabled = false;
+        }
+    }
+
+
+    //Checks if player is enchanted by fairy and calculates new attack damage
+    private void checkForEnchantment()
+    {
+        _damage = 20;
+        if(iceEnchantment)
+        {
+            _damage = _damage * 2;
+        }
+        else if (fireEnchantment)
+        {
+            _damage = _damage * 3;
         }
     }
 }
