@@ -19,8 +19,7 @@ public class Player : MovingObj
     void Start()
     {
         base.Start();
-        players[0] = GameObject.FindGameObjectWithTag("Player1");
-        players[1] = GameObject.FindGameObjectWithTag("Player2");
+        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     // Update is called once per frame

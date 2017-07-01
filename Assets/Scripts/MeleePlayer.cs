@@ -14,7 +14,7 @@ public class MeleePlayer : Player {
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         disableAttackColliders();
         this._hitpoints = 100;
-        this.attackCD = 0.5f;
+        this.attackCD = 1f;
         this._damage = 20;
     }
 
@@ -24,16 +24,6 @@ public class MeleePlayer : Player {
         if (Input.GetKeyDown("f") && !isOnCoolDown)
         {
             StartCoroutine(Attack()); //Coroutine is better here, an attack doesn't need to be done every frame
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (isAttacking == true && other.CompareTag("CasualEnemy"))
-        {
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(_damage);
-            print("Enemy attacked");
         }
     }
 

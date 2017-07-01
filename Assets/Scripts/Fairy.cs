@@ -17,42 +17,31 @@ public class Fairy : Player {
     void Start () {
         circleCollider = GetComponent<CircleCollider2D>();
         circleCollider.enabled = false;
-        this.attackCD = 0.3f;
-        this.attackTimer = 0;
+        this.attackCD = 2f;
         this._damage = 20; //Damage of Fairy AOE Attack
-        print(target);
     }
 
 
     void LateUpdate () {
         transform.position = target.transform.position + FAIRY_DISTANCE;
-        Attack();
+        if (Input.GetKeyDown("q") && !isOnCoolDown)
+        {
+            StartCoroutine(Attack());
+        }
         enchantAttacks();
     }
-
-
     //copy pasta MeleePlayer
-    private void Attack()
+    IEnumerator Attack()
     {
-        if (Input.GetKeyDown ("q") && !isAttacking)
-        {
-            isAttacking = true;
-            attackTimer = attackCD;
-        }
-        if (isAttacking)
-        {
-            if (attackTimer > 0)
-            {
-                attackTimer -= Time.deltaTime;
-                circleCollider.enabled = true;
-            }
-            else
-            {
-                isAttacking = false;
-                circleCollider.enabled = false;
-            }
-        }
-    }
+        isAttacking = true;
+        circleCollider.enabled = true;
+        isOnCoolDown = true;
+        yield return new WaitForSeconds(0.25f);
+        isAttacking = false;
+        circleCollider.enabled = false;
+        yield return new WaitForSeconds(attackCD);
+        isOnCoolDown = false;
+     }
 
     private new void FixedUpdate()
     {

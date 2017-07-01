@@ -7,13 +7,13 @@ public class RangedPlayer : Player
 
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
-    private float attackCD = 0.5f;
 
     // Use this for initialization
     void Start()
     {
         base.Start();
         this._damage = 10;
+        this.attackCD = 0.5f;
         animator = GetComponent<Animator>();
     }
 
