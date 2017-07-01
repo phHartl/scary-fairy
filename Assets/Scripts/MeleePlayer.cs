@@ -21,6 +21,7 @@ public class MeleePlayer : Player {
 	// Update is called once per frame
 	void FixedUpdate () {
         base.FixedUpdate();
+        ChangeClassInput();
 	}
 
     protected override void Update()
