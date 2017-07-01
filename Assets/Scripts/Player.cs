@@ -38,6 +38,8 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
+        animator.SetBool("IceEnchantment", iceEnchantment);
+        animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
     protected override Vector2 Move()
@@ -93,5 +95,27 @@ public class Player : MovingObj
         newPos = rb2D.position + horizontalMovement + verticalMovement;
         Debug.DrawLine(rb2D.position, rb2D.position + lastMove);
         return newPos;
+    }
+
+    protected void OnTriggerEnter2D(Collider2D other)
+    {
+        if (isAttacking == true && other.CompareTag("CasualEnemy"))
+        {
+            CasualEnemy ce = other.GetComponent<CasualEnemy>();
+            ce.applyDamage(_damage);
+            print("Enemy attacked");
+            if (iceEnchantment)
+            {
+                print("IceEnchanted Attack");
+            }
+            if (fireEnchantment)
+            {
+                print("FireEnchanted Attack");
+            }
+            if (!iceEnchantment && !fireEnchantment)
+            {
+                print("normal Attack");
+            }
+        }
     }
 }
