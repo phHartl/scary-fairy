@@ -124,16 +124,14 @@ public class Player : MovingObj
      */
     protected void ChangeClass()
     {
+        // Setting the correct player tag
+        nextClassPrefab.tag = gameObject.tag;
         // Instanzietes the new GameObject
-        GameObject newObject;
-        newObject = Instantiate(nextClassPrefab,
+        GameObject newObject = Instantiate(nextClassPrefab,
             gameObject.transform.position,
             gameObject.transform.rotation,
             gameObject.transform.parent) as GameObject;
-        // Setting the correct player tag
-        newObject.tag = gameObject.tag;
-        newObject.SetActive(false);
-        newObject.SetActive(true);
+
         Destroy(this.gameObject);
     }
 }
