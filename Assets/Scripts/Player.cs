@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MovingObj
 {
@@ -14,6 +12,8 @@ public class Player : MovingObj
     public string axisHorizontal;
     private Vector2 lastMove;
     protected int currentDir;
+    // This gameObject has to be set in every classes prefab within the Unity inspector
+    public GameObject nextClassPrefab;
 
     // Use this for initialization
     void Start()
@@ -28,6 +28,7 @@ public class Player : MovingObj
     void FixedUpdate()
     {
         base.FixedUpdate();
+        ChangeClassInput();
     }
 
      protected override void Update ()
@@ -93,5 +94,43 @@ public class Player : MovingObj
         newPos = rb2D.position + horizontalMovement + verticalMovement;
         Debug.DrawLine(rb2D.position, rb2D.position + lastMove);
         return newPos;
+    }
+
+    /**
+     * This method is used to distinguish between the two players and 
+     * to give them seperate inputs ("r"-key for Player1 and "0" for Player2)
+     */
+    protected void ChangeClassInput()
+    {
+        if (gameObject.tag == "Player1")
+        {
+            if (Input.GetKeyDown("r"))
+            {
+                ChangeClass();
+            }
+        } else if (gameObject.tag == "Player2")
+        {
+            if (Input.GetKeyDown("0"))
+            {
+                ChangeClass();
+            }
+        }
+    }
+
+    /*
+     * This method exchanges the GameObject the script is attached to(Player1 or Player2) with
+     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector 
+     * when the "r"-key is pressed.
+     */
+    protected void ChangeClass()
+    {
+        // Instanzietes the new GameObject
+        GameObject newObject = Instantiate(nextClassPrefab,
+            gameObject.transform.position,
+            gameObject.transform.rotation,
+            gameObject.transform.parent) as GameObject;
+        // Setting the correct player tag
+        newObject.tag = gameObject.tag;
+        Destroy(this.gameObject);
     }
 }
