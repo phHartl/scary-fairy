@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 76c91c8bfa3a24d40b6af2ed519b9cb6
+timeCreated: 1498856923
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: A Voice Liberty
+  fontNames:
+  - A Voice Liberty
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
