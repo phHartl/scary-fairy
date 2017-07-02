@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MovingObj
 {
@@ -14,6 +15,10 @@ public class Player : MovingObj
     protected int currentDir;
     // This gameObject has to be set in every classes prefab within the Unity inspector
     public GameObject nextClassPrefab;
+    public Sprite WarriorPortrait;
+    public Sprite RangerPortrait;
+    public GameObject PortraitSpritePlayer1;
+    public GameObject PortraitSpritePlayer2;
 
     // Use this for initialization
     void Start()
@@ -28,7 +33,6 @@ public class Player : MovingObj
     void FixedUpdate()
     {
         base.FixedUpdate();
-        ChangeClassInput();
     }
 
      protected override void Update ()
@@ -39,6 +43,7 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
+        ChangeClassInput();
     }
 
     protected override Vector2 Move()
@@ -107,20 +112,21 @@ public class Player : MovingObj
             if (Input.GetKeyDown("r"))
             {
                 ChangeClass();
+                ChangePortrait();
             }
         } else if (gameObject.tag == "Player2")
         {
             if (Input.GetKeyDown("0"))
             {
                 ChangeClass();
+                ChangePortrait();
             }
         }
     }
 
     /*
      * This method exchanges the GameObject the script is attached to(Player1 or Player2) with
-     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector 
-     * when the "r"-key is pressed.
+     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
      */
     protected void ChangeClass()
     {
@@ -133,5 +139,14 @@ public class Player : MovingObj
             gameObject.transform.parent) as GameObject;
 
         Destroy(this.gameObject);
+
+        
+    }
+
+    
+    protected void ChangePortrait() 
+    {
+
+
     }
 }

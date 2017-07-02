@@ -131,4 +131,9 @@ public class CameraControl : MonoBehaviour
 		// Find and set the required size of the camera.
 		m_Camera.orthographicSize = FindRequiredSize ();
 	}
+
+    public void RefocusCamera()
+    {
+
+    }
 }
