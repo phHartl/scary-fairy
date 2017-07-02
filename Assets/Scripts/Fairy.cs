@@ -12,11 +12,13 @@ public class Fairy : Player {
     private float enchantmentEffectDuration = 5f;   //Duration of a single enchantment spell
     private float enchantmentTimer = 0;
     protected CircleCollider2D circleCollider;
+    private Animator novaAnimator;
 
  
     void Start () {
         circleCollider = GetComponent<CircleCollider2D>();
         animator = GetComponent<Animator>();
+        novaAnimator = GetComponentsInChildren<Animator>()[1];
         circleCollider.enabled = false;
         this.attackCD = 2f;
         this._damage = 20; //Damage of Fairy AOE Attack
@@ -28,6 +30,7 @@ public class Fairy : Player {
         animator.SetFloat("MoveY", Input.GetAxisRaw(target.GetComponent<Player>().axisVertical));
         animator.SetFloat("LastMoveX", target.GetComponent<Player>().lastMove.x);
         animator.SetFloat("LastMoveY", target.GetComponent<Player>().lastMove.y);
+        novaAnimator.SetBool("NovaAttack", isAttacking);
     }
 
 
