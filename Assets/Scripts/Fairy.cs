@@ -16,9 +16,16 @@ public class Fairy : Player {
  
     void Start () {
         circleCollider = GetComponent<CircleCollider2D>();
+        animator = GetComponent<Animator>();
         circleCollider.enabled = false;
         this.attackCD = 2f;
         this._damage = 20; //Damage of Fairy AOE Attack
+    }
+
+    protected override void Update()
+    {
+        animator.SetFloat("MoveX", Input.GetAxisRaw(target.GetComponent<Player>().axisHorizontal));
+        animator.SetFloat("MoveY", Input.GetAxisRaw(target.GetComponent<Player>().axisVertical));
     }
 
 

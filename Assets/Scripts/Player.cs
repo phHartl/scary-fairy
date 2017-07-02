@@ -36,8 +36,8 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
-        animator.SetBool("IceEnchantment", iceEnchantment);
-        animator.SetBool("FireEnchantment", fireEnchantment);
+       //animator.SetBool("IceEnchantment", iceEnchantment);
+        //animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
     protected override Vector2 Move()
