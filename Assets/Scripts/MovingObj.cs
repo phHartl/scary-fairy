@@ -63,6 +63,11 @@ public abstract class MovingObj : MonoBehaviour
         }
     }
 
+    public int getDamage()
+    {
+        return _damage;
+    }
+
     protected void OnDie(GameObject hit) //Report back to Gamemanager
 	{
         //Destroy(hit);

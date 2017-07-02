@@ -12,6 +12,7 @@ public class Player : MovingObj
     private Vector2 verticalMovement;
     public string axisVertical;
     public string axisHorizontal;
+    [HideInInspector]
     public Vector2 lastMove;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
 
@@ -114,6 +115,19 @@ public class Player : MovingObj
             {
                 print("normal Attack");
             }
+        }
+    }
+
+    protected void checkForEnchantment()
+    {
+        int damage = _damage;
+        if (iceEnchantment)
+        {
+            _damage = damage * 2;
+        }
+        else if (fireEnchantment)
+        {
+            _damage = damage * 3;
         }
     }
 }

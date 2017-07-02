@@ -16,10 +16,10 @@ public class Arrow : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-       if(other.CompareTag("CasualEnemy"))
+        if (other.CompareTag("CasualEnemy"))
         {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(10);
+            ce.applyDamage(this.GetComponentInParent<Player>().getDamage());
             print("Arrow hit enemy");
         }
     }
