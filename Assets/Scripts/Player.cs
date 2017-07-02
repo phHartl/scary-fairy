@@ -14,6 +14,7 @@ public class Player : MovingObj
     public string axisHorizontal;
     [HideInInspector]
     public Vector2 lastMove;
+    protected int baseDamage;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
 
     // Use this for initialization
@@ -120,14 +121,14 @@ public class Player : MovingObj
 
     protected void checkForEnchantment()
     {
-        int damage = _damage;
+        _damage = baseDamage;
         if (iceEnchantment)
         {
-            _damage = damage * 2;
+            _damage = baseDamage * 2;
         }
         else if (fireEnchantment)
         {
-            _damage = damage * 3;
+            _damage = baseDamage * 3;
         }
     }
 }

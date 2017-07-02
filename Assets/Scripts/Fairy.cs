@@ -21,7 +21,7 @@ public class Fairy : Player {
         novaAnimator = GetComponentsInChildren<Animator>()[1];
         circleCollider.enabled = false;
         this.attackCD = 2f;
-        this._damage = 20; //Damage of Fairy AOE Attack
+        this.baseDamage = 20; //Damage of Fairy AOE Attack
     }
 
     protected override void Update()

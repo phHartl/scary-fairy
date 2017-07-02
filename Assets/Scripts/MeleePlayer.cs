@@ -15,7 +15,7 @@ public class MeleePlayer : Player {
         disableAttackColliders();
         this._hitpoints = 100;
         this.attackCD = 1f;
-        this._damage = 20;
+        this.baseDamage = 20;
     }
 
     protected override void Update()
@@ -50,18 +50,4 @@ public class MeleePlayer : Player {
         }
     }
 
-
-    //Checks if player is enchanted by fairy and calculates new attack damage
-    private void checkForEnchantment()
-    {
-        _damage = 20;
-        if(iceEnchantment)
-        {
-            _damage = _damage * 2;
-        }
-        else if (fireEnchantment)
-        {
-            _damage = _damage * 3;
-        }
-    }
 }
