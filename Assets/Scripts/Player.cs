@@ -12,7 +12,7 @@ public class Player : MovingObj
     private Vector2 verticalMovement;
     public string axisVertical;
     public string axisHorizontal;
-    private Vector2 lastMove;
+    public Vector2 lastMove;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
 
     // Use this for initialization

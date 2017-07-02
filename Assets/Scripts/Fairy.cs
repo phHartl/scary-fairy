@@ -26,6 +26,8 @@ public class Fairy : Player {
     {
         animator.SetFloat("MoveX", Input.GetAxisRaw(target.GetComponent<Player>().axisHorizontal));
         animator.SetFloat("MoveY", Input.GetAxisRaw(target.GetComponent<Player>().axisVertical));
+        animator.SetFloat("LastMoveX", target.GetComponent<Player>().lastMove.x);
+        animator.SetFloat("LastMoveY", target.GetComponent<Player>().lastMove.y);
     }
 
 
