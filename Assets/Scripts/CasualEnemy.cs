@@ -27,12 +27,6 @@ public class CasualEnemy : Npc
         this.moveSpeed = 0;
     }
 
-    private void OnPathComplete(Path p)
-    {
-        Debug.Log("We did it" + p.error);
-        
-    }
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -43,7 +37,6 @@ public class CasualEnemy : Npc
     {
         base.Update();
         slider.value = _hitpoints;
-        
     }
 
     protected override Vector2 Move()

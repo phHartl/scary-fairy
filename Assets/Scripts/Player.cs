@@ -125,13 +125,12 @@ public class Player : MovingObj
         return newPos;
     }
 
-    protected void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (isAttacking == true && other.CompareTag("CasualEnemy"))
         {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
             ce.applyDamage(_damage);
-            print("Enemy attacked");
             if (iceEnchantment)
             {
                 print("IceEnchanted Attack");
