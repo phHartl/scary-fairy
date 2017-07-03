@@ -31,15 +31,15 @@ public class Fairy : Player {
         animator.SetFloat("LastMoveX", target.GetComponent<Player>().lastMove.x);
         animator.SetFloat("LastMoveY", target.GetComponent<Player>().lastMove.y);
         novaAnimator.SetBool("NovaAttack", isAttacking);
+        if (Input.GetKeyDown("q") && !isOnCoolDown)
+        {
+            StartCoroutine(Attack());
+        }
     }
 
 
     void LateUpdate () {
         transform.position = target.transform.position + FAIRY_DISTANCE;
-        if (Input.GetKeyDown("q") && !isOnCoolDown)
-        {
-            StartCoroutine(Attack());
-        }
         enchantAttacks();
     }
     //copy pasta MeleePlayer
@@ -55,10 +55,6 @@ public class Fairy : Player {
         isOnCoolDown = false;
      }
 
-    private new void FixedUpdate()
-    {
-
-    }
 
 
     /*
