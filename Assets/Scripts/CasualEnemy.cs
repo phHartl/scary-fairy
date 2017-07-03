@@ -8,7 +8,8 @@ public class CasualEnemy : Npc
 {
 
     UnityEngine.UI.Slider slider;
- 
+
+    
 
     // Use this for initialization
     void Start()
@@ -29,6 +30,7 @@ public class CasualEnemy : Npc
     private void OnPathComplete(Path p)
     {
         Debug.Log("We did it" + p.error);
+        
     }
 
     // Update is called once per frame
@@ -41,12 +43,15 @@ public class CasualEnemy : Npc
     {
         base.Update();
         slider.value = _hitpoints;
+        
     }
 
     protected override Vector2 Move()
     {
         return rb2D.position;
     }
+
+    
 
     public void applyDamage(int damage)
     {

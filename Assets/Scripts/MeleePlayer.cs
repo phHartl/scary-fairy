@@ -6,6 +6,8 @@ public class MeleePlayer : Player {
 
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
 
+    public float knockBackStrength = 2;
+
     // Use this for initialization
     void Start()
     {
@@ -26,6 +28,22 @@ public class MeleePlayer : Player {
             StartCoroutine(Attack()); //Coroutine is better here, an attack doesn't need to be done every frame
         }
     }
+
+ private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (isAttacking == true && other.CompareTag("CasualEnemy"))
+        {
+
+CasualEnemy ce = other.GetComponent<CasualEnemy>();
+            ce.applyDamage(_damage);
+            print("Enemy attacked");
+            // knockVector = direction of knockBack times strength of knockback
+            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackStrength;
+            ce.knockBack(knockVector);
+}
+}
+
+
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function enables the triggers attached to the player in dependence of which direction the player is facing
