@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MovingObj
 {
@@ -13,7 +12,7 @@ public class Player : MovingObj
     private string axisHorizontal;
     private Vector2 lastMove;
     protected int currentDir;
-    // This gameObject has to be set in every classes prefab within the Unity inspector
+    // These GameObjects have to be set in every classes prefab within the Unity inspector
     public GameObject nextClassPrefab;
     public Sprite WarriorPortrait;
     public Sprite RangerPortrait;
@@ -21,25 +20,21 @@ public class Player : MovingObj
     public GameObject PortraitSpritePlayer2;
 
 
-    private void Awake()
-    {
-        GameObject cameraRig = GameObject.Find("CameraRig");
-        //onClassChanged.AddListener(cameraRig.GetComponent<CameraControl>().RefocusCamera);
-        cameraRig.GetComponent<CameraControl>().RefocusCamera();
-    }
-
-
     // Use this for initialization
-    void Start()
+    protected void Start()
     {
         base.Start();
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
-        
         SetAxis();
         animator = GetComponent<Animator>();
     }
 
+    /*
+     * This method assigns the controll axis for the player according to their 
+     * corresponding tags (Player1/Player2).
+     * The controll-axis are set in the input settings (Edit -> Project Settings -> Input).
+     */
     protected void SetAxis()
     {
         if (gameObject.tag == "Player1")
@@ -54,12 +49,12 @@ public class Player : MovingObj
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         base.FixedUpdate();
     }
 
-     protected override void Update ()
+    protected override void Update ()
     {
         animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));
         animator.SetFloat("MoveY", Input.GetAxisRaw(axisVertical));
@@ -127,47 +122,51 @@ public class Player : MovingObj
 
     /**
      * This method is used to distinguish between the two players and 
-     * to give them seperate inputs ("r"-key for Player1 and "0" for Player2)
+     * to give them seperate inputs ("0"-key for Player1 and "r"-key for Player2)
      */
-    protected void ChangeClassInput()
+    private void ChangeClassInput()
     {
         if (gameObject.tag == "Player1")
         {
-            if (Input.GetKeyDown("r"))
+            if (Input.GetKeyDown("0"))
             {
-                ChangeClass();
+                ChangeClass(0);
                 ChangePortrait();
             }
         } else if (gameObject.tag == "Player2")
         {
-            if (Input.GetKeyDown("0"))
+            if (Input.GetKeyDown("r"))
             {
-                ChangeClass();
+                ChangeClass(1);
                 ChangePortrait();
             }
         }
     }
 
     /*
-     * This method exchanges the GameObject the script is attached to(Player1 or Player2) with
+     * This method exchanges the GameObject the script is attached to (Player1 or Player2) with
      * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
+     * It afterwards sets the new player GameObject as the new target of the camera.
      */
-    protected void ChangeClass()
+    private void ChangeClass(int index)
     {
         // Setting the correct player tag
         nextClassPrefab.tag = gameObject.tag;
+
         // Instanzietes the new GameObject
         Destroy(this.gameObject);
-        GameObject newObject = Instantiate(nextClassPrefab,
+        GameObject newPlayer = Instantiate(nextClassPrefab,
             gameObject.transform.position,
             gameObject.transform.rotation,
             gameObject.transform.parent) as GameObject;
 
-        
+        // Setting the new player as the new target of the camera
+        GameObject cameraRig = GameObject.Find("CameraRig");
+        cameraRig.GetComponent<CameraControl>().SetTarget(index, newPlayer);
     }
 
     
-    protected void ChangePortrait() 
+    private void ChangePortrait() 
     {
 
 

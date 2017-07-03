@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MeleePlayer : Player {
 
@@ -11,10 +9,8 @@ public class MeleePlayer : Player {
     // Use this for initialization
     void Start () {
         base.Start();
-        SetAxis();
-        animator = GetComponent<Animator>();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
-        disableAttackColliders();
+        DisableAttackColliders();
         this._hitpoints = 100;
         this._damage = 20;
 	}
@@ -63,7 +59,7 @@ public class MeleePlayer : Player {
         }
     }
 
-    private void disableAttackColliders()
+    private void DisableAttackColliders()
     {
         for (int i = 1; i < attackColliders.Length; i++)
         {
