@@ -11,6 +11,7 @@ public class MeleePlayer : Player {
     // Use this for initialization
     void Start () {
         base.Start();
+        SetAxis();
         animator = GetComponent<Animator>();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         disableAttackColliders();

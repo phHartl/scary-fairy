@@ -9,8 +9,8 @@ public class Player : MovingObj
     private GameObject[] players = new GameObject[2];
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
-    public string axisVertical;
-    public string axisHorizontal;
+    private string axisVertical;
+    private string axisHorizontal;
     private Vector2 lastMove;
     protected int currentDir;
     // This gameObject has to be set in every classes prefab within the Unity inspector
@@ -26,7 +26,21 @@ public class Player : MovingObj
         base.Start();
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
+        SetAxis();
         animator = GetComponent<Animator>();
+    }
+
+    protected void SetAxis()
+    {
+        if (gameObject.tag == "Player1")
+        {
+            axisVertical = "Vertical";
+            axisHorizontal = "Horizontal";
+        } else if (gameObject.tag == "Player2")
+        {
+            axisVertical = "Verticalp2";
+            axisHorizontal = "Horizontalp2";
+        }
     }
 
     // Update is called once per frame
