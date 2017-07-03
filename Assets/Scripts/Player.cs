@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MovingObj
 {
@@ -10,27 +8,62 @@ public class Player : MovingObj
     private GameObject[] players = new GameObject[2];
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
+<<<<<<< HEAD
     public string axisVertical;
     public string axisHorizontal;
     [HideInInspector]
     public Vector2 lastMove;
     protected int baseDamage;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
+=======
+    private string axisVertical;
+    private string axisHorizontal;
+    private Vector2 lastMove;
+    protected int currentDir;
+    // These GameObjects have to be set in every classes prefab within the Unity inspector
+    public GameObject nextClassPrefab;
+    public Sprite WarriorPortrait;
+    public Sprite RangerPortrait;
+    public GameObject PortraitSpritePlayer1;
+    public GameObject PortraitSpritePlayer2;
+
+>>>>>>> refs/remotes/origin/FormConversion
 
     // Use this for initialization
-    void Start()
+    protected void Start()
     {
         base.Start();
-        players = GameObject.FindGameObjectsWithTag("Player");
+        players[0] = GameObject.FindGameObjectWithTag("Player1");
+        players[1] = GameObject.FindGameObjectWithTag("Player2");
+        SetAxis();
+        animator = GetComponent<Animator>();
+    }
+
+    /*
+     * This method assigns the controll axis for the player according to their 
+     * corresponding tags (Player1/Player2).
+     * The controll-axis are set in the input settings (Edit -> Project Settings -> Input).
+     */
+    protected void SetAxis()
+    {
+        if (gameObject.tag == "Player1")
+        {
+            axisVertical = "Vertical";
+            axisHorizontal = "Horizontal";
+        } else if (gameObject.tag == "Player2")
+        {
+            axisVertical = "Verticalp2";
+            axisHorizontal = "Horizontalp2";
+        }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         base.FixedUpdate();
     }
 
-     protected override void Update ()
+    protected override void Update ()
     {
         animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));
         animator.SetFloat("MoveY", Input.GetAxisRaw(axisVertical));
@@ -40,6 +73,7 @@ public class Player : MovingObj
         animator.SetBool("PlayerAttack", isAttacking);
        //animator.SetBool("IceEnchantment", iceEnchantment);
         //animator.SetBool("FireEnchantment", fireEnchantment);
+        ChangeClassInput();
     }
 
     protected override Vector2 Move()
@@ -115,6 +149,27 @@ public class Player : MovingObj
             if (!iceEnchantment && !fireEnchantment)
             {
                 print("normal Attack");
+}}
+    /**
+     * This method is used to distinguish between the two players and 
+     * to give them seperate inputs ("0"-key for Player1 and "r"-key for Player2)
+     */
+    private void ChangeClassInput()
+    {
+        if (gameObject.tag == "Player1")
+        {
+            if (Input.GetKeyDown("0"))
+            {
+                ChangeClass(0);
+                ChangePortrait();
+            }
+        } else if (gameObject.tag == "Player2")
+        {
+            if (Input.GetKeyDown("r"))
+            {
+                ChangeClass(1);
+                ChangePortrait();
+>>>>>>> refs/remotes/origin/FormConversion
             }
         }
     }
@@ -130,5 +185,30 @@ public class Player : MovingObj
         {
             _damage = baseDamage * 3;
         }
+    /*
+     * This method exchanges the GameObject the script is attached to (Player1 or Player2) with
+     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
+     * It afterwards sets the new player GameObject as the new target of the camera.
+     */
+    private void ChangeClass(int index)
+    {
+        // Setting the correct player tag
+        nextClassPrefab.tag = gameObject.tag;
+
+        // Instanzietes the new GameObject
+        Destroy(this.gameObject);
+        GameObject newPlayer = Instantiate(nextClassPrefab,
+            gameObject.transform.position,
+            gameObject.transform.rotation,
+            gameObject.transform.parent) as GameObject;
+
+        // Setting the new player as the new target of the camera
+        GameObject cameraRig = GameObject.Find("CameraRig");
+        cameraRig.GetComponent<CameraControl>().SetTarget(index, newPlayer);
+    }
+
+    
+    private void ChangePortrait() 
+    {
     }
 }

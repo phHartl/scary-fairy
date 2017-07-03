@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
@@ -6,7 +7,7 @@ public class CameraControl : MonoBehaviour
 	public float m_ScreenEdgeBuffer = 4f;           // Space between the top/bottom most target and the screen edge.
 	public float m_MinSize = 6.5f;                  // The smallest orthographic size the camera can be.
 	public float m_MaxSize = 8f;
-	public Transform[] m_Targets; // All the targets the camera needs to encompass.
+	private Transform[] m_Targets; // All the targets the camera needs to encompass.
 
 
 	private Camera m_Camera;                        // Used for referencing the camera.
@@ -21,14 +22,20 @@ public class CameraControl : MonoBehaviour
 		m_Camera = GetComponentInChildren<Camera> ();
 	}
 
+    public void Start()
+    {
+        InitTargets();
+    }
 
-	private void FixedUpdate ()
+    private void FixedUpdate ()
 	{
-		// Move the camera towards a desired position.
-		Move ();
+        if (m_Targets[0] != null && m_Targets[1] != null) {
+            // Move the camera towards a desired position.
+            Move();
 
-		// Change the size of the camera based.
-		Zoom ();
+            // Change the size of the camera based.
+            Zoom();
+        }
 	}
 
 
@@ -131,4 +138,16 @@ public class CameraControl : MonoBehaviour
 		// Find and set the required size of the camera.
 		m_Camera.orthographicSize = FindRequiredSize ();
 	}
+
+    private void InitTargets()
+    {
+        m_Targets = new Transform[2];
+        m_Targets[0] = GameObject.FindGameObjectWithTag("Player1").transform;
+        m_Targets[1] = GameObject.FindGameObjectWithTag("Player2").transform;
+    }
+
+    public void SetTarget(int index, GameObject player)
+    {
+        m_Targets[index] = player.transform;
+    }
 }
