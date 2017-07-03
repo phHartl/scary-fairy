@@ -20,12 +20,22 @@ public class Player : MovingObj
     public GameObject PortraitSpritePlayer1;
     public GameObject PortraitSpritePlayer2;
 
+
+    private void Awake()
+    {
+        GameObject cameraRig = GameObject.Find("CameraRig");
+        //onClassChanged.AddListener(cameraRig.GetComponent<CameraControl>().RefocusCamera);
+        cameraRig.GetComponent<CameraControl>().RefocusCamera();
+    }
+
+
     // Use this for initialization
     void Start()
     {
         base.Start();
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
+        
         SetAxis();
         animator = GetComponent<Animator>();
     }
@@ -147,12 +157,11 @@ public class Player : MovingObj
         // Setting the correct player tag
         nextClassPrefab.tag = gameObject.tag;
         // Instanzietes the new GameObject
+        Destroy(this.gameObject);
         GameObject newObject = Instantiate(nextClassPrefab,
             gameObject.transform.position,
             gameObject.transform.rotation,
             gameObject.transform.parent) as GameObject;
-
-        Destroy(this.gameObject);
 
         
     }
