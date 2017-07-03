@@ -16,6 +16,7 @@ public class Player : MovingObj
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
     // These GameObjects have to be set in every classes prefab within the Unity inspector
     public GameObject nextClassPrefab;
+    public GameObject alternativePrefab;
     public Sprite WarriorPortrait;
     public Sprite RangerPortrait;
     public GameObject PortraitSpritePlayer1;
@@ -188,6 +189,21 @@ public class Player : MovingObj
      */
     private void ChangeClass(int index)
     {
+        GameObject otherPlayer;
+        if (index == 0)
+        {
+            otherPlayer = GameObject.FindGameObjectWithTag("Player2");
+        } else
+        {        
+            otherPlayer = GameObject.FindGameObjectWithTag("Player1");
+        }
+
+        // This prohibits both players being a fairy
+        if(nextClassPrefab.name == "fairy" && otherPlayer.GetComponent<Fairy>())
+        {
+            nextClassPrefab = alternativePrefab;
+        }
+
         // Setting the correct player tag
         nextClassPrefab.tag = gameObject.tag;
 
@@ -197,7 +213,14 @@ public class Player : MovingObj
             gameObject.transform.position,
             gameObject.transform.rotation,
             gameObject.transform.parent) as GameObject;
-        if(nextClassPrefab.name == "fairy") { //Quick and dirty method - should be down better later
+
+        if (otherPlayer.GetComponent<Fairy>())
+        {
+            // The other player is a fairy and the target needs to be set
+            otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
+        }
+
+        if (nextClassPrefab.name == "fairy") { //Quick and dirty method - should be down better later
             if(index == 0)
             {
                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player2").GetComponent<MovingObj>();

@@ -1,10 +1,17 @@
 fileFormatVersion: 2
 guid: 83d140b01e58d1e4598609004d972827
-timeCreated: 1494967563
+timeCreated: 1499114298
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - nextClassPrefab: {instanceID: 0}
+  - alternativePrefab: {fileID: 1720036468196440, guid: 796b42031be51564ab8ae01ccdc03256,
+      type: 2}
+  - WarriorPortrait: {instanceID: 0}
+  - RangerPortrait: {instanceID: 0}
+  - PortraitSpritePlayer1: {instanceID: 0}
+  - PortraitSpritePlayer2: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
