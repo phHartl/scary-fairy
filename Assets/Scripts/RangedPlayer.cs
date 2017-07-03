@@ -46,14 +46,17 @@ public class RangedPlayer : Player
         }
         if (currentDir == 3)
         {
+            arrowClone.transform.Rotate(0, 0, -90);
             arrowClone.velocity = (-transform.up * 10f);
         }
         if (currentDir == 4)
         {
+            arrowClone.transform.Rotate(180, 0, 180);
             arrowClone.velocity = (-transform.right * 10f);
         }
         if (currentDir == 1)
         {
+            arrowClone.transform.Rotate(0, 0, 90);
             arrowClone.velocity = (transform.up * 10f);
         }
         isOnCoolDown = true;

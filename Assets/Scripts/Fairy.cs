@@ -45,6 +45,7 @@ public class Fairy : Player {
     //copy pasta MeleePlayer
     IEnumerator Attack()
     {
+        _damage = baseDamage;
         isAttacking = true;
         circleCollider.enabled = true;
         isOnCoolDown = true;
