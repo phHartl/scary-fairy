@@ -35,6 +35,7 @@ public class Fairy : Player {
         {
             StartCoroutine(Attack());
         }
+        ChangeClassInput();
     }
 
 
@@ -90,6 +91,8 @@ public class Fairy : Player {
             target.resetEnchantments();
         }
     }
+
+    private void FixedUpdate() { }
 
 
     //Checks if enchantment spell is ready again, 10 second Cooldown (default value)
