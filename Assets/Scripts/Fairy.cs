@@ -56,17 +56,6 @@ public class Fairy : Player {
         isOnCoolDown = false;
      }
 
-    //Damages enemies if they enter the fairy AOE and the fairy attacks
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (isAttacking == true && other.CompareTag("CasualEnemy"))
-        {
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(baseDamage);
-            print("Enemy attacked");
-        }
-    }
-
     /*
      * Press Button "1" to enchant the other player with ice
      * Press Button "2" to enchant the other player with fire
