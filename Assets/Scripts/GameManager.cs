@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     //levelNum: in welchem Level befinden wir uns gerade - wird inkrementiert wenn das Levelende erreicht wird
     //und ein neues Level geladen werden soll
-    private int levelNum = 1;
+    public int levelNum = 1;
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
         initGame();
     }
 
-    void initGame()
+    public void initGame()
     {
         //SceneManager.LoadScene lädt Level anhand deren Index in den Build Settings (strg + shift + B in Unity)
         //auch anhand des Namens möglich

@@ -36,9 +36,11 @@ public abstract class MovingObj : MonoBehaviour
 
     protected virtual void Update ()
     {
-        if (this._hitpoints <= 0)
+        if (this._hitpoints <= 0 && gameObject.tag == "CasualEnemy")
         {
             OnDie(this.gameObject);
+            GameObject.FindObjectOfType<GameManager>().levelNum = 2;
+            GameObject.FindObjectOfType<GameManager>().initGame();
         }
     }
 
@@ -46,19 +48,6 @@ public abstract class MovingObj : MonoBehaviour
 	{
 		return newPos;
 	}
-
-    private bool applyDamage(int damage)
-    {
-        _hitpoints -= damage;
-        if(_hitpoints > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     public int getDamage()
     {
