@@ -39,8 +39,6 @@ public abstract class MovingObj : MonoBehaviour
         if (this._hitpoints <= 0 && gameObject.tag == "CasualEnemy")
         {
             OnDie(this.gameObject);
-            GameObject.FindObjectOfType<GameManager>().levelNum = 2;
-            GameObject.FindObjectOfType<GameManager>().initGame();
         }
     }
 
