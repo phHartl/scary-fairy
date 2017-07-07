@@ -39,7 +39,11 @@ public class TrapTrigger : MonoBehaviour {
     }
 
 
-    //Checks if enemies spawned by trap are still alive. If there is at least 1 enemy alive returns true. If all enemies are dead returns false
+    /*
+     * Checks if enemies spawned by trap are still alive.
+     * If there is at least 1 enemy alive returns true.
+     * If all enemies are dead returns false.
+    */
     private bool checkIfEnemiesAlive()
     {
         for (int i = 0; i < trapEnemies.transform.childCount; i++)
