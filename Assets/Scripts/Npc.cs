@@ -36,6 +36,11 @@ public abstract class Npc : MovingObj
         }
     }
 
+    protected void OnCollisionEnter2D(Collision2D other)
+    {
+        other.gameObject.GetComponent<MovingObj>().applyDamage(_damage);
+    }
+
 
     public void knockBack(Vector2 force)
     {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Player : MovingObj
 {
@@ -26,6 +27,7 @@ public class Player : MovingObj
     protected void Start()
     {
         base.Start();
+        _hitpoints = 100;
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
         SetAxis();
@@ -144,6 +146,31 @@ public class Player : MovingObj
                 print("normal Attack");
             }
         }
+    }
+    //Overrides applyDamage in MovingObj, player gets invincible for 0.5 seconds if hit by an enemy
+    public override void applyDamage(int damage)
+    {
+        if (!isInvincible)
+        {
+            base.applyDamage(damage);
+            StartCoroutine(playerInvincible());
+        }
+    }
+
+       IEnumerator playerInvincible()
+    {
+        isInvincible = true;
+        setPlayerTransparency(0.5f); // 50% transparent
+        yield return new WaitForSeconds(0.5f);
+        setPlayerTransparency(1.0f);
+        isInvincible = false;
+    }
+
+
+    //This methodes makes the player transparent, input variable is transparency in percent
+    private void setPlayerTransparency(float alpha)
+    {
+        gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha);
     }
     /**
      * This method is used to distinguish between the two players and 

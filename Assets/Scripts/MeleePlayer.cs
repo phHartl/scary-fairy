@@ -13,7 +13,6 @@ public class MeleePlayer : Player {
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         DisableAttackColliders();
-        this._hitpoints = 100;
         this.attackCD = 1f;
         this.baseDamage = 20;
     }

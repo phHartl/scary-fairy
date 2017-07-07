@@ -10,6 +10,7 @@ public abstract class MovingObj : MonoBehaviour
 	protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
+    protected bool isInvincible;
     protected bool isOnCoolDown;
     protected float attackCD;
     protected bool iceEnchantment;
@@ -36,10 +37,7 @@ public abstract class MovingObj : MonoBehaviour
 
     protected virtual void Update ()
     {
-        if (this._hitpoints <= 0 && gameObject.tag == "CasualEnemy")
-        {
-            OnDie(this.gameObject);
-        }
+
     }
 
     protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
@@ -52,13 +50,17 @@ public abstract class MovingObj : MonoBehaviour
         return _damage;
     }
 
-    protected void OnDie(GameObject hit) //Report back to Gamemanager
-	{
-        //Destroy(hit);
-        gameObject.SetActive(false);
+    public virtual void applyDamage(int damage)
+    {
+        _hitpoints -= damage;
+        if(_hitpoints <= 0)
+        {
+            gameObject.SetActive(false);
+        }
+        print(this.name + " took damage. HP: " + _hitpoints);
     }
 
-    public void activateFireEnchantment()
+    public virtual void activateFireEnchantment()
     {
         iceEnchantment = false;
         fireEnchantment = true;

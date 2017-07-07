@@ -39,7 +39,6 @@ public class RangedPlayer : Player
         checkForEnchantment();
         isAttacking = true;
         Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
-        arrowClone.transform.SetParent(this.transform);
         if (currentDir == 2)
         {
             arrowClone.velocity = (transform.right * 10f);

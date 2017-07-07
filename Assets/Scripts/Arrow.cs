@@ -19,7 +19,7 @@ public class Arrow : MonoBehaviour {
         if (other.CompareTag("CasualEnemy"))
         {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(this.GetComponentInParent<Player>().getDamage());
+            ce.applyDamage(GameObject.FindObjectOfType<RangedPlayer>().getDamage()); //If we want enemies to be able to shoot arrows we need some changes here
             print("Arrow hit enemy");
         }
     }
