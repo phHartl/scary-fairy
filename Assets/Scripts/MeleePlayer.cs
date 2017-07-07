@@ -8,7 +8,7 @@ public class MeleePlayer : Player {
     public float knockBackStrength = 2;
 
     // Use this for initialization
-    void Start()
+    protected void Start()
     {
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
