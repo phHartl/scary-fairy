@@ -23,16 +23,10 @@ public abstract class MovingObj : MonoBehaviour
 
 
 	// Use this for initialization
-	protected void Start ()
+	protected virtual void Start ()
 	{
 		boxCollider = GetComponent<BoxCollider2D>();
 		rb2D = GetComponent<Rigidbody2D>();
-	}
-	
-	// Update is called once per frame
-	protected void FixedUpdate ()
-	{
-		rb2D.MovePosition(Move());
 	}
 
     protected virtual void Update ()

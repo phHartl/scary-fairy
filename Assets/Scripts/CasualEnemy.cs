@@ -23,7 +23,7 @@ public class CasualEnemy : Npc
     // Update is called once per frame
     void FixedUpdate()
     {
-       //    base.FixedUpdate();
+       base.FixedUpdate();
     }
 
     protected override void Update()

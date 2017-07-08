@@ -5,7 +5,7 @@ public class MeleePlayer : Player {
 
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
 
-    public float knockBackStrength = 2;
+    public int knockBackLength = 2;
 
     // Use this for initialization
     void Start()
@@ -46,8 +46,8 @@ public class MeleePlayer : Player {
                 print("normal Attack");
             }
             // knockVector = direction of knockBack times strength of knockback
-            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackStrength;
-            ce.knockBack(knockVector);
+            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackLength;
+            ce.knockBack(knockVector,rb2D.mass);
         }
 }
 

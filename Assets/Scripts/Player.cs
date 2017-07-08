@@ -53,12 +53,12 @@ public class Player : MovingObj
         }
     }
 
-    // Update is called once per frame
     protected void FixedUpdate()
     {
-        base.FixedUpdate();
+        rb2D.MovePosition(Move());
     }
 
+    // Update is called once per frame
     protected override void Update()
     {
         animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));

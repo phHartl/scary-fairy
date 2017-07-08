@@ -1,39 +1,36 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Npc : MovingObj
 {
-
-    // #justKnockBackThings
-    public int speed = 50;
-
     private Vector2 startMarker;
     private Vector2 endMarker;
-    private float startTime;
     private float journeyLength;
     private bool isKnockedBack = false;
+    private AIPath AI;
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
         base.Start();
-        startTime = Time.time;
+        AI = GetComponent<AIPath>(); //Simple caching of component -> better performance
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
-        base.FixedUpdate();
+        if (isKnockedBack && Math.Abs(Vector2.Distance(startMarker, rb2D.position)) > journeyLength) //IsKnockedBack used for performance improvement, if first argument is false, no more calc is need (distance needs cpu power)
+        {
+            rb2D.velocity = Vector2.zero; //Stop rigidbody from moving
+            isKnockedBack = false;
+            AI.canMove = true; //AI can now move again
+        }
     }
 
     protected override void Update()
     {
         base.Update();
-        if (isKnockedBack)
-        {
-            travelKnockBackPath();
-        }
     }
 
     protected void OnCollisionEnter2D(Collision2D other)
@@ -42,25 +39,15 @@ public abstract class Npc : MovingObj
     }
 
 
-    public void knockBack(Vector2 force)
-    {
-        // npc needs to travel from start to endmarker
-        startTime = Time.time;
-        startMarker = transform.position;
-        endMarker = startMarker + force;
-        journeyLength = Vector2.Distance(startMarker, endMarker);
-        isKnockedBack = true;
-    }
 
-    private void travelKnockBackPath()
+    public void knockBack(Vector2 force, float playerMass)
     {
-        // calculate a fraction of the path to travel in this frame, based on passed time and speed
-        float distCovered = (Time.time - startTime) * speed;
-        float fracJourney = distCovered / journeyLength;
-        if ((Vector2)transform.position == endMarker)
-        {
-            isKnockedBack = false;
-        }
-        transform.position = Vector2.Lerp(startMarker, endMarker, fracJourney);
+        startMarker = rb2D.position;
+        endMarker = startMarker + force;
+        journeyLength = Math.Abs(Vector2.Distance(startMarker, endMarker));
+        rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
+        rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
+        AI.canMove = false; //Prevent AI from moving instead
+        isKnockedBack = true;
     }
 }
