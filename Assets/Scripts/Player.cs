@@ -217,16 +217,20 @@ public class Player : MovingObj
         {
             // The other player is a fairy and the target needs to be set
             otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
+            otherPlayer.GetComponent<Fairy>().buff = newPlayer.GetComponentInChildren<ParticleSystem>();
         }
 
         if (nextClassPrefab.name == "fairy") { //Quick and dirty method - should be down better later
             if(index == 0)
             {
                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player2").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().buff = GameObject.FindGameObjectWithTag("Player2").GetComponentInChildren<ParticleSystem>();
+
             }
             if(index == 1)
             {
                 newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player1").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().buff = GameObject.FindGameObjectWithTag("Player1").GetComponentInChildren<ParticleSystem>();
             }
         }
 

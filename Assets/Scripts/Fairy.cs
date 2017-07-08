@@ -13,6 +13,8 @@ public class Fairy : Player {
     private float enchantmentTimer = 0;
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
+    public ParticleSystem buff;
+ 
 
  
     void Start () {
@@ -66,6 +68,7 @@ public class Fairy : Player {
     {
         if (Input.GetKeyDown("1") && !target.getOnEnchantmentCD())
         {
+            buff.Play();
             enchantmentEffectTimer = enchantmentEffectDuration;
             enchantmentTimer = enchantmentCD;
             target.activateIceEnchantment();
@@ -89,6 +92,8 @@ public class Fairy : Player {
         else
         {
             target.resetEnchantments();
+            buff.Stop();
+
         }
     }
 
