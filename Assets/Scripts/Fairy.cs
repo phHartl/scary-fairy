@@ -66,14 +66,18 @@ public class Fairy : Player {
     */
     private void enchantAttacks()
     {
+        var main = buff.main;
         if (Input.GetKeyDown("1") && !target.getOnEnchantmentCD())
         {
+            main.startColor = new Color(1f, 0.36f, 0.13f, 1f);
             buff.Play();
             enchantmentEffectTimer = enchantmentEffectDuration;
             enchantmentTimer = enchantmentCD;
             target.activateIceEnchantment();
-        }
+        }                   
         if (Input.GetKeyDown("2") && !target.getOnEnchantmentCD()){
+            main.startColor= new Color(0.13f,0.85f,1f,1f);
+            buff.Play();
             enchantmentEffectTimer = enchantmentEffectDuration;
             enchantmentTimer = enchantmentCD;
             target.activateFireEnchantment();
