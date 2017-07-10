@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Player : MovingObj
 {
     public float maxVerticalDistance = 8.0f;
     public float maxHorizontalDistance = 12.0f;
     public float currentDistance;
-    private GameObject[] players = new GameObject[2];
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
     public string axisVertical;
@@ -26,35 +26,7 @@ public class Player : MovingObj
     protected void Start()
     {
         base.Start();
-        players[0] = GameObject.FindGameObjectWithTag("Player1");
-        players[1] = GameObject.FindGameObjectWithTag("Player2");
-        SetAxis();
         animator = GetComponent<Animator>();
-    }
-
-    /*
-     * This method assigns the controll axis for the player according to their 
-     * corresponding tags (Player1/Player2).
-     * The controll-axis are set in the input settings (Edit -> Project Settings -> Input).
-     */
-    protected void SetAxis()
-    {
-        if (gameObject.tag == "Player1")
-        {
-            axisVertical = "Vertical";
-            axisHorizontal = "Horizontal";
-        }
-        else if (gameObject.tag == "Player2")
-        {
-            axisVertical = "Verticalp2";
-            axisHorizontal = "Horizontalp2";
-        }
-    }
-
-    // Update is called once per frame
-    protected void FixedUpdate()
-    {
-        base.FixedUpdate();
     }
 
     protected override void Update()
@@ -67,7 +39,6 @@ public class Player : MovingObj
         animator.SetBool("PlayerAttack", isAttacking);
         //animator.SetBool("IceEnchantment", iceEnchantment);
         //animator.SetBool("FireEnchantment", fireEnchantment);
-        ChangeClassInput();
     }
 
     protected override Vector2 Move()
@@ -145,31 +116,21 @@ public class Player : MovingObj
             }
         }
     }
-    /**
-     * This method is used to distinguish between the two players and 
-     * to give them seperate inputs ("0"-key for Player1 and "r"-key for Player2)
-     */
-    protected void ChangeClassInput()
+
+    public void AttemptAttack()
     {
-        if (gameObject.tag == "Player1")
+        if (!isOnCoolDown)
         {
-            if (Input.GetKeyDown("0"))
-            {
-                ChangeClass(0);
-                ChangePortrait();
-            }
-        }
-        else if (gameObject.tag == "Player2")
-        {
-            if (Input.GetKeyDown("r"))
-            {
-                ChangeClass(1);
-                ChangePortrait();
-            }
+            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
         }
     }
 
-    protected void checkForEnchantment()
+    protected virtual IEnumerator Attack()
+    {
+        return null;
+    }
+
+    protected void CheckForEnchantment()
     {
         _damage = baseDamage;
         if (iceEnchantment)
@@ -181,12 +142,13 @@ public class Player : MovingObj
             _damage = baseDamage * 3;
         }
     }
+
     /*
      * This method exchanges the GameObject the script is attached to (Player1 or Player2) with
      * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
      * It afterwards sets the new player GameObject as the new target of the camera.
      */
-    private void ChangeClass(int index)
+    public void ChangeClass(int index)
     {
         GameObject otherPlayer;
         if (index == 0)
@@ -233,6 +195,7 @@ public class Player : MovingObj
         // Setting the new player as the new target of the camera
         GameObject cameraRig = GameObject.Find("CameraRig");
         cameraRig.GetComponent<CameraControl>().SetTarget(index, newPlayer);
+        ChangePortrait();
     }
 
 

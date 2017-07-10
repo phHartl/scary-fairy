@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Fairy : Player {
@@ -14,8 +12,7 @@ public class Fairy : Player {
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
 
- 
-    void Start () {
+    private void Start () {
         circleCollider = GetComponent<CircleCollider2D>();
         animator = GetComponent<Animator>();
         novaAnimator = GetComponentsInChildren<Animator>()[1];
@@ -26,25 +23,20 @@ public class Fairy : Player {
 
     protected override void Update()
     {
-        animator.SetFloat("MoveX", Input.GetAxisRaw(target.GetComponent<Player>().axisHorizontal));
-        animator.SetFloat("MoveY", Input.GetAxisRaw(target.GetComponent<Player>().axisVertical));
+        //animator.SetFloat("MoveX", Input.GetAxisRaw(target.GetComponent<Player>().axisHorizontal));
+        //animator.SetFloat("MoveY", Input.GetAxisRaw(target.GetComponent<Player>().axisVertical));
         animator.SetFloat("LastMoveX", target.GetComponent<Player>().lastMove.x);
         animator.SetFloat("LastMoveY", target.GetComponent<Player>().lastMove.y);
         novaAnimator.SetBool("NovaAttack", isAttacking);
-        if (Input.GetKeyDown("q") && !isOnCoolDown)
-        {
-            StartCoroutine(Attack());
-        }
-        ChangeClassInput();
     }
 
-
-    void LateUpdate () {
+    private void LateUpdate () {
         transform.position = target.transform.position + FAIRY_DISTANCE;
-        enchantAttacks();
+        EnchantAttacks();
     }
+
     //copy pasta MeleePlayer
-    IEnumerator Attack()
+    protected override IEnumerator Attack()
     {
         _damage = baseDamage;
         isAttacking = true;
@@ -62,7 +54,7 @@ public class Fairy : Player {
      * Press Button "2" to enchant the other player with fire
      * Fire deals more damage than ice, ice does currently not have any extra effects. Maybe add slow.
     */
-    private void enchantAttacks()
+    private void EnchantAttacks()
     {
         if (Input.GetKeyDown("1") && !target.getOnEnchantmentCD())
         {
@@ -75,12 +67,12 @@ public class Fairy : Player {
             enchantmentTimer = enchantmentCD;
             target.activateFireEnchantment();
         }
-        checkEnchantmentCD();
-        checkEnchantmentDuration();
+        CheckEnchantmentCD();
+        CheckEnchantmentDuration();
     }
 
     //Checks remaining enchantment duration, disables enchantment after 5 seconds (default value)
-    private void checkEnchantmentDuration()
+    private void CheckEnchantmentDuration()
     {
         if(enchantmentEffectTimer > 0)
         {
@@ -92,11 +84,8 @@ public class Fairy : Player {
         }
     }
 
-    private void FixedUpdate() { }
-
-
     //Checks if enchantment spell is ready again, 10 second Cooldown (default value)
-    private void checkEnchantmentCD()
+    private void CheckEnchantmentCD()
     {
         if (target.getOnEnchantmentCD())
         {

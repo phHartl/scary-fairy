@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RangedPlayer : Player
@@ -9,7 +8,7 @@ public class RangedPlayer : Player
     private float timeToTravel = 1f;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         base.Start();
         this.baseDamage = 10;
@@ -17,26 +16,11 @@ public class RangedPlayer : Player
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-        if (Input.GetKeyDown("m") && !isOnCoolDown)
-        {
-            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
-        }
-    }
-
-    void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
-    IEnumerator Attack()
+    protected override IEnumerator Attack()
     {
-        checkForEnchantment();
+        CheckForEnchantment();
         isAttacking = true;
         Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
         arrowClone.transform.SetParent(this.transform);
