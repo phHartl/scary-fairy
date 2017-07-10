@@ -13,6 +13,7 @@ public class RangedPlayer : Player
     {
         base.Start();
         this.baseDamage = 10;
+        this._hitpoints = 100;
         this.attackCD = 0.5f;
         animator = GetComponent<Animator>();
     }
@@ -38,6 +39,17 @@ public class RangedPlayer : Player
     {
         checkForEnchantment();
         isAttacking = true;
+        isOnCoolDown = true;
+        yield return new WaitForSeconds(attackCD); //Waiting for the cooldown
+        isOnCoolDown = false;
+    }
+
+    /*This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
+     * This function gets called from the animator (see animations events)
+     */
+    private void createArrow(int currentDir)
+    {
+        isAttacking = false;
         Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
         if (currentDir == 2)
         {
@@ -58,10 +70,5 @@ public class RangedPlayer : Player
             arrowClone.transform.Rotate(0, 0, 90);
             arrowClone.velocity = (transform.up * 10f);
         }
-        isOnCoolDown = true;
-        yield return new WaitForSeconds(0.25f); //Waiting for animation
-        isAttacking = false; //After animation has finished, player isn't attacking anymore
-        yield return new WaitForSeconds(attackCD); //Waiting for the cooldown
-        isOnCoolDown = false;
     }
 }

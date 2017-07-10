@@ -59,13 +59,15 @@ public class MeleePlayer : Player {
 {
         checkForEnchantment();
         isAttacking = true;
-        attackColliders[currentDir].enabled = true;
         isOnCoolDown = true;
-        yield return new WaitForSeconds(0.25f); //Wait for animation
-        isAttacking = false; //After animation has finished, player isn't attacking anymore
-        attackColliders[currentDir].enabled = false;
         yield return new WaitForSeconds(attackCD); //Waiting for cooldown
         isOnCoolDown = false;
+    }
+
+    //This function gets called when the attack animation starts (see animations events)
+    private void EnableAttackCollider(int currentDir)
+    {
+        attackColliders[currentDir].enabled = true;
     }
 
     private void DisableAttackColliders()
@@ -74,6 +76,12 @@ public class MeleePlayer : Player {
         {
             attackColliders[i].enabled = false;
         }
+    }
+    //This function gets called when the attack animations ends
+    private void DisableAttackCollider(int currentDir)
+    {
+        attackColliders[currentDir].enabled = false;
+        isAttacking = false;
     }
 
 }

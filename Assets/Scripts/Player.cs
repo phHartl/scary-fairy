@@ -67,8 +67,13 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
+        animator.SetInteger("Hitpoints", _hitpoints);
         //animator.SetBool("IceEnchantment", iceEnchantment);
         //animator.SetBool("FireEnchantment", fireEnchantment);
+        if(_hitpoints <= 0)
+        {
+            Subject.Notify("Player died");
+        }
         ChangeClassInput();
     }
 
@@ -244,16 +249,20 @@ public class Player : MovingObj
         {
             // The other player is a fairy and the target needs to be set
             otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
+            otherPlayer.GetComponent<Fairy>().buff = newPlayer.GetComponentInChildren<ParticleSystem>();
         }
 
         if (nextClassPrefab.name == "fairy") { //Quick and dirty method - should be down better later
             if(index == 0)
             {
                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player2").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().buff = GameObject.FindGameObjectWithTag("Player2").GetComponentInChildren<ParticleSystem>();
+
             }
             if(index == 1)
             {
                 newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player1").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().buff = GameObject.FindGameObjectWithTag("Player1").GetComponentInChildren<ParticleSystem>();
             }
         }
 

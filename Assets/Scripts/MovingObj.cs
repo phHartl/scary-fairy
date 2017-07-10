@@ -49,7 +49,7 @@ public abstract class MovingObj : MonoBehaviour
         _hitpoints -= damage;
         if(_hitpoints <= 0)
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }
         print(this.name + " took damage. HP: " + _hitpoints);
     }
