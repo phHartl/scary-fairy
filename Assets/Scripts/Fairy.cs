@@ -13,8 +13,8 @@ public class Fairy : Player {
     private Animator novaAnimator;
 
     private void Start () {
+        base.Start();
         circleCollider = GetComponent<CircleCollider2D>();
-        animator = GetComponent<Animator>();
         novaAnimator = GetComponentsInChildren<Animator>()[1];
         circleCollider.enabled = false;
         this.attackCD = 2f;
@@ -32,10 +32,8 @@ public class Fairy : Player {
 
     private void LateUpdate () {
         transform.position = target.transform.position + FAIRY_DISTANCE;
-        EnchantAttacks();
     }
 
-    //copy pasta MeleePlayer
     protected override IEnumerator Attack()
     {
         _damage = baseDamage;
@@ -54,34 +52,22 @@ public class Fairy : Player {
      * Press Button "2" to enchant the other player with fire
      * Fire deals more damage than ice, ice does currently not have any extra effects. Maybe add slow.
     */
-    private void EnchantAttacks()
+    public void EnchantAttacks(bool isIceEnchant)
     {
-        if (Input.GetKeyDown("1") && !target.getOnEnchantmentCD())
-        {
-            enchantmentEffectTimer = enchantmentEffectDuration;
-            enchantmentTimer = enchantmentCD;
-            target.activateIceEnchantment();
-        }
-        if (Input.GetKeyDown("2") && !target.getOnEnchantmentCD()){
-            enchantmentEffectTimer = enchantmentEffectDuration;
-            enchantmentTimer = enchantmentCD;
-            target.activateFireEnchantment();
+        if (!target.getOnEnchantmentCD()) {
+            if (isIceEnchant)
+            {
+                enchantmentEffectTimer = enchantmentEffectDuration;
+                enchantmentTimer = enchantmentCD;
+                target.activateIceEnchantment();
+            } else {
+                enchantmentEffectTimer = enchantmentEffectDuration;
+                enchantmentTimer = enchantmentCD;
+                target.activateFireEnchantment();
+            }
         }
         CheckEnchantmentCD();
         CheckEnchantmentDuration();
-    }
-
-    //Checks remaining enchantment duration, disables enchantment after 5 seconds (default value)
-    private void CheckEnchantmentDuration()
-    {
-        if(enchantmentEffectTimer > 0)
-        {
-            enchantmentEffectTimer -= Time.deltaTime;
-        }
-        else
-        {
-            target.resetEnchantments();
-        }
     }
 
     //Checks if enchantment spell is ready again, 10 second Cooldown (default value)
@@ -97,6 +83,19 @@ public class Fairy : Player {
             {
                 target.resetEnchantmentCooldown();
             }
+        }
+    }
+
+    //Checks remaining enchantment duration, disables enchantment after 5 seconds (default value)
+    private void CheckEnchantmentDuration()
+    {
+        if(enchantmentEffectTimer > 0)
+        {
+            enchantmentEffectTimer -= Time.deltaTime;
+        }
+        else
+        {
+            target.resetEnchantments();
         }
     }
 }

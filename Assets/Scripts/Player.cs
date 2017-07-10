@@ -14,13 +14,7 @@ public class Player : MovingObj
     public Vector2 lastMove;
     protected int baseDamage;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
-    // These GameObjects have to be set in every classes prefab within the Unity inspector
-    public GameObject nextClassPrefab;
-    public GameObject alternativePrefab;
-    public Sprite WarriorPortrait;
-    public Sprite RangerPortrait;
-    public GameObject PortraitSpritePlayer1;
-    public GameObject PortraitSpritePlayer2;
+    
 
     // Use this for initialization
     protected void Start()
@@ -96,6 +90,20 @@ public class Player : MovingObj
         return newPos;
     }
 
+    public void AttemptAttack()
+    {
+        if (!isOnCoolDown)
+        {
+            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
+        }
+    }
+
+    // This method is needed in order to call Attack from the PlayerManager in a secure way
+    protected virtual IEnumerator Attack()
+    {
+        return null;
+    }
+
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (isAttacking == true && other.CompareTag("CasualEnemy"))
@@ -117,19 +125,6 @@ public class Player : MovingObj
         }
     }
 
-    public void AttemptAttack()
-    {
-        if (!isOnCoolDown)
-        {
-            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
-        }
-    }
-
-    protected virtual IEnumerator Attack()
-    {
-        return null;
-    }
-
     protected void CheckForEnchantment()
     {
         _damage = baseDamage;
@@ -141,65 +136,5 @@ public class Player : MovingObj
         {
             _damage = baseDamage * 3;
         }
-    }
-
-    /*
-     * This method exchanges the GameObject the script is attached to (Player1 or Player2) with
-     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
-     * It afterwards sets the new player GameObject as the new target of the camera.
-     */
-    public void ChangeClass(int index)
-    {
-        GameObject otherPlayer;
-        if (index == 0)
-        {
-            otherPlayer = GameObject.FindGameObjectWithTag("Player2");
-        } else
-        {        
-            otherPlayer = GameObject.FindGameObjectWithTag("Player1");
-        }
-
-        // This prohibits both players being a fairy
-        if(nextClassPrefab.name == "fairy" && otherPlayer.GetComponent<Fairy>())
-        {
-            nextClassPrefab = alternativePrefab;
-        }
-
-        // Setting the correct player tag
-        nextClassPrefab.tag = gameObject.tag;
-
-        // Instanzietes the new GameObject
-        Destroy(this.gameObject);
-        GameObject newPlayer = Instantiate(nextClassPrefab,
-            gameObject.transform.position,
-            gameObject.transform.rotation,
-            gameObject.transform.parent) as GameObject;
-
-        if (otherPlayer.GetComponent<Fairy>())
-        {
-            // The other player is a fairy and the target needs to be set
-            otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
-        }
-
-        if (nextClassPrefab.name == "fairy") { //Quick and dirty method - should be down better later
-            if(index == 0)
-            {
-               newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player2").GetComponent<MovingObj>();
-            }
-            if(index == 1)
-            {
-                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player1").GetComponent<MovingObj>();
-            }
-        }
-
-        // Setting the new player as the new target of the camera
-        GameObject cameraRig = GameObject.Find("CameraRig");
-        cameraRig.GetComponent<CameraControl>().SetTarget(index, newPlayer);
-        ChangePortrait();
-    }
-
-
-    protected void ChangePortrait()
-    {
     }
 }

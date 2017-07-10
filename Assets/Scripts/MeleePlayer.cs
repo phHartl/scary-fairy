@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class MeleePlayer : Player {
-
+public class MeleePlayer : Player
+{
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
-
     public float knockBackStrength = 2;
 
     // Use this for initialization
@@ -13,14 +12,8 @@ public class MeleePlayer : Player {
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         DisableAttackColliders();
-        this._hitpoints = 100;
         this.attackCD = 1f;
         this.baseDamage = 20;
-    }
-
-    protected override void Update()
-    {
-        base.Update();
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)
@@ -46,14 +39,12 @@ public class MeleePlayer : Player {
             Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackStrength;
             ce.knockBack(knockVector);
         }
-}
-
-
+    }
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function enables the triggers attached to the player in dependence of which direction the player is facing
     protected override IEnumerator Attack()
-{
+    {
         CheckForEnchantment();
         isAttacking = true;
         attackColliders[currentDir].enabled = true;

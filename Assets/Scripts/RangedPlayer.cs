@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class RangedPlayer : Player
 {
-
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
 
@@ -13,7 +12,6 @@ public class RangedPlayer : Player
         base.Start();
         this.baseDamage = 10;
         this.attackCD = 0.5f;
-        animator = GetComponent<Animator>();
     }
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
