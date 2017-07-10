@@ -72,7 +72,7 @@ public class Player : MovingObj
         //animator.SetBool("FireEnchantment", fireEnchantment);
         if(_hitpoints <= 0)
         {
-            Subject.Notify("Player died");
+            Subject.Notify("Player died"); //Notify gamemanager and reload level see gamemanger
         }
         ChangeClassInput();
     }
