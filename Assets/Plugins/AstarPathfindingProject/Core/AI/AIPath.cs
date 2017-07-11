@@ -116,10 +116,13 @@ public class AIPath : AIBase {
 
 	protected Vector3 velocity;
 
-	/** Rotation speed.
+    public float iceSlowPower = 0.5f;
+    public float iceSlowDuration = 1f;
+
+    /** Rotation speed.
 	 * \deprecated This field has been renamed to #rotationSpeed and is now in degrees per second instead of a damping factor.
 	 */
-	[System.Obsolete("This field has been renamed to #rotationSpeed and is now in degrees per second instead of a damping factor")]
+    [System.Obsolete("This field has been renamed to #rotationSpeed and is now in degrees per second instead of a damping factor")]
 	public float turningSpeed { get { return rotationSpeed/90; } set { rotationSpeed = value*90; } }
 
 	/** Starts searching for paths.
@@ -361,4 +364,18 @@ public class AIPath : AIBase {
 		if (version < 1) rotationSpeed *= 90;
 		return 1;
 	}
+
+    public void hitByIceEnchantment()
+    {
+            StartCoroutine(applyIceSlow());
+    }
+
+    protected IEnumerator applyIceSlow()
+    {
+        speed = speed * iceSlowPower;
+        yield return new WaitForSeconds(iceSlowDuration);
+        speed = speed / iceSlowPower;
+    }
+
+
 }

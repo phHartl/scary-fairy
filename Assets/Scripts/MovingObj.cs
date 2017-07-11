@@ -12,11 +12,15 @@ public abstract class MovingObj : MonoBehaviour
     protected bool isAttacking;
     protected bool isOnCoolDown;
     protected float attackCD;
-    protected bool iceEnchantment;
-    protected bool fireEnchantment;
     protected bool onEnchantmentCD;
 	protected Vector2 newPos;
     protected Animator animator;
+
+    public bool iceEnchantment;
+    public bool fireEnchantment;
+
+    public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
+    public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
     
 
 

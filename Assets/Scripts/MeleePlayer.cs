@@ -22,17 +22,21 @@ public class MeleePlayer : Player
         {
 
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            ce.applyDamage(_damage);
+            AIPath ai = other.GetComponent<AIPath>();
             if (iceEnchantment)
             {
+                ce.applyDamage(_damage);
+                ai.hitByIceEnchantment();
                 print("IceEnchanted Attack");
             }
             if (fireEnchantment)
             {
+                ce.applyDamage(_damage, FIRE_ENCHANTMENT);
                 print("FireEnchanted Attack");
             }
             if (!iceEnchantment && !fireEnchantment)
             {
+                ce.applyDamage(_damage);
                 print("normal Attack");
             }
             // knockVector = direction of knockBack times strength of knockback

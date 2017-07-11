@@ -9,7 +9,7 @@ public class CasualEnemy : Npc
 
     UnityEngine.UI.Slider slider;
 
-    
+    public float iceEnchantSlowModifier = 0.5f;
 
     // Use this for initialization
     void Start()
@@ -45,10 +45,25 @@ public class CasualEnemy : Npc
     }
 
     
+    /* 
+     * applyDamage (int damage) takes only an integer as an argument and should be used for
+     * standard damage.
+     * apply damage (int damage, string enchantment) needs both an integer and a string as arguments
+     * and is used to apply special effects from enchantments (eg. slow from ice attacks)
+     */
 
     public void applyDamage(int damage)
     {
         _hitpoints -= damage;
         print("Enemy took damage, health: " + _hitpoints);
     }
+
+    public void applyDamage(int damage, string enchantment)
+    {
+        _hitpoints -= damage;
+        print("Enemy took damage, health: " + _hitpoints);
+
+    }
+
+
 }
