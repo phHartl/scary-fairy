@@ -38,7 +38,6 @@ public class PlayerManager : MonoBehaviour
     {
         GameObject newPlayer = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
         playerTransform = newPlayer.transform;
-        newPlayer.tag = "Player" + playerNumber;
     }
 
     // Gets called before changing class
@@ -146,7 +145,6 @@ public class PlayerManager : MonoBehaviour
             gameObject.transform) as GameObject;
         playerTransform = newPlayer.transform;
         SetAxis();
-        newPlayer.tag = "Player" + playerNumber;
 
         if (otherPlayer.GetComponent<Fairy>())
         {
