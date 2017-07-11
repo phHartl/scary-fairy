@@ -24,7 +24,7 @@ public abstract class MovingObj : MonoBehaviour
     public bool iceEnchantment;
     public bool fireEnchantment;
 
-    public float BURN_DAMAGE_DURATION = 3f;
+    public float BURN_DAMAGE_DURATION = 4f;
     public float BURN_TICKRATE = 0.5f;
 
     [HideInInspector]public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
