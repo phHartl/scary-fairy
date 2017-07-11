@@ -9,6 +9,12 @@ public class Fairy : Player {
     private float enchantmentEffectTimer = 0;
     private float enchantmentEffectDuration = 5f;   //Duration of a single enchantment spell
     private float enchantmentTimer = 0;
+
+    private float speedBoostPower = 1.8f;
+    private float speedBoostDuration = 5f;
+    private float speedBoostCD = 8f;
+    private bool speedBoostOnCd = false;
+
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
 
@@ -73,6 +79,25 @@ public class Fairy : Player {
         }
         CheckEnchantmentCD();
         CheckEnchantmentDuration();
+    }
+
+    public void speedBoost()
+    {
+        StartCoroutine(SpeedBoostCoroutine());
+    }
+
+    private IEnumerator SpeedBoostCoroutine()
+    {
+        if (!speedBoostOnCd)
+        {
+            
+            speedBoostOnCd = true;
+            target.moveSpeed = target.moveSpeed * speedBoostPower;
+            yield return new WaitForSeconds(speedBoostDuration);
+            target.moveSpeed = target.moveSpeed / speedBoostPower;
+            yield return new WaitForSeconds(speedBoostCD);
+            speedBoostOnCd = false;
+        }
     }
 
     //Checks if enchantment spell is ready again, 10 second Cooldown (default value)

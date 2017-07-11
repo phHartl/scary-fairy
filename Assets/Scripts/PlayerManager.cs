@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public string changeClassInput;
     public string enchantFireInput;
     public string enchantIceInput;
+    public string speedBoostInput;
     private Transform playerTransform;
     public int playerNumber;
     private static bool hasFairy;
@@ -103,6 +104,16 @@ public class PlayerManager : MonoBehaviour
             {
                 Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
                 fairy.EnchantAttacks(true);
+            }
+        }
+
+        //Speed Boost
+        if (Input.GetButtonDown(speedBoostInput))
+        {
+            if (gameObject.transform.GetComponentInChildren<Fairy>())
+            {
+                Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
+                fairy.speedBoost();
             }
         }
     }
