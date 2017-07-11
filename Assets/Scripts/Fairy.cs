@@ -21,6 +21,11 @@ public class Fairy : Player {
         this.baseDamage = 20; //Damage of Fairy AOE Attack
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     protected override void Update()
     {
         //animator.SetFloat("MoveX", Input.GetAxisRaw(target.GetComponent<Player>().axisHorizontal));

@@ -13,13 +13,15 @@ public class PlayerManager : MonoBehaviour
     public int playerNumber;
     private static bool hasFairy;
     public GameObject[] classes;
-    public GameObject nextClassPrefab;
-    public GameObject alternativePrefab;
+    private int currentClassIndex;
+    private CameraControl cameraControl;
 
     // Use this for initialization
     private void Start () {
         _hitpoints = 100;
         hasFairy = false;
+        cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
+        currentClassIndex = 0;
         if (gameObject.GetComponentInChildren<Player>())
         {
             playerTransform = gameObject.transform.GetChild(0);
@@ -34,9 +36,19 @@ public class PlayerManager : MonoBehaviour
     // This method initializes a new player child-object depending on the first entry of the classes array
     private void InitPlayer()
     {
-        GameObject newPlayer = Instantiate(classes[0], gameObject.transform) as GameObject;
+        GameObject newPlayer = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
         playerTransform = newPlayer.transform;
         newPlayer.tag = "Player" + playerNumber;
+    }
+
+    // Gets called before changing class
+    private void UpdateCurrentClassIndex()
+    {
+        currentClassIndex++;
+        if (currentClassIndex==3)
+        {
+            currentClassIndex = 0;
+        }
     }
 
     // This methods sets the Axis for the Player
@@ -47,7 +59,6 @@ public class PlayerManager : MonoBehaviour
         player.axisVertical = axisVertical;
     }
 
-
     /* Update is called once per frame
      * 
      * Class Changing for Player1 has to be done in Update and
@@ -56,7 +67,8 @@ public class PlayerManager : MonoBehaviour
      * are pressed within the same update-cycle
      */
     private void Update () {
-        playerTransform = gameObject.transform.GetChild(0);
+        playerTransform = gameObject.transform.GetChild(0); //needs to be removed as soon as ChangeClass is implemented again
+
         // Attack
         if (Input.GetButtonDown(attackInput))
         {
@@ -68,7 +80,8 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetButtonDown(changeClassInput))
         {
             Player player = playerTransform.GetComponent<Player>();
-            //ChangeClass(playerIndex);
+            ChangeClass();
+            ChangePortrait();
         }
     }
 
@@ -96,37 +109,44 @@ public class PlayerManager : MonoBehaviour
     }
 
     /*
-     * This method exchanges the GameObject the script is attached to (Player1 or Player2) with
-     * an instance of the prefab that has been set as the nextClassPrefab(Warrior/Ranger/Fairy) in the Unity inspector.
-     * It afterwards sets the new player GameObject as the new target of the camera.
+     * This method exchanges the Child of the GameObject the script is attached to (Player1 or Player2) with
+     * an instance of the prefab that has been set in the classes-array in the Unity inspector.
+     * The classes get changed according to their index in the array (0 - first).
+     * It afterwards sets the new Player-GameObject as the new target of the camera.
      */
-    public void ChangeClass(int index)
+    private void ChangeClass()
     {
         GameObject otherPlayer;
-        if (index == 0)
+        if (playerNumber == 1)
         {
-            otherPlayer = GameObject.FindGameObjectWithTag("Player2");
+            otherPlayer = GameObject.Find("Player2").transform.GetChild(0).gameObject;
         }
         else
         {
-            otherPlayer = GameObject.FindGameObjectWithTag("Player1");
+            otherPlayer = GameObject.Find("Player1").transform.GetChild(0).gameObject;
         }
 
-        // This prohibits both players being a fairy
-        if (nextClassPrefab.name == "fairy" && otherPlayer.GetComponent<Fairy>())
+        // The transform of the player gets saved, afterwards the old Player-Gameobject gets destroyed
+        Transform newPlayerTransform = playerTransform;
+        Destroy(playerTransform.gameObject);
+
+        // Updates the new Index
+        UpdateCurrentClassIndex();
+
+        // This prohibits both players from being a fairy at the same time
+        if (classes[currentClassIndex].name == "fairy" && otherPlayer.GetComponent<Fairy>())
         {
-            nextClassPrefab = alternativePrefab;
+            UpdateCurrentClassIndex();
         }
-
-        // Setting the correct player tag
-        nextClassPrefab.tag = gameObject.tag;
 
         // Instanzietes the new GameObject
-        Destroy(this.gameObject);
-        GameObject newPlayer = Instantiate(nextClassPrefab,
-            gameObject.transform.position,
-            gameObject.transform.rotation,
-            gameObject.transform.parent) as GameObject;
+        GameObject newPlayer = Instantiate(classes[currentClassIndex],
+            newPlayerTransform.position,
+            newPlayerTransform.rotation,
+            gameObject.transform) as GameObject;
+        playerTransform = newPlayer.transform;
+        SetAxis();
+        newPlayer.tag = "Player" + playerNumber;
 
         if (otherPlayer.GetComponent<Fairy>())
         {
@@ -134,26 +154,24 @@ public class PlayerManager : MonoBehaviour
             otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
         }
 
-        if (nextClassPrefab.name == "fairy")
+        if (classes[currentClassIndex].name == "fairy")
         { //Quick and dirty method - should be down better later
-            if (index == 0)
+            if (playerNumber == 1)
             {
-                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player2").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().target = GameObject.Find("Player2").transform.GetChild(0).gameObject.GetComponent<MovingObj>();
             }
-            if (index == 1)
+            if (playerNumber == 2)
             {
-                newPlayer.GetComponent<Fairy>().target = GameObject.FindGameObjectWithTag("Player1").GetComponent<MovingObj>();
+                newPlayer.GetComponent<Fairy>().target = GameObject.Find("Player1").transform.GetChild(0).gameObject.GetComponent<MovingObj>();
             }
         }
 
         // Setting the new player as the new target of the camera
-        GameObject cameraRig = GameObject.Find("CameraRig");
-        cameraRig.GetComponent<CameraControl>().SetTarget(index, newPlayer);
-        ChangePortrait();
+        cameraControl.SetTarget(playerNumber - 1, newPlayer);
     }
 
-
-    protected void ChangePortrait()
+    private void ChangePortrait()
     {
+
     }
 }
