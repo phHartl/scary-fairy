@@ -10,6 +10,8 @@ public class CasualEnemy : Npc
     UnityEngine.UI.Slider slider;
 
     public float iceEnchantSlowModifier = 0.5f;
+    private Boolean isBurning = false;
+    private Boolean durationRefreshed = false;
 
     // Use this for initialization
     void Start()
@@ -52,17 +54,46 @@ public class CasualEnemy : Npc
      * and is used to apply special effects from enchantments (eg. slow from ice attacks)
      */
 
-    public void applyDamage(int damage)
+    public void applyDamage(float damage)
     {
         _hitpoints -= damage;
         print("Enemy took damage, health: " + _hitpoints);
     }
 
-    public void applyDamage(int damage, string enchantment)
+    public void applyDamage(float damage, string enchantment)
     {
         _hitpoints -= damage;
         print("Enemy took damage, health: " + _hitpoints);
 
+        if(enchantment == FIRE_ENCHANTMENT)
+        {
+            if (!isBurning)
+            {
+                StartCoroutine(applyBurnDamage());
+            }
+            if (isBurning)
+            {
+                durationRefreshed = true;
+            }
+        }
+    }
+
+    private IEnumerator applyBurnDamage()
+    {
+        isBurning = true;
+        for(int i = 0; i < BURN_DAMAGE_DURATION; i++)
+        {
+            if (durationRefreshed)
+            {
+                print("Burn Refreshed");
+                i = 0;
+                durationRefreshed = false;
+            }
+            _hitpoints -= 2;
+            print("Enemy got burned");
+            yield return new WaitForSeconds(BURN_TICKRATE);
+        }
+        isBurning = false;
     }
 
 

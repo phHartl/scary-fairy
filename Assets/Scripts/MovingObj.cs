@@ -6,8 +6,8 @@ public abstract class MovingObj : MonoBehaviour
 	public LayerMask collisionLayer;
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
-	protected int _hitpoints;
-	protected int _damage;
+	protected float _hitpoints;
+	protected float _damage;
     protected bool isMoving;
     protected bool isAttacking;
     protected bool isOnCoolDown;
@@ -19,8 +19,11 @@ public abstract class MovingObj : MonoBehaviour
     public bool iceEnchantment;
     public bool fireEnchantment;
 
-    public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
-    public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
+    public float BURN_DAMAGE_DURATION = 3f;
+    public float BURN_TICKRATE = 0.5f;
+
+    [HideInInspector]public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
+    [HideInInspector]public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
     
 
 
@@ -53,7 +56,7 @@ public abstract class MovingObj : MonoBehaviour
 		return newPos;
 	}
 
-    public int getDamage()
+    public float getDamage()
     {
         return _damage;
     }

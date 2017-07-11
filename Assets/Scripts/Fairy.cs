@@ -5,7 +5,7 @@ public class Fairy : Player {
 
     public MovingObj target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
-    private float enchantmentCD = 10f;              //Duration between enchantments
+    private float enchantmentCD = 5f;              //Duration between enchantments
     private float enchantmentEffectTimer = 0;
     private float enchantmentEffectDuration = 5f;   //Duration of a single enchantment spell
     private float enchantmentTimer = 0;
@@ -58,27 +58,34 @@ public class Fairy : Player {
         isOnCoolDown = false;
      }
 
-    /*
-     * Press Button "1" to enchant the other player with ice
-     * Press Button "2" to enchant the other player with fire
-     * Fire deals more damage than ice, ice does currently not have any extra effects. Maybe add slow.
-    */
-    public void EnchantAttacks(bool isIceEnchant)
+
+
+    public IEnumerator applyFireEnchantment()
     {
-        if (!target.getOnEnchantmentCD()) {
-            if (isIceEnchant)
-            {
-                enchantmentEffectTimer = enchantmentEffectDuration;
-                enchantmentTimer = enchantmentCD;
-                target.activateIceEnchantment();
-            } else {
-                enchantmentEffectTimer = enchantmentEffectDuration;
-                enchantmentTimer = enchantmentCD;
-                target.activateFireEnchantment();
-            }
+        if (!target.getOnEnchantmentCD())
+        {
+            print("Fire enchantment activated");
+            target.activateFireEnchantment();
+            yield return new WaitForSeconds(enchantmentEffectDuration);
+            target.resetEnchantments();
+            yield return new WaitForSeconds(enchantmentCD);
+            target.resetEnchantmentCooldown();
         }
-        CheckEnchantmentCD();
-        CheckEnchantmentDuration();
+        
+    }
+
+
+    public IEnumerator applyIceEnchantment()
+    {
+        if (!target.getOnEnchantmentCD())
+        {
+            print("Ice enchantment activated");
+            target.activateIceEnchantment();
+            yield return new WaitForSeconds(enchantmentEffectDuration);
+            target.resetEnchantments();
+            yield return new WaitForSeconds(enchantmentCD);
+            target.resetEnchantmentCooldown();
+        }
     }
 
     public void speedBoost()
@@ -90,7 +97,6 @@ public class Fairy : Player {
     {
         if (!speedBoostOnCd)
         {
-            
             speedBoostOnCd = true;
             target.moveSpeed = target.moveSpeed * speedBoostPower;
             yield return new WaitForSeconds(speedBoostDuration);

@@ -93,7 +93,7 @@ public class PlayerManager : MonoBehaviour
             if (gameObject.transform.GetComponentInChildren<Fairy>())
             {
                 Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-                fairy.EnchantAttacks(false);
+                fairy.StartCoroutine(fairy.applyFireEnchantment());
             }
         }
 
@@ -103,7 +103,7 @@ public class PlayerManager : MonoBehaviour
             if (gameObject.transform.GetComponentInChildren<Fairy>())
             {
                 Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-                fairy.EnchantAttacks(true);
+                fairy.StartCoroutine(fairy.applyIceEnchantment());
             }
         }
 
