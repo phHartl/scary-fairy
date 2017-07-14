@@ -141,8 +141,8 @@ public class CameraControl : MonoBehaviour
     private void InitTargets()
     {
         m_Targets = new Transform[2];
-        m_Targets[0] = GameObject.FindGameObjectWithTag("Player1").transform;
-        m_Targets[1] = GameObject.FindGameObjectWithTag("Player2").transform;
+        m_Targets[0] = GameObject.Find("Player1").transform.GetChild(0).transform;
+        m_Targets[1] = GameObject.Find("Player2").transform.GetChild(0).transform;
     }
 
     public void SetTarget(int index, GameObject player)
