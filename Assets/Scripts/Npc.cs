@@ -9,7 +9,7 @@ public abstract class Npc : MovingObj
     private Vector2 endMarker;
     private float journeyLength;
     private bool isKnockedBack = false;
-    private AIMove AI;
+    protected AIMove AI;
 
     // Use this for initialization
     protected override void Start()

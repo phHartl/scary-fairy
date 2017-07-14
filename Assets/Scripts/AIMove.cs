@@ -113,4 +113,10 @@ public class AIMove : AIBase {
             currentWaypoint++;
         }
     }
+
+    public Vector3 getDirection()
+    {
+        Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+        return direction;
+    }
 }
