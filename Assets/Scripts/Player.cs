@@ -28,6 +28,8 @@ public class Player : MovingObj
     {
         base.Start();
         _hitpoints = 100;
+        lastMove.x = 0; //Players starting position -> else there is a weird bug where you can shoot and attack in all directions
+        lastMove.y = -1;
         players[0] = GameObject.FindGameObjectWithTag("Player1");
         players[1] = GameObject.FindGameObjectWithTag("Player2");
         SetAxis();

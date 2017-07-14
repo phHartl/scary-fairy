@@ -14,7 +14,7 @@ public class RangedPlayer : Player
         base.Start();
         this.baseDamage = 10;
         this._hitpoints = 100;
-        this.attackCD = 0.5f;
+        this.attackCD = 1f;
         animator = GetComponent<Animator>();
     }
 
