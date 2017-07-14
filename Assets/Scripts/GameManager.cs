@@ -36,17 +36,23 @@ public class GameManager : MonoBehaviour, IObserver
                 levelNum += 1;
                 SceneManager.LoadScene(levelNum);
                 break;
+            case "Main Menu":
+                SceneManager.LoadScene("MainMenu");
+                break;
+            case "Current Level":
+                SceneManager.LoadScene(levelNum);
+                break;
             default:
                 break;
         }
 
     }
 
-    void initGame()
+    public void initGame()
     {
         //SceneManager.LoadScene lädt Level anhand deren Index in den Build Settings (strg + shift + B in Unity)
         //auch anhand des Namens möglich
-        SceneManager.LoadScene(levelNum);
+        SceneManager.LoadScene("MainMenu");
     }
 
     void Start()
