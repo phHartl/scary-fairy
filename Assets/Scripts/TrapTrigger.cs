@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TrapTrigger : MonoBehaviour {
 
-    public PolygonCollider2D entrance;
+    public GameObject entrance;
     public GameObject trapEnemies;
     public BoxCollider2D trapCollider;
     public GameObject exit;
@@ -20,11 +20,11 @@ public class TrapTrigger : MonoBehaviour {
 	protected void Update () {
         if (enemiesSpawned)
         {
-            entrance.enabled = true;
+            entrance.SetActive(true);
             enemiesSpawned = checkIfEnemiesAlive();     //Entrance closed as long as at least one enemy spawned by trap is alive
         } else
         {
-            entrance.enabled = false;
+            entrance.SetActive(false);
         }
 	}
 
