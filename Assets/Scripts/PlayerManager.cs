@@ -10,8 +10,9 @@ public class PlayerManager : MonoBehaviour
     public string enchantFireInput;
     public string enchantIceInput;
     public string speedBoostInput;
-    private Transform playerTransform;
+    private GameObject playerObject;
     public int playerNumber;
+    // The hasFairy-attribute is used to check and set if any player is a fairy or not
     private static bool hasFairy;
     public GameObject[] classes;
     private int currentClassIndex;
@@ -23,99 +24,52 @@ public class PlayerManager : MonoBehaviour
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
         currentClassIndex = 0;
-        if (gameObject.GetComponentInChildren<Player>())
-        {
-            playerTransform = gameObject.transform.GetChild(0);
-        } else
-        {
-            // No child-object
-            InitPlayer();
-        }
+        InitPlayerObject();
         SetAxis();
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
-    private void InitPlayer()
+    private void InitPlayerObject()
     {
-        GameObject newPlayer = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
-        playerTransform = newPlayer.transform;
-    }
-
-    // Gets called before changing class
-    private void UpdateCurrentClassIndex()
-    {
-        currentClassIndex++;
-        if (currentClassIndex==3)
+        if (gameObject.GetComponentInChildren<Player>())
         {
-            currentClassIndex = 0;
+            playerObject = gameObject.transform.GetChild(0).gameObject;
+        }
+        else
+        {
+            // No child-object
+            GameObject newPlayer = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
+            playerObject = newPlayer;
         }
     }
 
     // This methods sets the Axis for the Player
     private void SetAxis()
     {
-        Player player = playerTransform.GetComponent<Player>();
+        Player player = playerObject.GetComponent<Player>();
         player.axisHorizontal = axisHorizontal;
         player.axisVertical = axisVertical;
     }
 
-    /* Update is called once per frame
-     * 
-     * Class Changing for Player1 has to be done in Update and
-     * Class Changing for Player 2 has to done in LateUpdate in order
-     * to fix both players being able to change to fairy when both buttons
-     * are pressed within the same update-cycle
-     */
+    // Update is called once per frame
     private void Update () {
-        playerTransform = gameObject.transform.GetChild(0); //needs to be removed as soon as ChangeClass is implemented again
-
         // Attack
         if (Input.GetButtonDown(attackInput))
         {
-            Player player = playerTransform.GetComponent<Player>();
-            player.AttemptAttack(); //Coroutines don't need to be finished within the updateframe
+            Attack();
         }
 
         // Change Class
         if (Input.GetButtonDown(changeClassInput))
         {
-            Player player = playerTransform.GetComponent<Player>();
             ChangeClass();
-            ChangePortrait();
         }
     }
 
-    private void LateUpdate()
+    private void Attack()
     {
-        // Fire Enchant
-        if (Input.GetButtonDown(enchantFireInput))
-        {
-            if (gameObject.transform.GetComponentInChildren<Fairy>())
-            {
-                Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-                fairy.StartCoroutine(fairy.applyFireEnchantment());
-            }
-        }
-
-        // Ice Enchant
-        if (Input.GetButtonDown(enchantIceInput))
-        {
-            if (gameObject.transform.GetComponentInChildren<Fairy>())
-            {
-                Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-                fairy.StartCoroutine(fairy.applyIceEnchantment());
-            }
-        }
-
-        //Speed Boost
-        if (Input.GetButtonDown(speedBoostInput))
-        {
-            if (gameObject.transform.GetComponentInChildren<Fairy>())
-            {
-                Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-                fairy.speedBoost();
-            }
-        }
+        Player player = playerObject.GetComponent<Player>();
+        player.AttemptAttack();
     }
 
     /*
@@ -126,61 +80,146 @@ public class PlayerManager : MonoBehaviour
      */
     private void ChangeClass()
     {
-        GameObject otherPlayer;
-        if (playerNumber == 1)
-        {
-            otherPlayer = GameObject.Find("Player2").transform.GetChild(0).gameObject;
-        }
-        else
-        {
-            otherPlayer = GameObject.Find("Player1").transform.GetChild(0).gameObject;
-        }
-
         // The transform of the player gets saved, afterwards the old Player-Gameobject gets destroyed
-        Transform newPlayerTransform = playerTransform;
-        Destroy(playerTransform.gameObject);
+        Transform newPlayerTransform = playerObject.transform;
+        Destroy(playerObject.gameObject);
 
-        // Updates the new Index
+        // The player switches his class from fairy to the next class
+        if (classes[currentClassIndex].name == "fairy")
+        {
+            hasFairy = false;
+        }
+
+        // Increments the Index
         UpdateCurrentClassIndex();
 
         // This prohibits both players from being a fairy at the same time
-        if (classes[currentClassIndex].name == "fairy" && otherPlayer.GetComponent<Fairy>())
+        if (classes[currentClassIndex].name == "fairy" && hasFairy)
         {
             UpdateCurrentClassIndex();
         }
 
-        // Instanzietes the new GameObject
-        GameObject newPlayer = Instantiate(classes[currentClassIndex],
+        // Instantiates the new GameObject
+        playerObject = Instantiate(classes[currentClassIndex],
             newPlayerTransform.position,
             newPlayerTransform.rotation,
             gameObject.transform) as GameObject;
-        playerTransform = newPlayer.transform;
         SetAxis();
 
-        if (otherPlayer.GetComponent<Fairy>())
-        {
-            // The other player is a fairy and the target needs to be set
-            otherPlayer.GetComponent<Fairy>().target = newPlayer.GetComponent<MovingObj>();
-        }
-
+        // The player now is a fairy
         if (classes[currentClassIndex].name == "fairy")
-        { //Quick and dirty method - should be down better later
-            if (playerNumber == 1)
-            {
-                newPlayer.GetComponent<Fairy>().target = GameObject.Find("Player2").transform.GetChild(0).gameObject.GetComponent<MovingObj>();
-            }
-            if (playerNumber == 2)
-            {
-                newPlayer.GetComponent<Fairy>().target = GameObject.Find("Player1").transform.GetChild(0).gameObject.GetComponent<MovingObj>();
-            }
+        {
+            hasFairy = true;
         }
 
-        // Setting the new player as the new target of the camera
-        cameraControl.SetTarget(playerNumber - 1, newPlayer);
+        // Sets the target for the fairy
+        SetFairyTarget();
+
+        // Setting the new player as target of the camera
+        cameraControl.SetTarget(playerNumber - 1, playerObject);
+
+        // Change the portrait to fit the new class
+        ChangePortrait();
     }
 
+    // Gets called before changing class
+    private void UpdateCurrentClassIndex()
+    {
+        currentClassIndex++;
+        if (currentClassIndex == 3)
+        {
+            currentClassIndex = 0;
+        }
+    }
+
+    /* 
+     * This method first determines if anyone is a fairy.
+     * If that is the case it determines which player is a fairy and 
+     * then sets the target of the fairy accordingly.
+     */
+    private void SetFairyTarget()
+    {
+        if (hasFairy)
+        {
+            if (classes[currentClassIndex].name == "fairy")
+            {
+                // The player is a fairy and the target needs to be set
+                playerObject.GetComponent<Fairy>().target = OtherPlayer().GetComponent<MovingObj>();
+            }
+            else
+            {
+                // The other player is a fairy and the target needs to be set
+                OtherPlayer().GetComponent<Fairy>().target = playerObject.GetComponent<MovingObj>();
+            }
+
+
+        }
+    }
+
+    // This method can be used to get the GameObject of the other Player
+    private GameObject OtherPlayer()
+    {
+        if (playerNumber == 1)
+        {
+            return GameObject.Find("Player2").transform.GetChild(0).gameObject;
+        }
+        else
+        {
+            return GameObject.Find("Player1").transform.GetChild(0).gameObject;
+        }
+    }
+
+    // This method is used to change the portrais of the player to fit the current class
     private void ChangePortrait()
     {
 
+    }
+
+    private void LateUpdate()
+    {
+        // Fire Enchant
+        if (Input.GetButtonDown(enchantFireInput))
+        {
+            EnchantFire();
+        }
+
+        // Ice Enchant
+        if (Input.GetButtonDown(enchantIceInput))
+        {
+            EnchantIce();
+        }
+
+        //Speed Boost
+        if (Input.GetButtonDown(speedBoostInput))
+        {
+            SpeedBoost();
+        }
+    }
+
+    private void EnchantFire()
+    {
+        if (gameObject.transform.GetComponentInChildren<Fairy>())
+        {
+            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
+            fairy.StartCoroutine(fairy.applyFireEnchantment());
+        }
+    }
+
+    private void EnchantIce()
+    {
+        if (gameObject.transform.GetComponentInChildren<Fairy>())
+        {
+            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
+            fairy.StartCoroutine(fairy.applyIceEnchantment());
+        }
+    }
+
+    private void SpeedBoost()
+    {
+        if (gameObject.transform.GetComponentInChildren<Fairy>())
+        {
+            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
+            fairy.speedBoost();
+        }
     }
 }
