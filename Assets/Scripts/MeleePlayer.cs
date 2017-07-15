@@ -4,6 +4,7 @@ using UnityEngine;
 public class MeleePlayer : Player {
 
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
+    private AudioSource sound;
 
     public int knockBackLength = 2;
 
@@ -12,6 +13,7 @@ public class MeleePlayer : Player {
     {
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
+        sound = GameObject.FindObjectOfType<AudioSource>();
         DisableAttackColliders();
         this.attackCD = 1f;
         this.baseDamage = 20;
@@ -22,6 +24,7 @@ public class MeleePlayer : Player {
         base.Update();
         if (Input.GetKeyDown("f") && !isOnCoolDown)
         {
+            sound.Play();
             StartCoroutine(Attack()); //Coroutine is better here, an attack doesn't need to be done every frame
         }
     }
