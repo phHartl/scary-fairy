@@ -8,7 +8,6 @@ public class CasualEnemy : Npc
 {
 
     UnityEngine.UI.Slider slider;
-    Vector3 currentDir;
 
 
 
@@ -31,16 +30,5 @@ public class CasualEnemy : Npc
     protected override void Update()
     {
         base.Update();
-        //slider.value = _hitpoints;
-        checkMovement();
-        animator.SetBool("isMoving", true);
-        animator.SetFloat("MoveX", currentDir.x);
-        animator.SetFloat("MoveY", currentDir.y);
-    }
-
-    private void checkMovement()
-    {
-        currentDir = AI.getDirection();
-        isMoving = AI.canMove;
     }
 }

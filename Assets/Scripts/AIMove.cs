@@ -26,7 +26,8 @@ public class AIMove : AIBase {
     private int currentWaypoint = 0;
 
     private Transform[] targets = new Transform[2];
-    
+
+
 
     private void Start()
     {

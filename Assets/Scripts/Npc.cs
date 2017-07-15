@@ -10,6 +10,7 @@ public abstract class Npc : MovingObj
     private float journeyLength;
     private bool isKnockedBack = false;
     protected AIMove AI;
+    private Vector3 currentDir;
 
     // Use this for initialization
     protected override void Start()
@@ -18,7 +19,7 @@ public abstract class Npc : MovingObj
         AI = GetComponent<AIMove>(); //Simple caching of component -> better performance
     }
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (isKnockedBack && Math.Abs(Vector2.Distance(startMarker, rb2D.position)) > journeyLength) //IsKnockedBack used for performance improvement, if first argument is false, no more calc is need (distance needs cpu power)
         {
@@ -31,11 +32,28 @@ public abstract class Npc : MovingObj
     protected override void Update()
     {
         base.Update();
+        //slider.value = _hitpoints;
+        checkMovement();
+        animator.SetBool("isMoving", true);
+        if (Mathf.Abs(currentDir.x) > 0.5f)
+        {
+            animator.SetFloat("MoveX", currentDir.x);
+        }
+        if (Mathf.Abs(currentDir.y) > 0.5f)
+        {
+            animator.SetFloat("MoveY", currentDir.y);
+        }
+    }
+
+    public void checkMovement()
+    {
+        currentDir = AI.getDirection();
+        isMoving = AI.canMove;
     }
 
     protected void OnCollisionStay2D(Collision2D other)
     {
-        if (!other.gameObject.CompareTag("CasualEnemy"))
+        if (!other.gameObject.CompareTag("CasualEnemy") && !isKnockedBack)
         {
             other.gameObject.GetComponent<MovingObj>().applyDamage(_damage);
             rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy
@@ -56,9 +74,10 @@ public abstract class Npc : MovingObj
         endMarker = startMarker + force;
         journeyLength = Math.Abs(Vector2.Distance(startMarker, endMarker));
         rb2D.velocity = Vector2.zero;
+        isKnockedBack = true;
+        AI.canMove = false;
+        rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
-        AI.canMove = false; //Prevent AI from moving instead
-        isKnockedBack = true;
     }
 }
