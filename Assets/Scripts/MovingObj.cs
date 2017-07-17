@@ -6,7 +6,7 @@ public abstract class MovingObj : MonoBehaviour
     public LayerMask collisionLayer;
     protected Rigidbody2D rb2D;
     protected BoxCollider2D boxCollider;
-    protected int _hitpoints;
+    public int _hitpoints;
     protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
