@@ -42,13 +42,18 @@ public class AIMove : AIBase, IObserver {
         switch (gameEvent)
         {
             case "Player changed class":
-                getPlayers();
-                StartCoroutine(SearchPlayer());
-                StartCoroutine(UpdatePath());
+                    getPlayers();
+                    StartCoroutine(SearchPlayer());
+                    StartCoroutine(UpdatePath());
                 break;
             default:
                 break;
         }
+    }
+
+    private void OnDisable()
+    {
+        Subject.RemoveObserver(this);
     }
 
     public void getPlayers()

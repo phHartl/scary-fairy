@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     private CameraControl cameraControl;
 
     // Use this for initialization
-    private void Start () {
+    private void Awake () {
         _hitpoints = 100;
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();

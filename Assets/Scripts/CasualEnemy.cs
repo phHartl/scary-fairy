@@ -52,12 +52,14 @@ public class CasualEnemy : Npc
     public void applyDamage(int damage)
     {
         _hitpoints -= damage;
+        checkDeath();
         print("Enemy took damage, health: " + _hitpoints);
     }
 
     public void applyDamage(int damage, string enchantment)
     {
         _hitpoints -= damage;
+        checkDeath();
         print("Enemy took damage, health: " + _hitpoints);
 
         if(enchantment == FIRE_ENCHANTMENT)
@@ -90,6 +92,4 @@ public class CasualEnemy : Npc
         }
         isBurning = false;
     }
-
-
 }

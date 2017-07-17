@@ -53,7 +53,7 @@ public abstract class Npc : MovingObj
 
     protected void OnCollisionStay2D(Collision2D other)
     {
-        if (!other.gameObject.CompareTag("CasualEnemy") && !isKnockedBack)
+        if (other.gameObject.CompareTag("Player") && !isKnockedBack)
         {
             other.gameObject.GetComponent<MovingObj>().applyDamage(_damage);
             rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy

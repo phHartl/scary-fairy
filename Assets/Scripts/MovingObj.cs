@@ -2,19 +2,19 @@
 
 public abstract class MovingObj : MonoBehaviour
 {
-	public float moveSpeed;
-	public LayerMask collisionLayer;
-	protected Rigidbody2D rb2D;
-	protected BoxCollider2D boxCollider;
-	protected int _hitpoints;
-	protected int _damage;
+    public float moveSpeed;
+    public LayerMask collisionLayer;
+    protected Rigidbody2D rb2D;
+    protected BoxCollider2D boxCollider;
+    protected int _hitpoints;
+    protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
     protected bool isInvincible;
     protected bool isOnCoolDown;
     protected float attackCD;
     protected bool onEnchantmentCD;
-	protected Vector2 newPos;
+    protected Vector2 newPos;
     protected Animator animator;
     protected ParticleSystem particles;
     protected ParticleSystem.MainModule particleSettings;
@@ -27,29 +27,29 @@ public abstract class MovingObj : MonoBehaviour
     public float BURN_DAMAGE_DURATION = 4f;
     public float BURN_TICKRATE = 0.5f;
 
-    [HideInInspector]public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
-    [HideInInspector]public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
-    
+    [HideInInspector] public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
+    [HideInInspector] public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
 
 
 
-	// Use this for initialization
-	protected virtual void Start ()
-	{
-		boxCollider = GetComponent<BoxCollider2D>();
-		rb2D = GetComponent<Rigidbody2D>();
-	}
 
-
-    protected virtual void Update ()
+    // Use this for initialization
+    protected virtual void Start()
     {
-        
+        boxCollider = GetComponent<BoxCollider2D>();
+        rb2D = GetComponent<Rigidbody2D>();
+    }
+
+
+    protected virtual void Update()
+    {
+
     }
 
     protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
-	{
-		return newPos;
-	}
+    {
+        return newPos;
+    }
 
     public int getDamage()
     {
@@ -59,10 +59,6 @@ public abstract class MovingObj : MonoBehaviour
     public virtual void applyDamage(int damage)
     {
         _hitpoints -= damage;
-        if(_hitpoints <= 0)
-        {
-            //gameObject.SetActive(false);
-        }
         print(this.name + " took damage. HP: " + _hitpoints);
     }
 
@@ -99,5 +95,12 @@ public abstract class MovingObj : MonoBehaviour
     public bool getOnEnchantmentCD()
     {
         return onEnchantmentCD;
+    }
+    protected void checkDeath()
+    {
+        if (_hitpoints <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
