@@ -29,7 +29,7 @@ public class AIMove : AIBase, IObserver {
 
 
 
-    private void Start()
+    private void Init()
     {
         Subject.AddObserver(this);
         getPlayers();
@@ -54,6 +54,11 @@ public class AIMove : AIBase, IObserver {
     private void OnDisable()
     {
         Subject.RemoveObserver(this);
+    }
+
+    private void OnEnable()
+    {
+        Init();
     }
 
     public void getPlayers()

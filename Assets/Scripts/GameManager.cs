@@ -36,7 +36,13 @@ public class GameManager : MonoBehaviour, IObserver
                 levelNum += 1;
                 SceneManager.LoadScene(levelNum);
                 break;
-            case "Player Died":
+            case "Main Menu":
+                SceneManager.LoadScene("MainMenu");
+                break;
+            case "Current Level":
+                SceneManager.LoadScene(levelNum);
+                break;
+	    case "Player Died":
                 restartLevel(); //If one player has died reload the current scene -> alternative respawn mechanic?
                 break;
             default:
@@ -45,11 +51,11 @@ public class GameManager : MonoBehaviour, IObserver
 
     }
 
-    void initGame()
+    public void initGame()
     {
         //SceneManager.LoadScene lädt Level anhand deren Index in den Build Settings (strg + shift + B in Unity)
         //auch anhand des Namens möglich
-        SceneManager.LoadScene(levelNum);
+        SceneManager.LoadScene("MainMenu");
     }
 
     void Start()
