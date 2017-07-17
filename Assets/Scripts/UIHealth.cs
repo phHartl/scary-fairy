@@ -13,7 +13,7 @@ public class UIHealth : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(this.name == "HealthP1")
+		if(this.name == "HealthP1") //Should be done with an event later on
         {
             slider.value = GameObject.Find("Player1").GetComponentInChildren<MovingObj>()._hitpoints;
         }

@@ -9,7 +9,7 @@ public class Exit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.CompareTag("Player1") || collider.CompareTag("Player2"))
+        if (collider.CompareTag("feetHitbox"))
         {
             Subject.Notify("Next Level");
         }
