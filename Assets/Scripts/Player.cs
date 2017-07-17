@@ -12,7 +12,7 @@ public class Player : MovingObj
     public string axisHorizontal;
     [HideInInspector]
     public Vector2 lastMove;
-    protected float baseDamage;
+    protected int baseDamage;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
     
 
@@ -20,6 +20,8 @@ public class Player : MovingObj
     protected void Start()
     {
         base.Start();
+        lastMove.x = 0;
+        lastMove.y = -1;
         animator = GetComponent<Animator>();
     }
 
@@ -31,8 +33,14 @@ public class Player : MovingObj
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
+        animator.SetInteger("Hitpoints", _hitpoints);
         //animator.SetBool("IceEnchantment", iceEnchantment);
         //animator.SetBool("FireEnchantment", fireEnchantment);
+    }
+
+    protected void FixedUpdate()
+    {
+        rb2D.MovePosition(Move());
     }
 
     protected override Vector2 Move()
@@ -125,16 +133,43 @@ public class Player : MovingObj
         }
     }
 
+    //Overrides applyDamage in MovingObj, player gets invincible for 0.5 seconds if hit by an enemy
+    public override void applyDamage(int damage)
+    {
+        if (!isInvincible)
+        {
+            base.applyDamage(damage);
+            StartCoroutine(playerInvincible());
+        }
+    }
+
+       IEnumerator playerInvincible()
+    {
+        isInvincible = true;
+        setPlayerTransparency(0.5f); // 50% transparent
+        yield return new WaitForSeconds(0.5f);
+        setPlayerTransparency(1.0f);
+        isInvincible = false;
+    }
+
+
+    //This methodes makes the player transparent, input variable is transparency in percent
+    private void setPlayerTransparency(float alpha)
+    {
+        gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha);
+    }
+   
+
     protected void CheckForEnchantment()
     {
         _damage = baseDamage;
         if (iceEnchantment)
         {
-            _damage = baseDamage * 2f;
+            _damage = baseDamage * 3;
         }
         else if (fireEnchantment)
         {
-            _damage = baseDamage * 1.5f;
+            _damage = baseDamage * 2;
         }
     }
 }

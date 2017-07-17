@@ -17,6 +17,8 @@ public class Fairy : Player {
 
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
+    public ParticleSystem buff;
+ 
 
     private void Start () {
         base.Start();

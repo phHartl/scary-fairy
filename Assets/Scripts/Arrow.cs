@@ -16,7 +16,7 @@ public class Arrow : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Player player = this.GetComponentInParent<Player>();
+        Player player = GameObject.FindObjectOfType<RangedPlayer>();
         if (other.CompareTag("CasualEnemy"))
         {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
@@ -27,11 +27,11 @@ public class Arrow : MonoBehaviour {
                 ce.applyDamage(player.getDamage());
                 ai.hitByIceEnchantment();
             }
-            if (player.fireEnchantment)
+            else if (player.fireEnchantment)
             {
                 ce.applyDamage(player.getDamage(), player.FIRE_ENCHANTMENT);
             }
-            if(!player.iceEnchantment && !player.fireEnchantment)
+            else
             {
                 ce.applyDamage(player.getDamage());
             }

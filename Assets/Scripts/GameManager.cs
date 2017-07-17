@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+
+public class GameManager : MonoBehaviour, IObserver
+{
+
+
 
     public static GameManager instance = null;
     //levelNum: in welchem Level befinden wir uns gerade - wird inkrementiert wenn das Levelende erreicht wird
     //und ein neues Level geladen werden soll
-    public int levelNum = 1;
+    private int levelNum = 1;
 
     void Awake()
     {
@@ -24,18 +28,42 @@ public class GameManager : MonoBehaviour {
         initGame();
     }
 
-    public void initGame()
+    public void OnNotify(string gameEvent)
+    {
+        switch (gameEvent)
+        {
+            case "Next Level":
+                levelNum += 1;
+                SceneManager.LoadScene(levelNum);
+                break;
+            case "Player Died":
+                restartLevel(); //If one player has died reload the current scene -> alternative respawn mechanic?
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    void initGame()
     {
         //SceneManager.LoadScene lädt Level anhand deren Index in den Build Settings (strg + shift + B in Unity)
         //auch anhand des Namens möglich
         SceneManager.LoadScene(levelNum);
     }
 
-    void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    void Start()
+    {
+        Subject.AddObserver(this);
+    }
+
+    void Update()
+    {
+
+    }
+
+    void restartLevel()
+    {
+        SceneManager.LoadSceneAsync(levelNum); //Async is better here, because there is already a scene displayed
+    }
 }

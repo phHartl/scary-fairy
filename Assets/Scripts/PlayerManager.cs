@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -62,7 +63,7 @@ public class PlayerManager : MonoBehaviour
         // Change Class
         if (Input.GetButtonDown(changeClassInput))
         {
-            ChangeClass();
+            StartCoroutine(ChangeClass());
         }
     }
 
@@ -78,7 +79,7 @@ public class PlayerManager : MonoBehaviour
      * The classes get changed according to their index in the array (0 - first).
      * It afterwards sets the new Player-GameObject as the new target of the camera.
      */
-    private void ChangeClass()
+    private IEnumerator ChangeClass()
     {
         // The transform of the player gets saved, afterwards the old Player-Gameobject gets destroyed
         Transform newPlayerTransform = playerObject.transform;
@@ -120,6 +121,8 @@ public class PlayerManager : MonoBehaviour
 
         // Change the portrait to fit the new class
         ChangePortrait();
+        yield return new WaitForSeconds(0.25f);
+        Subject.Notify("Player changed class");
     }
 
     // Gets called before changing class

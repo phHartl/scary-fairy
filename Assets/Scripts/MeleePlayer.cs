@@ -4,25 +4,29 @@ using UnityEngine;
 public class MeleePlayer : Player
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
-    public float knockBackStrength = 2;
+    private AudioSource sound;
+
+    public int knockBackLength = 2;
 
     // Use this for initialization
     private void Start()
     {
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
+        sound = GameObject.FindObjectOfType<AudioSource>();
         DisableAttackColliders();
         this.attackCD = 1f;
+        this._hitpoints = 100;
         this.baseDamage = 20;
     }
 
-    protected override void OnTriggerEnter2D(Collider2D other)
+ protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (isAttacking == true && other.CompareTag("CasualEnemy"))
+        if (isAttacking && other.CompareTag("CasualEnemy"))
         {
 
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            AIPath ai = other.GetComponent<AIPath>();
+            AIMove ai = other.GetComponent<AIMove>();
             if (iceEnchantment)
             {
                 ce.applyDamage(_damage);
@@ -40,8 +44,8 @@ public class MeleePlayer : Player
                 print("normal Attack");
             }
             // knockVector = direction of knockBack times strength of knockback
-            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackStrength;
-            ce.knockBack(knockVector);
+            Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackLength;
+            ce.knockBack(knockVector,rb2D.mass);
         }
     }
 
@@ -51,13 +55,15 @@ public class MeleePlayer : Player
     {
         CheckForEnchantment();
         isAttacking = true;
-        attackColliders[currentDir].enabled = true;
         isOnCoolDown = true;
-        yield return new WaitForSeconds(0.25f); //Wait for animation
-        isAttacking = false; //After animation has finished, player isn't attacking anymore
-        attackColliders[currentDir].enabled = false;
         yield return new WaitForSeconds(attackCD); //Waiting for cooldown
         isOnCoolDown = false;
+    }
+
+    //This function gets called when the attack animation starts (see animations events)
+    private void EnableAttackCollider(int currentDir)
+    {
+        attackColliders[currentDir].enabled = true;
     }
 
     private void DisableAttackColliders()
@@ -66,6 +72,12 @@ public class MeleePlayer : Player
         {
             attackColliders[i].enabled = false;
         }
+    }
+    //This function gets called when the attack animations ends
+    private void DisableAttackCollider(int currentDir)
+    {
+        attackColliders[currentDir].enabled = false;
+        isAttacking = false;
     }
 
 }

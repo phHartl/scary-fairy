@@ -13,32 +13,27 @@ public class CasualEnemy : Npc
     private Boolean isBurning = false;
     private Boolean durationRefreshed = false;
 
+
     // Use this for initialization
     void Start()
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-
-        // hitpoints placeholder
+        animator = GetComponent<Animator>();
         this._hitpoints = 100;
-
-        // damage placeholder
-        this._damage = 69;
-
-        //movespeed placeholder
-        this.moveSpeed = 0;
+        this._damage = 30;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-       //    base.FixedUpdate();
+        base.FixedUpdate();
     }
 
     protected override void Update()
     {
-        base.Update();
         slider.value = _hitpoints;
+        base.Update();
     }
 
     protected override Vector2 Move()
@@ -54,13 +49,13 @@ public class CasualEnemy : Npc
      * and is used to apply special effects from enchantments (eg. slow from ice attacks)
      */
 
-    public void applyDamage(float damage)
+    public void applyDamage(int damage)
     {
         _hitpoints -= damage;
         print("Enemy took damage, health: " + _hitpoints);
     }
 
-    public void applyDamage(float damage, string enchantment)
+    public void applyDamage(int damage, string enchantment)
     {
         _hitpoints -= damage;
         print("Enemy took damage, health: " + _hitpoints);

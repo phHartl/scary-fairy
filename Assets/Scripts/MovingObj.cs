@@ -6,10 +6,11 @@ public abstract class MovingObj : MonoBehaviour
 	public LayerMask collisionLayer;
 	protected Rigidbody2D rb2D;
 	protected BoxCollider2D boxCollider;
-	protected float _hitpoints;
-	protected float _damage;
+	protected int _hitpoints;
+	protected int _damage;
     protected bool isMoving;
     protected bool isAttacking;
+    protected bool isInvincible;
     protected bool isOnCoolDown;
     protected float attackCD;
     protected bool onEnchantmentCD;
@@ -29,26 +30,16 @@ public abstract class MovingObj : MonoBehaviour
 
 
 	// Use this for initialization
-	protected void Start ()
+	protected virtual void Start ()
 	{
 		boxCollider = GetComponent<BoxCollider2D>();
 		rb2D = GetComponent<Rigidbody2D>();
 	}
-	
-	// Update is called once per frame
-	protected void FixedUpdate ()
-	{
-		rb2D.MovePosition(Move());
-	}
+
 
     protected virtual void Update ()
     {
-        if (this._hitpoints <= 0 && gameObject.tag == "CasualEnemy")
-        {
-            OnDie(this.gameObject);
-            GameObject.FindObjectOfType<GameManager>().levelNum = 2;
-            GameObject.FindObjectOfType<GameManager>().initGame();
-        }
+        
     }
 
     protected virtual Vector2 Move() //Report back to Gamemanager -> Animation
@@ -56,18 +47,22 @@ public abstract class MovingObj : MonoBehaviour
 		return newPos;
 	}
 
-    public float getDamage()
+    public int getDamage()
     {
         return _damage;
     }
 
-    protected void OnDie(GameObject hit) //Report back to Gamemanager
-	{
-        //Destroy(hit);
-        gameObject.SetActive(false);
+    public virtual void applyDamage(int damage)
+    {
+        _hitpoints -= damage;
+        if(_hitpoints <= 0)
+        {
+            //gameObject.SetActive(false);
+        }
+        print(this.name + " took damage. HP: " + _hitpoints);
     }
 
-    public void activateFireEnchantment()
+    public virtual void activateFireEnchantment()
     {
         iceEnchantment = false;
         fireEnchantment = true;
