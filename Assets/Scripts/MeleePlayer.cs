@@ -14,6 +14,9 @@ public class MeleePlayer : Player
         base.Start();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         sound = GameObject.FindObjectOfType<AudioSource>();
+        particles = GetComponentInChildren<ParticleSystem>();
+        particleSettings = particles.main;
+        particles.Stop();
         DisableAttackColliders();
         this.attackCD = 1f;
         this._hitpoints = 100;

@@ -5,7 +5,6 @@ public class RangedPlayer : Player
 {
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
-    private ParticleSystem buff;
 
     // Use this for initialization
     private void Start()
@@ -14,9 +13,10 @@ public class RangedPlayer : Player
         this.baseDamage = 10;
         this._hitpoints = 100;
         this.attackCD = 1f;
-        buff = GetComponent<ParticleSystem>();
-        buff.Play();
         animator = GetComponent<Animator>();
+        particles = GetComponentInChildren<ParticleSystem>();
+        particleSettings = particles.main;
+        particles.Stop();
     }
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield

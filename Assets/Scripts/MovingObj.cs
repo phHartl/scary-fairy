@@ -16,6 +16,10 @@ public abstract class MovingObj : MonoBehaviour
     protected bool onEnchantmentCD;
 	protected Vector2 newPos;
     protected Animator animator;
+    protected ParticleSystem particles;
+    protected ParticleSystem.MainModule particleSettings;
+    private Color blue = new Color(0.1f, 0.3f, 1.0f);
+    private Color red = new Color(1.0f, 0.3f, 0.1f);
 
     public bool iceEnchantment;
     public bool fireEnchantment;
@@ -67,6 +71,8 @@ public abstract class MovingObj : MonoBehaviour
         iceEnchantment = false;
         fireEnchantment = true;
         onEnchantmentCD = true;
+        particleSettings.startColor = red;
+        particles.Play();
     }
 
     public void activateIceEnchantment()
@@ -74,12 +80,15 @@ public abstract class MovingObj : MonoBehaviour
         fireEnchantment = false;
         iceEnchantment = true;
         onEnchantmentCD = true;
+        particleSettings.startColor = blue;
+        particles.Play();
     }
 
     public void resetEnchantments()
     {
         iceEnchantment = false;
         fireEnchantment = false;
+        particles.Stop();
     }
 
     public void resetEnchantmentCooldown()

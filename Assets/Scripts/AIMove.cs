@@ -62,6 +62,10 @@ public class AIMove : AIBase, IObserver {
         int targetIndex = -1;
         for (int i = 0; i < targets.Length; i++)
         {
+            if(target == null)
+            {
+                getPlayers();
+            }
             float distanceToCurrPlayer = Math.Abs(Vector3.Distance(transform.position, targets[i].transform.position));
             if (closestDistance > distanceToCurrPlayer)
             {

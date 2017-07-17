@@ -20,7 +20,7 @@ public class Arrow : MonoBehaviour {
         if (other.CompareTag("CasualEnemy"))
         {
             CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            AIPath ai = other.GetComponent<AIPath>();
+            AIMove ai = other.GetComponent<AIMove>();
 
             if ((player.iceEnchantment))
             {
