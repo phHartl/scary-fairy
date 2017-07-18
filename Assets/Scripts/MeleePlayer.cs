@@ -59,6 +59,7 @@ public class MeleePlayer : Player
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown = true;
+        sound.Play();
         yield return new WaitForSeconds(attackCD); //Waiting for cooldown
         isOnCoolDown = false;
     }
