@@ -58,10 +58,10 @@ public class MeleePlayer : Player
     {
         CheckForEnchantment();
         isAttacking = true;
-        isOnCoolDown = true;
+        isOnCoolDown[0] = true;
         sound.Play();
         yield return new WaitForSeconds(attackCD); //Waiting for cooldown
-        isOnCoolDown = false;
+        isOnCoolDown[0] = false;
     }
 
     //This function gets called when the attack animation starts (see animations events)

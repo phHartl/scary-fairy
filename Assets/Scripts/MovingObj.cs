@@ -11,7 +11,7 @@ public abstract class MovingObj : MonoBehaviour
     protected bool isMoving;
     protected bool isAttacking;
     protected bool isInvincible;
-    protected bool isOnCoolDown;
+    protected bool[] isOnCoolDown = new bool[3]; //Cooldowns for three abilites (0 is attack, 1 first ability, 2 second ability)
     protected float attackCD;
     protected bool onEnchantmentCD;
     protected Vector2 newPos;
