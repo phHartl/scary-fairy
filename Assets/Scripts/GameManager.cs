@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour, IObserver
 
         DontDestroyOnLoad(gameObject);
 
+        //delete player states so first level starts with full health ranger and warrior
+        PlayerPrefs.DeleteAll();
+
         //lade erstes Level
         initGame();
     }

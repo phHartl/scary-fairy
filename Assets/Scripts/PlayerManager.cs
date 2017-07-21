@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    private int _hitpoints;
     public string axisVertical;
     public string axisHorizontal;
     public string attackInput;
@@ -21,7 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     // Use this for initialization
     private void Awake () {
-        _hitpoints = 100;
+        Subject.AddObserver(this);
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
         currentClassIndex = 0;
@@ -31,11 +30,26 @@ public class PlayerManager : MonoBehaviour
 
     // This method initializes a new player child-object depending on the first entry of the classes array
     private void InitPlayerObject()
-    {
-        if (gameObject.GetComponentInChildren<Player>())
+    {   
+        // returns player state to the last saved state, if there is one
+        if (PlayerPrefs.HasKey("HP" + gameObject.name))
+        {
+            currentClassIndex = PlayerPrefs.GetInt("classIndex" + gameObject.name);
+            playerObject = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
+            if (PlayerPrefs.GetInt("hasFairy") == 1)
+            {
+                hasFairy = true;
+                // broken
+                SetFairyTarget();
+            }
+            gameObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
+            ChangePortrait();
+
+        }
+        else if (gameObject.GetComponentInChildren<Player>())
         {
             playerObject = gameObject.transform.GetChild(0).gameObject;
-        }
+        } 
         else
         {
             // No child-object
@@ -123,6 +137,15 @@ public class PlayerManager : MonoBehaviour
         ChangePortrait();
         yield return new WaitForSeconds(0.25f);
         Subject.Notify("Player changed class");
+    }
+
+    public void SavePlayerState()
+    {
+        PlayerPrefs.SetInt("classIndex" + gameObject.name, currentClassIndex);
+        PlayerPrefs.SetInt("HP" + gameObject.name, gameObject.GetComponentInChildren<MovingObj>()._hitpoints);
+        int fairy = 0;
+        if (hasFairy) fairy = 1;
+        PlayerPrefs.SetInt("hasFairy", fairy);
     }
 
     // Gets called before changing class
@@ -224,5 +247,21 @@ public class PlayerManager : MonoBehaviour
             Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
             fairy.speedBoost();
         }
+    }
+
+    public void OnNotify(string gameEvent)
+    {
+        switch (gameEvent)
+        {
+            case "Next Level":
+                SavePlayerState();
+                break;
+        }
+    }
+
+
+    private void OnDestroy()
+    {
+        Subject.RemoveObserver(this);
     }
 }

@@ -9,6 +9,14 @@ public class MeleePlayer : Player
     public int knockBackLength = 2;
 
     // Use this for initialization
+    private void Awake()
+    {
+        this._hitpoints = 100;
+        this.attackCD = 1f;
+        this.baseDamage = 20;
+    }
+
+    // use this for initializing dependencies
     private void Start()
     {
         base.Start();
@@ -18,9 +26,6 @@ public class MeleePlayer : Player
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
-        this.attackCD = 1f;
-        this._hitpoints = 100;
-        this.baseDamage = 20;
     }
 
  protected override void OnTriggerEnter2D(Collider2D other)
