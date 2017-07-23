@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: e85da459ba83d2648b34bd773a37b9eb
-timeCreated: 1500821149
+guid: bcae70604bd0a814394531df13c470d6
+timeCreated: 1500818472
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - potion: {fileID: 50620089158483730, guid: 42082ae08b820054bbc81627dad92f13, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

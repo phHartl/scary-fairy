@@ -12,6 +12,7 @@ public class CasualEnemy : Npc
     public float iceEnchantSlowModifier = 0.5f;
     private Boolean isBurning = false;
     private Boolean durationRefreshed = false;
+    public Rigidbody2D potion;
 
 
     // Use this for initialization
@@ -19,7 +20,7 @@ public class CasualEnemy : Npc
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
         this._hitpoints = 100;
         this._damage = 30;
     }
@@ -92,4 +93,6 @@ public class CasualEnemy : Npc
         }
         isBurning = false;
     }
+
+   
 }

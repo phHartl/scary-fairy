@@ -11,6 +11,7 @@ public abstract class Npc : MovingObj
     private bool isKnockedBack = false;
     protected AIMove AI;
     private Vector3 currentDir;
+    private potionHealing potion;
 
     // Use this for initialization
     protected override void Start()
@@ -26,6 +27,7 @@ public abstract class Npc : MovingObj
             rb2D.velocity = Vector2.zero; //Stop rigidbody from moving
             isKnockedBack = false;
             AI.canMove = true; //AI can now move again
+            
         }
     }
 
@@ -34,6 +36,7 @@ public abstract class Npc : MovingObj
         base.Update();
         //slider.value = _hitpoints;
         checkMovement();
+        /*
         animator.SetBool("isMoving", true);
         if (Mathf.Abs(currentDir.x) > 0.5f)
         {
@@ -43,6 +46,7 @@ public abstract class Npc : MovingObj
         {
             animator.SetFloat("MoveY", currentDir.y);
         }
+        */
     }
 
     public void checkMovement()
@@ -80,4 +84,5 @@ public abstract class Npc : MovingObj
         rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
     }
+
 }

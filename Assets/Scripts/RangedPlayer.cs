@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class RangedPlayer : Player
+public class RangedPlayer : Player, IObserver
 {
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
@@ -11,12 +11,13 @@ public class RangedPlayer : Player
     {
         base.Start();
         this.baseDamage = 10;
-        this._hitpoints = 100;
+        this._hitpoints = 50;
         this.attackCD = 1f;
         animator = GetComponent<Animator>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;
         particles.Stop();
+        Subject.AddObserver(this);
     }
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
@@ -55,6 +56,20 @@ public class RangedPlayer : Player
         {
             arrowClone.transform.Rotate(0, 0, 90);
             arrowClone.velocity = (transform.up * 10f);
+        }
+    }
+
+    public void OnNotify(string gameEvent)
+    {
+        switch (gameEvent)
+        {
+            case "HealthPickup":
+                _hitpoints += 5;
+                if (_hitpoints > 100)
+                {
+                    _hitpoints = 100;
+                }
+                break;
         }
     }
 }
