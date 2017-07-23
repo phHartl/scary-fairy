@@ -26,6 +26,10 @@ public abstract class Npc : MovingObj
             rb2D.velocity = Vector2.zero; //Stop rigidbody from moving
             isKnockedBack = false;
             AI.canMove = true; //AI can now move again
+            if(_hitpoints <= 0)
+            {
+                dropHealthPotion();
+            }
         }
     }
 
@@ -79,5 +83,14 @@ public abstract class Npc : MovingObj
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
+    }
+
+    private void dropHealthPotion()
+    {
+        float randomFloat = UnityEngine.Random.Range(0f, 100f);
+        if(randomFloat >= 50)
+        {
+
+        }
     }
 }

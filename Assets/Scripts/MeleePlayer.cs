@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class MeleePlayer : Player
+public class MeleePlayer : Player, IObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
@@ -19,8 +19,9 @@ public class MeleePlayer : Player
         particles.Stop();
         DisableAttackColliders();
         this.attackCD = 1f;
-        this._hitpoints = 100;
+        this._hitpoints = 50;
         this.baseDamage = 20;
+        Subject.AddObserver(this);
     }
 
  protected override void OnTriggerEnter2D(Collider2D other)
@@ -82,6 +83,16 @@ public class MeleePlayer : Player
     {
         attackColliders[currentDir].enabled = false;
         isAttacking = false;
+    }
+
+    public void OnNotify(string gameEvent)
+    {
+        switch (gameEvent)
+        {
+            case "HealthPickup":
+                _hitpoints = 100;
+                break;
+        }
     }
 
 }
