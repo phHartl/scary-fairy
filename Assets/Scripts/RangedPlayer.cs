@@ -64,7 +64,11 @@ public class RangedPlayer : Player, IObserver
         switch (gameEvent)
         {
             case "HealthPickup":
-                _hitpoints = 100;
+                _hitpoints += 5;
+                if (_hitpoints > 100)
+                {
+                    _hitpoints = 100;
+                }
                 break;
         }
     }

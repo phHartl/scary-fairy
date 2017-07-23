@@ -21,6 +21,8 @@ public abstract class MovingObj : MonoBehaviour
     private Color blue = new Color(0.1f, 0.3f, 1.0f);
     private Color red = new Color(1.0f, 0.3f, 0.1f);
 
+    public float HEALTH_POTION_CHANCE = 50f;
+
     public bool iceEnchantment;
     public bool fireEnchantment;
 
@@ -101,6 +103,18 @@ public abstract class MovingObj : MonoBehaviour
         if (_hitpoints <= 0)
         {
             gameObject.SetActive(false);
+            dropHealthPotion();
         }
     }
+
+    //Creates a random number. If the random number is within a certain range, notifys observer to drop a health potion.
+    private void dropHealthPotion()
+    {
+        float randomFloat = Random.Range(0f, 100f);
+        if(randomFloat <= HEALTH_POTION_CHANCE)
+        {
+            Subject.Notify("HealthPotionDropped", transform.position);
+        }
+    }
+
 }

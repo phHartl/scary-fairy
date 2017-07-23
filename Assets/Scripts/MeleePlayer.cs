@@ -90,7 +90,12 @@ public class MeleePlayer : Player, IObserver
         switch (gameEvent)
         {
             case "HealthPickup":
-                _hitpoints = 100;
+                print("procced");
+                _hitpoints += 5;
+                if(_hitpoints > 100)
+                {
+                    _hitpoints = 100;
+                }
                 break;
         }
     }
