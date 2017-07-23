@@ -11,6 +11,11 @@ public class potionHealing : MonoBehaviour, TransformObserver {
         Subject.AddTransformObserver(this);
     }
 
+
+    /*
+     * Creates a new instance of Health Potion
+     * 'position' is the position where the health potion spawns
+     */
     public Rigidbody2D createPotion(Vector3 position)
     {
         Quaternion rotation = new Quaternion(0,0,0,0);
@@ -18,6 +23,11 @@ public class potionHealing : MonoBehaviour, TransformObserver {
         return potionClone;
     }
 
+
+    /*
+     * Checks for players walking over the health potion
+     * On contact the observer is notified of the pickup and the potion gets destroyed
+     */
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -27,6 +37,11 @@ public class potionHealing : MonoBehaviour, TransformObserver {
         }
     }
 
+
+    /*
+     * Currently only gets called from MovingObject
+     * Calls createPotion() with the position of the dead enemy
+     */
     public void OnNotify(string gameEvent, Vector3 position)
     {
         switch (gameEvent)
