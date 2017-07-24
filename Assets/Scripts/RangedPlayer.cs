@@ -5,6 +5,7 @@ public class RangedPlayer : Player, IObserver
 {
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
+    private bool firstAbility = false;
 
     // Use this for initialization
     private void Start()
@@ -26,36 +27,69 @@ public class RangedPlayer : Player, IObserver
     {
         CheckForEnchantment();
         isAttacking = true;
-        isOnCoolDown = true;
+        isOnCoolDown[0] = true;
         yield return new WaitForSeconds(attackCD); //Waiting for the cooldown
-        isOnCoolDown = false;
+        isOnCoolDown[0] = false;
     }
 
-    /*This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
-     * This function gets called from the animator (see animations events)
+    protected override IEnumerator FirstAbility()
+    {
+        firstAbility = true;
+        isOnCoolDown[1] = true;
+        yield return new WaitForSeconds(5f);
+        isOnCoolDown[1] = false;
+    }
+
+     // This function gets called from the animator(see animations events) to check if it is a normal attack or not
+    private void GenArrows(int currentDir)
+    {
+        if(firstAbility) {
+            multiShot(currentDir, 3, 15);
+        }
+        else
+        {
+            multiShot(currentDir, 1, 0);
+        }
+    }
+
+    /*This function generates a amount of arrow depending of which angle the player is facing
+     * parameter currentDir = facing direction, parameter count = how much arrows should spawn, degree = how much should those arrows be rotated per spawn
      */
-    private void createArrow(int currentDir)
+    private void multiShot(int currentDir, int count, float degree)
     {
         isAttacking = false;
-        Rigidbody2D arrowClone = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
-        if (currentDir == 2)
+        firstAbility = false;
+        int arrowCount = count;
+        Rigidbody2D [] arrows = new Rigidbody2D[arrowCount];
+        float degrees = degree;
+        for (int i = 0; i < arrowCount; i++)
         {
-            arrowClone.velocity = (transform.right * 10f);
-        }
-        if (currentDir == 3)
-        {
-            arrowClone.transform.Rotate(0, 0, -90);
-            arrowClone.velocity = (-transform.up * 10f);
-        }
-        if (currentDir == 4)
-        {
-            arrowClone.transform.Rotate(180, 0, 180);
-            arrowClone.velocity = (-transform.right * 10f);
-        }
-        if (currentDir == 1)
-        {
-            arrowClone.transform.Rotate(0, 0, 90);
-            arrowClone.velocity = (transform.up * 10f);
+            arrows[i] = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
+            Quaternion velocityAngle = Quaternion.Euler(0, 0, (i - arrowCount/2) * degrees);
+            if (currentDir == 1)
+            {
+                Quaternion facingAngle = Quaternion.Euler(0, 0, 90 + (i - arrowCount/2) * degrees);
+                arrows[i].transform.SetPositionAndRotation(transform.position, facingAngle);
+                arrows[i].velocity = velocityAngle * transform.up * 10f;
+            }
+            if(currentDir == 2)
+            {
+                Quaternion facingAngle = Quaternion.Euler(0, 0, (i - arrowCount / 2) * degrees);
+                arrows[i].transform.SetPositionAndRotation(transform.position, facingAngle);
+                arrows[i].velocity = velocityAngle * transform.right * 10f;
+            }
+            if(currentDir == 3)
+            {
+                Quaternion facingAngle = Quaternion.Euler(0, 0, -90 + (i - arrowCount / 2) * degrees);
+                arrows[i].transform.SetPositionAndRotation(transform.position, facingAngle);
+                arrows[i].velocity = velocityAngle * -transform.up * 10f;
+            }
+            if(currentDir == 4)
+            {
+                Quaternion facingAngle = Quaternion.Euler(180, 0, 180 + (i - arrowCount / 2) * -degrees);
+                arrows[i].transform.SetPositionAndRotation(transform.position, facingAngle);
+                arrows[i].velocity = velocityAngle * -transform.right * 10f;
+            }
         }
     }
 

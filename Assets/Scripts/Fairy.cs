@@ -51,12 +51,12 @@ public class Fairy : Player {
         _damage = baseDamage;
         isAttacking = true;
         circleCollider.enabled = true;
-        isOnCoolDown = true;
+        isOnCoolDown[0] = true;
         yield return new WaitForSeconds(0.25f);
         isAttacking = false;
         circleCollider.enabled = false;
         yield return new WaitForSeconds(attackCD);
-        isOnCoolDown = false;
+        isOnCoolDown[0] = false;
      }
 
 

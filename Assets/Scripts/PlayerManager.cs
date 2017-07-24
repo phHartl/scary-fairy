@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -8,8 +9,8 @@ public class PlayerManager : MonoBehaviour
     public string axisHorizontal;
     public string attackInput;
     public string changeClassInput;
-    public string enchantFireInput;
-    public string enchantIceInput;
+    public string firstSpecialAbility;
+    public string secondSpecialAbility;
     public string speedBoostInput;
     private GameObject playerObject;
     public int playerNumber;
@@ -125,6 +126,7 @@ public class PlayerManager : MonoBehaviour
         Subject.Notify("Player changed class");
     }
 
+
     // Gets called before changing class
     private void UpdateCurrentClassIndex()
     {
@@ -181,15 +183,15 @@ public class PlayerManager : MonoBehaviour
     private void LateUpdate()
     {
         // Fire Enchant
-        if (Input.GetButtonDown(enchantFireInput))
+        if (Input.GetButtonDown(firstSpecialAbility))
         {
-            EnchantFire();
+            firstAbility();
         }
 
         // Ice Enchant
-        if (Input.GetButtonDown(enchantIceInput))
+        if (Input.GetButtonDown(secondSpecialAbility))
         {
-            EnchantIce();
+            secondAbility();
         }
 
         //Speed Boost
@@ -199,16 +201,21 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void EnchantFire()
+    private void firstAbility()
     {
         if (gameObject.transform.GetComponentInChildren<Fairy>())
         {
             Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
             fairy.StartCoroutine(fairy.applyFireEnchantment());
         }
+        else
+        {
+            Player player = gameObject.GetComponentInChildren<Player>();
+            player.AttemptSpecialAbility();
+        }
     }
 
-    private void EnchantIce()
+    private void secondAbility()
     {
         if (gameObject.transform.GetComponentInChildren<Fairy>())
         {

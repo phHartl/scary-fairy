@@ -100,14 +100,25 @@ public class Player : MovingObj
 
     public void AttemptAttack()
     {
-        if (!isOnCoolDown)
+        if (!isOnCoolDown[0])
         {
             StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
         }
     }
 
+    public void AttemptSpecialAbility()
+    {
+        if(!isOnCoolDown[1])
+            StartCoroutine(FirstAbility());
+    }
+
     // This method is needed in order to call Attack from the PlayerManager in a secure way
     protected virtual IEnumerator Attack()
+    {
+        return null;
+    }
+
+    protected virtual IEnumerator FirstAbility()
     {
         return null;
     }

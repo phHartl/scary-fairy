@@ -11,7 +11,7 @@ public abstract class MovingObj : MonoBehaviour
     protected bool isMoving;
     protected bool isAttacking;
     protected bool isInvincible;
-    protected bool isOnCoolDown;
+    protected bool[] isOnCoolDown = new bool[3]; //Cooldowns for three abilites (0 is attack, 1 first ability, 2 second ability)
     protected float attackCD;
     protected bool onEnchantmentCD;
     protected Vector2 newPos;
@@ -21,7 +21,7 @@ public abstract class MovingObj : MonoBehaviour
     private Color blue = new Color(0.1f, 0.3f, 1.0f);
     private Color red = new Color(1.0f, 0.3f, 0.1f);
 
-    public float HEALTH_POTION_CHANCE = 50f;
+    public float HEALTH_POTION_CHANCE = 0.5f;
 
     public bool iceEnchantment;
     public bool fireEnchantment;
@@ -110,7 +110,7 @@ public abstract class MovingObj : MonoBehaviour
     //Creates a random number. If the random number is within a certain range, notifys observer to drop a health potion.
     private void dropHealthPotion()
     {
-        float randomFloat = Random.Range(0f, 100f);
+        float randomFloat = Random.Range(0f, 1f);
         if(randomFloat <= HEALTH_POTION_CHANCE)
         {
             Subject.Notify("HealthPotionDropped", transform.position);
