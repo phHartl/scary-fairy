@@ -28,6 +28,11 @@ public class PlayerManager : MonoBehaviour, IObserver
         SetAxis();
     }
 
+    private void Start()
+    {
+        SetFairyTarget();
+    }
+
     // This method initializes a new player child-object depending on the first entry of the classes array
     private void InitPlayerObject()
     {   
@@ -38,13 +43,10 @@ public class PlayerManager : MonoBehaviour, IObserver
             playerObject = Instantiate(classes[currentClassIndex], gameObject.transform) as GameObject;
             if (PlayerPrefs.GetInt("hasFairy") == 1)
             {
-                hasFairy = true;
-                // broken
-                SetFairyTarget();
+                hasFairy = true;           
             }
             gameObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
             ChangePortrait();
-
         }
         else if (gameObject.GetComponentInChildren<Player>())
         {
