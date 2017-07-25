@@ -10,9 +10,13 @@ public class AIMove : AIBase, IObserver {
 
     public float updateRate = 0.5f;
 
+    public float updatePlayerRate = 3f;
+
     public Path path;
 
     public bool canMove = true;
+
+    public bool canSearch = true;
 
     public float speed = 300f;
 
@@ -33,8 +37,8 @@ public class AIMove : AIBase, IObserver {
     {
         Subject.AddObserver(this);
         getPlayers();
-        StartCoroutine(SearchPlayer());
-        StartCoroutine(UpdatePath());
+        StartCoroutine(RepeatTrySearchPlayer());
+        StartCoroutine(RepeatTrySearchPath());
     }
 
     public void OnNotify(string gameEvent)
@@ -43,8 +47,7 @@ public class AIMove : AIBase, IObserver {
         {
             case "Player changed class":
                     getPlayers();
-                    StartCoroutine(SearchPlayer());
-                    StartCoroutine(UpdatePath());
+                    SearchPlayer();
                 break;
             default:
                 break;
@@ -54,9 +57,10 @@ public class AIMove : AIBase, IObserver {
     private void OnDisable()
     {
         Subject.RemoveObserver(this);
+        seeker.CancelCurrentPathRequest();
     }
 
-    private void OnEnable()
+    private void Start()
     {
         Init();
     }
@@ -66,7 +70,39 @@ public class AIMove : AIBase, IObserver {
         targets = GameObject.FindGameObjectsWithTag("Player");
     }
 
-    private IEnumerator SearchPlayer()
+    private IEnumerator RepeatTrySearchPath()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(TrySearchPath());
+        }
+    }
+
+    private IEnumerator RepeatTrySearchPlayer()
+    {
+        while (true) yield return new WaitForSeconds(TrySearchPlayer());
+    }
+
+    private float TrySearchPath()
+    {
+        if (canSearch && target != null && this.gameObject.activeInHierarchy)
+        {
+            UpdatePath();
+        }
+        return updateRate;
+    }
+
+    private float TrySearchPlayer()
+    {
+        if (canSearch && this.gameObject.activeInHierarchy)
+        {
+            getPlayers();
+            SearchPlayer();
+        }
+        return updatePlayerRate;
+    }
+
+    private void SearchPlayer()
     {
         float closestDistance = float.MaxValue;
         int targetIndex = -1;
@@ -84,8 +120,6 @@ public class AIMove : AIBase, IObserver {
             }
         }
         target = targets[targetIndex].transform;
-        yield return new WaitForSeconds(3f); //Search for the newest player every three seconds
-        StartCoroutine(SearchPlayer());
     }
 
     //Gets called if a path is available
@@ -99,15 +133,9 @@ public class AIMove : AIBase, IObserver {
         }
     }
 
-    IEnumerator UpdatePath()
+    public void UpdatePath()
     {
-        if (target == null)
-        {
-            StartCoroutine(SearchPlayer());
-        }
         seeker.StartPath(transform.position, target.position, OnPathComplete); //Calcs a path to the target
-        yield return new WaitForSeconds(updateRate); //Update our path every predefined time
-        StartCoroutine(UpdatePath());
     }
 
     protected override void MovementUpdate(float deltaTime)
