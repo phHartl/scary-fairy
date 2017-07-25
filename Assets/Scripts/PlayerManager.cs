@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
     public string axisVertical;
     public string axisHorizontal;
     public string attackInput;
-    public string changeClassInput;
+    public string changeClassUpInput;
+    public string changeClassDownInput;
     public string firstSpecialAbility;
     public string secondSpecialAbility;
     public string speedBoostInput;
@@ -62,9 +63,14 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Change Class
-        if (Input.GetButtonDown(changeClassInput))
+        if (Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput))
         {
-            StartCoroutine(ChangeClass());
+            bool down = false;
+            if (Input.GetButtonDown(changeClassDownInput))
+            {
+                down = true;
+            }
+            StartCoroutine(ChangeClass(down));
         }
     }
 
@@ -80,7 +86,7 @@ public class PlayerManager : MonoBehaviour
      * The classes get changed according to their index in the array (0 - first).
      * It afterwards sets the new Player-GameObject as the new target of the camera.
      */
-    private IEnumerator ChangeClass()
+    private IEnumerator ChangeClass(bool changedDownwards)
     {
         // The transform of the player gets saved, afterwards the old Player-Gameobject gets destroyed
         Transform newPlayerTransform = playerObject.transform;
@@ -93,12 +99,12 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Increments the Index
-        UpdateCurrentClassIndex();
+        UpdateCurrentClassIndex(changedDownwards);
 
         // This prohibits both players from being a fairy at the same time
         if (classes[currentClassIndex].name == "fairy" && hasFairy)
         {
-            UpdateCurrentClassIndex();
+            UpdateCurrentClassIndex(changedDownwards);
         }
 
         // Instantiates the new GameObject
@@ -128,12 +134,24 @@ public class PlayerManager : MonoBehaviour
 
 
     // Gets called before changing class
-    private void UpdateCurrentClassIndex()
+    private void UpdateCurrentClassIndex(bool changedDown)
     {
-        currentClassIndex++;
-        if (currentClassIndex == 3)
+        if (changedDown)
         {
-            currentClassIndex = 0;
+            currentClassIndex--;
+            if (currentClassIndex == -1)
+            {
+                currentClassIndex = 2;
+            }
+            return;
+        }
+        else
+        {
+            currentClassIndex++;
+            if (currentClassIndex == 3)
+            {
+                currentClassIndex = 0;
+            }
         }
     }
 
