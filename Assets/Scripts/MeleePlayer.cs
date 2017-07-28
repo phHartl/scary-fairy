@@ -5,6 +5,10 @@ public class MeleePlayer : Player, IObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
+    private float damageReduce = 0; //How much should the damage be reduced?
+    private float defensiveStateDuration = 5f; //Duration of buff
+    public float defensiveDebuff = 0.5f; //Factor to debuff other values
+
 
     public int knockBackLength = 2;
 
@@ -19,37 +23,21 @@ public class MeleePlayer : Player, IObserver
         particles.Stop();
         DisableAttackColliders();
         this.attackCD = 1f;
+        abilityCDs[0] = 5f;
         this._hitpoints = 50;
         this.baseDamage = 20;
         Subject.AddObserver(this);
     }
 
- protected override void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (isAttacking && other.CompareTag("CasualEnemy"))
+        base.OnTriggerEnter2D(other);
+        if (other.CompareTag("CasualEnemy"))
         {
-
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            AIMove ai = other.GetComponent<AIMove>();
-            if (iceEnchantment)
-            {
-                ce.applyDamage(_damage);
-                ai.hitByIceEnchantment();
-                print("IceEnchanted Attack");
-            }
-            if (fireEnchantment)
-            {
-                ce.applyDamage(_damage, FIRE_ENCHANTMENT);
-                print("FireEnchanted Attack");
-            }
-            if (!iceEnchantment && !fireEnchantment)
-            {
-                ce.applyDamage(_damage);
-                print("normal Attack");
-            }
+            Npc ce = other.GetComponent<Npc>();
             // knockVector = direction of knockBack times strength of knockback
             Vector2 knockVector = (ce.transform.position - this.transform.position).normalized * knockBackLength;
-            ce.knockBack(knockVector,rb2D.mass);
+            ce.knockBack(knockVector, rb2D.mass);
         }
     }
 
@@ -63,6 +51,35 @@ public class MeleePlayer : Player, IObserver
         sound.Play();
         yield return new WaitForSeconds(attackCD); //Waiting for cooldown
         isOnCoolDown[0] = false;
+    }
+
+    protected override IEnumerator FirstAbility()
+    {
+        firstAbility = true;
+        DefensiveState(firstAbility);
+        isOnCoolDown[1] = true;
+        yield return new WaitForSeconds(abilityCDs[0]);
+        firstAbility = false;
+        DefensiveState(firstAbility);
+        yield return new WaitForSeconds(defensiveStateDuration);
+        isOnCoolDown[1] = false;
+    }
+
+    private void DefensiveState(bool isDefensive)
+    {
+        if (isDefensive)
+        {
+            moveSpeed *= defensiveDebuff;
+            attackCD *= 1 / defensiveDebuff;
+            damageReduce = 0.8f;
+            return;
+        }
+        else
+        {
+            moveSpeed *= 1 / defensiveDebuff;
+            attackCD *= defensiveDebuff;
+            damageReduce = 0;
+        }
     }
 
     //This function gets called when the attack animation starts (see animations events)
@@ -98,6 +115,12 @@ public class MeleePlayer : Player, IObserver
                 }
                 break;
         }
+    }
+
+    public override void applyDamage(int damage)
+    {
+        damage = Mathf.RoundToInt(damage * (1- damageReduce));
+        base.applyDamage(damage);
     }
 
 }

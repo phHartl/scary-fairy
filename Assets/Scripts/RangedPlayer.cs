@@ -5,7 +5,6 @@ public class RangedPlayer : Player, IObserver
 {
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
-    private bool firstAbility = false;
 
     // Use this for initialization
     private void Start()

@@ -13,6 +13,7 @@ public class Player : MovingObj
     [HideInInspector]
     public Vector2 lastMove;
     protected int baseDamage;
+    protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
     
 
@@ -127,20 +128,29 @@ public class Player : MovingObj
     {
         if (isAttacking == true && other.CompareTag("CasualEnemy"))
         {
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
+            CalcEnemyDamage(other);
+        }
+    }
+
+    public void CalcEnemyDamage(Collider2D other) //This methode can be called by projectiles, removed duplicate code in arrow and meleeplayer
+    {
+        CasualEnemy ce = other.GetComponent<CasualEnemy>();
+        AIMove ai = other.GetComponent<AIMove>();
+        if (iceEnchantment)
+        {
             ce.applyDamage(_damage);
-            if (iceEnchantment)
-            {
-                print("IceEnchanted Attack");
-            }
-            if (fireEnchantment)
-            {
-                print("FireEnchanted Attack");
-            }
-            if (!iceEnchantment && !fireEnchantment)
-            {
-                print("normal Attack");
-            }
+            ai.hitByIceEnchantment();
+            print("IceEnchanted Attack");
+        }
+        if (fireEnchantment)
+        {
+            ce.applyDamage(_damage, FIRE_ENCHANTMENT);
+            print("FireEnchanted Attack");
+        }
+        if (!iceEnchantment && !fireEnchantment)
+        {
+            ce.applyDamage(_damage);
+            print("normal Attack");
         }
     }
 

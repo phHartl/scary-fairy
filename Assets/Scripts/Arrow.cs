@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : MonoBehaviour {
+public class Arrow : MonoBehaviour
+{
 
     public Rigidbody2D arrow;
 
@@ -19,22 +20,7 @@ public class Arrow : MonoBehaviour {
         Player player = GameObject.FindObjectOfType<RangedPlayer>();
         if (other.CompareTag("CasualEnemy"))
         {
-            CasualEnemy ce = other.GetComponent<CasualEnemy>();
-            AIMove ai = other.GetComponent<AIMove>();
-
-            if ((player.iceEnchantment))
-            {
-                ce.applyDamage(player.getDamage());
-                ai.hitByIceEnchantment();
-            }
-            else if (player.fireEnchantment)
-            {
-                ce.applyDamage(player.getDamage(), player.FIRE_ENCHANTMENT);
-            }
-            else
-            {
-                ce.applyDamage(player.getDamage());
-            }
+            player.CalcEnemyDamage(other);
             print("Arrow hit enemy");
         }
     }
