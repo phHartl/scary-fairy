@@ -55,7 +55,9 @@ public abstract class Npc : MovingObj
         isMoving = AI.canMove;
     }
 
-    protected void OnCollisionStay2D(Collision2D other)
+
+
+    protected void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player") && !isKnockedBack)
         {
@@ -65,7 +67,8 @@ public abstract class Npc : MovingObj
         }
     }
 
-    protected void OnCollisionExit2D(Collision2D collision)
+ 
+    protected void OnTriggerExit2D(Collider2D collision)
     {
         rb2D.bodyType = RigidbodyType2D.Dynamic; //Set rigidbody dynamic again;
     }

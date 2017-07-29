@@ -20,6 +20,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject[] classes;
     private int currentClassIndex;
     private CameraControl cameraControl;
+    public Transform otherPlayerTransform;
+    private SpriteRenderer renderer;
+
+    [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
+    [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
 
     // Use this for initialization
     private void Awake () {
@@ -29,6 +34,7 @@ public class PlayerManager : MonoBehaviour
         currentClassIndex = 0;
         InitPlayerObject();
         SetAxis();
+        renderer = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
@@ -71,6 +77,24 @@ public class PlayerManager : MonoBehaviour
                 down = true;
             }
             StartCoroutine(ChangeClass(down));
+        }
+
+        checkLayer();
+    }
+
+
+    /*
+     * Checks if player is in front of or behind other player by compairing y-coordinates of both players.
+     * If current player is behind other player, sets SortingLayer to PLAYER_BACKGROUND, if he is in front sets SortingLayer to PLAYER_FOREGROUND
+     */
+    private void checkLayer()
+    {
+        if(otherPlayerTransform.GetChild(0).transform.position.y > gameObject.transform.GetChild(0).transform.position.y)
+        {
+            renderer.sortingLayerName = PLAYER_FOREGROUND;
+        } else
+        {
+            renderer.sortingLayerName = PLAYER_BACKGROUND;
         }
     }
 
