@@ -29,6 +29,12 @@ public class MeleePlayer : Player, IObserver
         Subject.AddObserver(this);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        animator.SetBool("ShieldUp", firstAbility);
+    }
+
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);

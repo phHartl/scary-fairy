@@ -180,7 +180,7 @@ public class AIMove : AIBase, IObserver {
 
     public Vector3 getDirection()
     {
-        if (canMove)
+        if (canMove && canSearch && path != null)
         {
             Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
             return direction;

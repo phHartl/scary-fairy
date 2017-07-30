@@ -17,6 +17,7 @@ public abstract class Npc : MovingObj
     protected override void Start()
     {
         base.Start();
+        animator = GetComponent<Animator>();
         AI = GetComponent<AIMove>(); //Simple caching of component -> better performance
     }
 
@@ -36,7 +37,6 @@ public abstract class Npc : MovingObj
         base.Update();
         //slider.value = _hitpoints;
         checkMovement();
-        /*
         animator.SetBool("isMoving", true);
         if (Mathf.Abs(currentDir.x) > 0.5f)
         {
@@ -46,7 +46,6 @@ public abstract class Npc : MovingObj
         {
             animator.SetFloat("MoveY", currentDir.y);
         }
-        */
     }
 
     public void checkMovement()
