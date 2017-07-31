@@ -79,7 +79,8 @@ public class CasualEnemy : Npc
     private IEnumerator applyBurnDamage()
     {
         isBurning = true;
-        for(int i = 0; i < BURN_DAMAGE_DURATION; i++)
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
         {
             if (durationRefreshed)
             {
@@ -92,6 +93,7 @@ public class CasualEnemy : Npc
             yield return new WaitForSeconds(BURN_TICKRATE);
         }
         isBurning = false;
+        GetComponent<Renderer>().material.color = Color.white;
     }
 
    
