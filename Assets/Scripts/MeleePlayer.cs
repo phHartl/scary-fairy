@@ -8,6 +8,7 @@ public class MeleePlayer : Player, IObserver
     private float damageReduce = 0; //How much should the damage be reduced?
     private float defensiveStateDuration = 5f; //Duration of buff
     public float defensiveDebuff = 0.5f; //Factor to debuff other values
+    
 
 
     public int knockBackLength = 2;
@@ -38,7 +39,7 @@ public class MeleePlayer : Player, IObserver
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-        if (other.CompareTag("CasualEnemy"))
+        if (other.CompareTag("CasualEnemy") && isAttacking)
         {
             Npc ce = other.GetComponent<Npc>();
             // knockVector = direction of knockBack times strength of knockback

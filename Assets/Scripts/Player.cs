@@ -10,6 +10,7 @@ public class Player : MovingObj
     private Vector2 verticalMovement;
     public string axisVertical;
     public string axisHorizontal;
+    protected new SpriteRenderer renderer;
     [HideInInspector]
     public Vector2 lastMove;
     protected int baseDamage;
@@ -24,6 +25,7 @@ public class Player : MovingObj
         lastMove.x = 0;
         lastMove.y = -1;
         animator = GetComponent<Animator>();
+        renderer = GetComponent<SpriteRenderer>();
     }
 
     protected override void Update()
@@ -192,5 +194,10 @@ public class Player : MovingObj
         {
             _damage = baseDamage * 2;
         }
+    }
+
+    public SpriteRenderer getRenderer()
+    {
+        return renderer;
     }
 }
