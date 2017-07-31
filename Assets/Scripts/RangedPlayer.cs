@@ -7,12 +7,17 @@ public class RangedPlayer : Player, IObserver
     private float timeToTravel = 1f;
 
     // Use this for initialization
-    private void Start()
+    private void Awake()
     {
-        base.Start();
         this.baseDamage = 10;
         this._hitpoints = 50;
         this.attackCD = 1f;
+    }
+
+    // Use this for initializing dependencies
+    private void Start()
+    {
+        base.Start();
         animator = GetComponent<Animator>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;

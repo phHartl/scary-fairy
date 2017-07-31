@@ -14,6 +14,14 @@ public class MeleePlayer : Player, IObserver
     public int knockBackLength = 2;
 
     // Use this for initialization
+    private void Awake()
+    {
+        this._hitpoints = 100;
+        this.attackCD = 1f;
+        this.baseDamage = 20;
+    }
+
+    // use this for initializing dependencies
     private void Start()
     {
         base.Start();
