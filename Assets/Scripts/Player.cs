@@ -134,22 +134,22 @@ public class Player : MovingObj
 
     public void CalcEnemyDamage(Collider2D other) //This methode can be called by projectiles, removed duplicate code in arrow and meleeplayer
     {
-        CasualEnemy ce = other.GetComponent<CasualEnemy>();
+        Npc enemy = other.GetComponent<Npc>();
         AIMove ai = other.GetComponent<AIMove>();
         if (iceEnchantment)
         {
-            ce.applyDamage(_damage);
+            enemy.applyDamage(_damage);
             ai.hitByIceEnchantment();
             print("IceEnchanted Attack");
         }
         if (fireEnchantment)
         {
-            ce.applyDamage(_damage, FIRE_ENCHANTMENT);
+            enemy.applyDamage(_damage, FIRE_ENCHANTMENT);
             print("FireEnchanted Attack");
         }
         if (!iceEnchantment && !fireEnchantment)
         {
-            ce.applyDamage(_damage);
+            enemy.applyDamage(_damage);
             print("normal Attack");
         }
     }
