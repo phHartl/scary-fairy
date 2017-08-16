@@ -46,16 +46,16 @@ public class Fairy : Player {
         transform.position = target.transform.position + FAIRY_DISTANCE;
     }
 
-    protected override IEnumerator Attack()
+    protected override void Attack()
     {
         _damage = baseDamage;
         isAttacking = true;
         circleCollider.enabled = true;
         isOnCoolDown[0] = true;
-        yield return new WaitForSeconds(0.25f);
+       // yield return new WaitForSeconds(0.25f);
         isAttacking = false;
         circleCollider.enabled = false;
-        yield return new WaitForSeconds(attackCD);
+       // yield return new WaitForSeconds(attackCD);
         isOnCoolDown[0] = false;
      }
 

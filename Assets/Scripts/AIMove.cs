@@ -127,7 +127,7 @@ public class AIMove : AIBase, IObserver {
     //Gets called if a path is available
     private void OnPathComplete(Path p)
     {
-        Debug.Log("We got a path. Error?" + p.error);
+        //Debug.Log("We got a path. Error?" + p.error);
         if (!p.error)
         {
             path = p;

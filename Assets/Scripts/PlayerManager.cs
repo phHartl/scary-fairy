@@ -172,6 +172,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         ChangePortrait();
         yield return new WaitForSeconds(0.25f);
         Subject.Notify("Player changed class");
+        Subject.Notify("Player changed class", currentClassIndex);
     }
 
     public void SavePlayerState()

@@ -15,7 +15,8 @@ public class Player : MovingObj
     protected int baseDamage;
     protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
-    
+    public CooldownManager cdManager;
+
 
     // Use this for initialization
     protected void Start()
@@ -103,25 +104,25 @@ public class Player : MovingObj
     {
         if (!isOnCoolDown[0])
         {
-            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
+            Attack(); //Coroutines don't need to be finished within the updateframe
         }
     }
 
     public void AttemptSpecialAbility()
     {
         if(!isOnCoolDown[1])
-            StartCoroutine(FirstAbility());
+            FirstAbility();
     }
 
     // This method is needed in order to call Attack from the PlayerManager in a secure way
-    protected virtual IEnumerator Attack()
+    protected virtual void Attack()
     {
-        return null;
+        return;
     }
 
-    protected virtual IEnumerator FirstAbility()
+    protected virtual void FirstAbility()
     {
-        return null;
+        return;
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)

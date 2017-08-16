@@ -58,25 +58,25 @@ public class MeleePlayer : Player, IObserver
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function enables the triggers attached to the player in dependence of which direction the player is facing
-    protected override IEnumerator Attack()
+    protected override void Attack()
     {
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown[0] = true;
         sound.Play();
-        yield return new WaitForSeconds(attackCD); //Waiting for cooldown
+       // yield return new WaitForSeconds(attackCD); //Waiting for cooldown
         isOnCoolDown[0] = false;
     }
 
-    protected override IEnumerator FirstAbility()
+    protected override void FirstAbility()
     {
         firstAbility = true;
         DefensiveState(firstAbility);
         isOnCoolDown[1] = true;
-        yield return new WaitForSeconds(abilityCDs[0]);
+        //yield return new WaitForSeconds(abilityCDs[0]);
         firstAbility = false;
         DefensiveState(firstAbility);
-        yield return new WaitForSeconds(defensiveStateDuration);
+        //yield return new WaitForSeconds(defensiveStateDuration);
         isOnCoolDown[1] = false;
     }
 

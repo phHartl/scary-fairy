@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class RangedPlayer : Player, IObserver
+public class RangedPlayer : Player, IObserver, CooldownObserver
 {
     public Rigidbody2D arrow;
     private float timeToTravel = 1f;
@@ -9,6 +10,7 @@ public class RangedPlayer : Player, IObserver
     // Use this for initialization
     private void Awake()
     {
+        cdManager = GetComponentInParent<CooldownManager>();
         this.baseDamage = 10;
         this._hitpoints = 50;
         this.attackCD = 1f;
@@ -18,30 +20,31 @@ public class RangedPlayer : Player, IObserver
     private void Start()
     {
         base.Start();
+        isOnCoolDown = cdManager.GetRangerCooldowns();
         animator = GetComponent<Animator>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;
         particles.Stop();
         Subject.AddObserver(this);
+        Subject.AddCDObserver(this);
     }
 
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
-    protected override IEnumerator Attack()
+    protected override void Attack()
     {
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown[0] = true;
-        yield return new WaitForSeconds(attackCD); //Waiting for the cooldown
-        isOnCoolDown[0] = false;
+        cdManager.StartCooldown(0, 1);
     }
 
-    protected override IEnumerator FirstAbility()
+    protected override void FirstAbility()
     {
+        CheckForEnchantment();
         firstAbility = true;
         isOnCoolDown[1] = true;
-        yield return new WaitForSeconds(5f);
-        isOnCoolDown[1] = false;
+        cdManager.StartCooldown(1, 1);
     }
 
      // This function gets called from the animator(see animations events) to check if it is a normal attack or not
@@ -107,6 +110,16 @@ public class RangedPlayer : Player, IObserver
                 {
                     _hitpoints = 100;
                 }
+                break;
+        }
+    }
+
+    public void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        switch (gameEvent)
+        {
+            case "RangerCDOver":
+                isOnCoolDown[cooldownIndex] = false;
                 break;
         }
     }

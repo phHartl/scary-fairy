@@ -7,6 +7,7 @@ public static class Subject
 
     static List<IObserver> observers = new List<IObserver>();
     static List<TransformObserver> transformObservers = new List<TransformObserver>();
+    static List<CooldownObserver> cdObservers = new List<CooldownObserver>();
 
     public static void Notify(string gameEvent)
     {
@@ -22,6 +23,14 @@ public static class Subject
         for (int i = 0; i < observers.Count; i++)
         {
             transformObservers[i].OnNotify(gameEvent, position);
+        }
+    }
+
+    public static void Notify(string gameEvent, int cooldownIndex)
+    {
+        for (int i = 0; i < observers.Count; i++)
+        {
+            cdObservers[i].OnNotify(gameEvent, cooldownIndex);
         }
     }
 
@@ -43,5 +52,15 @@ public static class Subject
     public static void RemoveTransformObserver(TransformObserver observer)
     {
         transformObservers.Remove(observer);
+    }
+
+    public static void AddCDObserver(CooldownObserver observer)
+    {
+        cdObservers.Add(observer);
+    }
+
+    public static void RemoveCDObserver(CooldownObserver observer)
+    {
+        cdObservers.Remove(observer);
     }
 }
