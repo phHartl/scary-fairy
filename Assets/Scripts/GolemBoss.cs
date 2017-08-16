@@ -10,9 +10,10 @@ public class GolemBoss : Npc, IObserver
     private bool durationRefreshed = false;
     private bool activated = false;
 
-    Animator animator;
-    PolygonCollider2D damageTrigger;
-    AIMove moveScript;
+    private Animator animator;
+    private AIMove moveScript;
+
+    public GameObject projectileObject;
 
     // Use this for initialization
     void Start ()
@@ -42,6 +43,7 @@ public class GolemBoss : Npc, IObserver
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         moveScript.canMove = true;
         moveScript.canSearch = true;
+        StartCoroutine(startProjectileAttack());
     }
 
     // Update is called once per frame
@@ -49,6 +51,18 @@ public class GolemBoss : Npc, IObserver
     {
         base.Update();
 	}
+
+    protected IEnumerator startProjectileAttack()
+    {
+        while(_hitpoints > 0)
+        {
+            GameObject projectileClone = projectileObject;
+            Instantiate(projectileClone);
+            projectileClone.transform.position = this.transform.position;
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
 
     public override void applyDamage(int damage)
     {
@@ -98,6 +112,7 @@ public class GolemBoss : Npc, IObserver
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;
     }
+
 
     public void OnNotify(String gameEvent)
     {
