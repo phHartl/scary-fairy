@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class Fairy : Player {
+public class Fairy : Player, CooldownObserver {
 
     public MovingObj target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
@@ -21,10 +22,10 @@ public class Fairy : Player {
 
     private void Start () {
         base.Start();
+        isOnCoolDown = cdManager.GetFairyCooldown();
         circleCollider = GetComponent<CircleCollider2D>();
         novaAnimator = GetComponentsInChildren<Animator>()[1];
         circleCollider.enabled = false;
-        this.attackCD = 2f;
         this.baseDamage = 20; //Damage of Fairy AOE Attack
     }
 
@@ -52,12 +53,15 @@ public class Fairy : Player {
         isAttacking = true;
         circleCollider.enabled = true;
         isOnCoolDown[0] = true;
-       // yield return new WaitForSeconds(0.25f);
+        cdManager.StartCooldown(0, 2);
+    }
+
+    //Called trough child object because of how an animation event works
+    public void AttackOver()   
+    {
         isAttacking = false;
         circleCollider.enabled = false;
-       // yield return new WaitForSeconds(attackCD);
-        isOnCoolDown[0] = false;
-     }
+    }
 
 
 
@@ -133,6 +137,16 @@ public class Fairy : Player {
         else
         {
             target.resetEnchantments();
+        }
+    }
+
+    public void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        switch (gameEvent)
+        {
+            case "FairyCDOver":
+                isOnCoolDown[cooldownIndex] = false;
+                break;
         }
     }
 }

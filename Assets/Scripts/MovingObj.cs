@@ -12,8 +12,6 @@ public abstract class MovingObj : MonoBehaviour
     protected bool isAttacking;
     protected bool isInvincible;
     protected bool[] isOnCoolDown = new bool[4]; //Cooldowns for four abilites (0 is attack, 1 first ability, 2 second ability, 3 third ability)
-    protected float attackCD;
-    protected float[] abilityCDs = new float[3]; //Time of ability cooldowns (0 is first ability (fire,multiShot,defensiveState), 1 is ice, 2 is speed
     protected bool onEnchantmentCD;
     protected Vector2 newPos;
     protected Animator animator;

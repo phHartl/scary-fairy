@@ -8,9 +8,11 @@ public class CooldownManager : MonoBehaviour {
     private bool[] warriorOnCooldown = new bool[2]; //This needs to be checked by player classes
     private bool[] rangerOnCooldown = new bool[2];
     private bool[] fairyOnCooldown = new bool[4];
-    private float[] warriorAbilityCooldowns = { 1f, 5f }; //Attack, defensiveState
+    private bool changeClassOnCooldown = false;
+    private float[] warriorAbilityCooldowns = { 1f, 10f }; //Attack, defensiveState
     private float[] rangerAbilityCooldowns = { 1f, 5f }; //Attack, multiShot
     private float[] fairyAbilityCooldowns = { 2f, 5f, 5f, 8f }; //Attack, fire, ice, speed
+    private float classChangeCooldown = 10f;
 
 	// Use this for initialization
 	void Awake () { 
@@ -20,6 +22,11 @@ public class CooldownManager : MonoBehaviour {
 	void Update () {
 		
 	}
+    
+    public void SetWarriorCooldowns(int cooldownIndex, float multiplier)
+    {
+        warriorAbilityCooldowns[cooldownIndex] *= multiplier;
+    }
 
     public bool[] GetWarriorCooldowns()
     {
@@ -36,6 +43,7 @@ public class CooldownManager : MonoBehaviour {
         return fairyOnCooldown;
     }
 
+    //This class is needed, because IEnumerator are getting stuck when calling object gets destroyed
     public void StartCooldown(int cooldownIndex, int playerClassIndex)
     {
         StartCoroutine(StartCD(cooldownIndex, playerClassIndex));

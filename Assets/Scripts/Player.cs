@@ -22,6 +22,7 @@ public class Player : MovingObj
     protected void Start()
     {
         base.Start();
+        cdManager = GetComponentInParent<CooldownManager>();
         lastMove.x = 0;
         lastMove.y = -1;
         animator = GetComponent<Animator>();
@@ -104,7 +105,7 @@ public class Player : MovingObj
     {
         if (!isOnCoolDown[0])
         {
-            Attack(); //Coroutines don't need to be finished within the updateframe
+            Attack();
         }
     }
 

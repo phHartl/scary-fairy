@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class MeleePlayer : Player, IObserver
+public class MeleePlayer : Player, IObserver, CooldownObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
@@ -17,7 +18,6 @@ public class MeleePlayer : Player, IObserver
     private void Awake()
     {
         this._hitpoints = 100;
-        this.attackCD = 1f;
         this.baseDamage = 20;
     }
 
@@ -25,14 +25,13 @@ public class MeleePlayer : Player, IObserver
     private void Start()
     {
         base.Start();
+        isOnCoolDown = cdManager.GetWarriorCooldowns();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         sound = GameObject.FindObjectOfType<AudioSource>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
-        this.attackCD = 1f;
-        abilityCDs[0] = 5f;
         this._hitpoints = 50;
         this.baseDamage = 20;
         Subject.AddObserver(this);
@@ -64,37 +63,27 @@ public class MeleePlayer : Player, IObserver
         isAttacking = true;
         isOnCoolDown[0] = true;
         sound.Play();
-       // yield return new WaitForSeconds(attackCD); //Waiting for cooldown
-        isOnCoolDown[0] = false;
+        cdManager.StartCooldown(0, 0);
     }
 
     protected override void FirstAbility()
     {
-        firstAbility = true;
-        DefensiveState(firstAbility);
+        StartCoroutine(DefensiveState());
         isOnCoolDown[1] = true;
-        //yield return new WaitForSeconds(abilityCDs[0]);
-        firstAbility = false;
-        DefensiveState(firstAbility);
-        //yield return new WaitForSeconds(defensiveStateDuration);
-        isOnCoolDown[1] = false;
+        cdManager.StartCooldown(1, 0);
     }
 
-    private void DefensiveState(bool isDefensive)
+    private IEnumerator DefensiveState()
     {
-        if (isDefensive)
-        {
-            moveSpeed *= defensiveDebuff;
-            attackCD *= 1 / defensiveDebuff;
-            damageReduce = 0.8f;
-            return;
-        }
-        else
-        {
-            moveSpeed *= 1 / defensiveDebuff;
-            attackCD *= defensiveDebuff;
-            damageReduce = 0;
-        }
+        firstAbility = true;
+        moveSpeed *= defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, (1 / defensiveDebuff));
+        damageReduce = 0.8f;
+        yield return new WaitForSeconds(defensiveStateDuration);
+        moveSpeed *= 1 / defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, defensiveDebuff);
+        damageReduce = 0;
+        firstAbility = false;
     }
 
     //This function gets called when the attack animation starts (see animations events)
@@ -138,4 +127,13 @@ public class MeleePlayer : Player, IObserver
         base.applyDamage(damage);
     }
 
+    public void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        switch (gameEvent)
+        {
+            case "WarriorCDOver":
+                isOnCoolDown[cooldownIndex] = false;
+                break;
+        }
+    }
 }

@@ -10,10 +10,8 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     // Use this for initialization
     private void Awake()
     {
-        cdManager = GetComponentInParent<CooldownManager>();
         this.baseDamage = 10;
         this._hitpoints = 50;
-        this.attackCD = 1f;
     }
 
     // Use this for initializing dependencies
