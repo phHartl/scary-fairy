@@ -22,7 +22,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
     }
 
     // use this for initializing dependencies
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         isOnCoolDown = cdManager.GetWarriorCooldowns();
@@ -35,6 +35,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         this._hitpoints = 50;
         this.baseDamage = 20;
         Subject.AddObserver(this);
+        Subject.AddCDObserver(this);
     }
 
     protected override void Update()
@@ -133,6 +134,11 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         {
             case "WarriorCDOver":
                 isOnCoolDown[cooldownIndex] = false;
+                break;
+            case "BuffOver":
+                resetEnchantments();
+                moveSpeed = 5;
+                onEnchantmentCD = cdManager.GetBuffCooldown();
                 break;
         }
     }

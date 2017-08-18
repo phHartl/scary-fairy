@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour, IObserver
     public GameObject[] classes;
     private int currentClassIndex;
     private CameraControl cameraControl;
+    private CooldownManager cdmanager;
 
     [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
     [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
@@ -28,6 +29,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         Subject.AddObserver(this);
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
+        cdmanager = GetComponent<CooldownManager>();
         currentClassIndex = 0;
         InitPlayerObject();
         SetAxis();
@@ -87,7 +89,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         }
 
         // Change Class
-        if (Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput))
+        if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
         {
             bool down = false;
             if (Input.GetButtonDown(changeClassDownInput))
@@ -170,6 +172,7 @@ public class PlayerManager : MonoBehaviour, IObserver
 
         // Change the portrait to fit the new class
         ChangePortrait();
+        cdmanager.StartChangeClassCD();
         yield return new WaitForSeconds(0.25f);
         Subject.Notify("Player changed class");
         Subject.Notify("Player changed class", currentClassIndex);
@@ -266,40 +269,26 @@ public class PlayerManager : MonoBehaviour, IObserver
         //Speed Boost
         if (Input.GetButtonDown(speedBoostInput))
         {
-            SpeedBoost();
+            thirdAbility();
         }
     }
 
     private void firstAbility()
     {
-        if (gameObject.transform.GetComponentInChildren<Fairy>())
-        {
-            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-            fairy.StartCoroutine(fairy.applyFireEnchantment());
-        }
-        else
-        {
             Player player = gameObject.GetComponentInChildren<Player>();
             player.AttemptSpecialAbility();
-        }
     }
 
     private void secondAbility()
     {
-        if (gameObject.transform.GetComponentInChildren<Fairy>())
-        {
-            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-            fairy.StartCoroutine(fairy.applyIceEnchantment());
-        }
+        Player player = gameObject.GetComponentInChildren<Player>();
+        player.AttemptSecondSpecialAbility();
     }
 
-    private void SpeedBoost()
+    private void thirdAbility()
     {
-        if (gameObject.transform.GetComponentInChildren<Fairy>())
-        {
-            Fairy fairy = gameObject.transform.GetComponentInChildren<Fairy>();
-            fairy.speedBoost();
-        }
+        Player player = gameObject.GetComponentInChildren<Player>();
+        player.AttemptThirdSpecialAbility();
     }
 
     public void OnNotify(string gameEvent)

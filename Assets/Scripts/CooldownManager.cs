@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class CooldownManager : MonoBehaviour {
 
-    private bool[] warriorOnCooldown = new bool[2]; //This needs to be checked by player classes
+    private bool[] warriorOnCooldown = new bool[2];
     private bool[] rangerOnCooldown = new bool[2];
     private bool[] fairyOnCooldown = new bool[4];
+    private bool buffOnCooldown = false;
     private bool changeClassOnCooldown = false;
     private float[] warriorAbilityCooldowns = { 1f, 10f }; //Attack, defensiveState
     private float[] rangerAbilityCooldowns = { 1f, 5f }; //Attack, multiShot
-    private float[] fairyAbilityCooldowns = { 2f, 5f, 5f, 8f }; //Attack, fire, ice, speed
+    private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed
+    private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
     private float classChangeCooldown = 10f;
 
 	// Use this for initialization
@@ -43,7 +45,17 @@ public class CooldownManager : MonoBehaviour {
         return fairyOnCooldown;
     }
 
-    //This class is needed, because IEnumerator are getting stuck when calling object gets destroyed
+    public bool GetBuffCooldown()
+    {
+        return buffOnCooldown;
+    }
+
+    public bool GetClassChangeCooldown()
+    {
+        return changeClassOnCooldown;
+    }
+
+    //This function is needed, because IEnumerator are getting stuck when calling object gets destroyed
     public void StartCooldown(int cooldownIndex, int playerClassIndex)
     {
         StartCoroutine(StartCD(cooldownIndex, playerClassIndex));
@@ -65,12 +77,31 @@ public class CooldownManager : MonoBehaviour {
             rangerOnCooldown[cooldownIndex] = false;
             Subject.Notify("RangerCDOver", cooldownIndex);
         }
-        else //Fairy
+        else if (playerClassIndex == 2) //Fairy
         {
             fairyOnCooldown[cooldownIndex] = true;
-            yield return new WaitForSeconds(warriorAbilityCooldowns[cooldownIndex]);
+            yield return new WaitForSeconds(fairyAbilityCooldowns[cooldownIndex]);
             fairyOnCooldown[cooldownIndex] = false;
             Subject.Notify("FairyCDOver", cooldownIndex);
         }
+        else //Target of fairy buff
+        {
+            buffOnCooldown = true;
+            yield return new WaitForSeconds(buffDurations[cooldownIndex-1]);
+            buffOnCooldown = false;
+            Subject.Notify("BuffOver", cooldownIndex);
+        }
+    }
+
+    public void StartChangeClassCD()
+    {
+        StartCoroutine(StartClassCD());
+    }
+
+    private IEnumerator StartClassCD()
+    {
+        changeClassOnCooldown = true;
+        yield return new WaitForSeconds(classChangeCooldown);
+        changeClassOnCooldown = false;
     }
 }

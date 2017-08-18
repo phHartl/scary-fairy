@@ -15,7 +15,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     }
 
     // Use this for initializing dependencies
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         isOnCoolDown = cdManager.GetRangerCooldowns();
@@ -118,6 +118,11 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         {
             case "RangerCDOver":
                 isOnCoolDown[cooldownIndex] = false;
+                break;
+            case "BuffOver":
+                resetEnchantments();
+                moveSpeed = 5;
+                onEnchantmentCD = cdManager.GetBuffCooldown();
                 break;
         }
     }

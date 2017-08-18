@@ -6,21 +6,13 @@ public class Fairy : Player, CooldownObserver {
 
     public MovingObj target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
-    private float enchantmentCD = 5f;              //Duration between enchantments
-    private float enchantmentEffectTimer = 0;
-    private float enchantmentEffectDuration = 5f;   //Duration of a single enchantment spell
-    private float enchantmentTimer = 0;
 
     private float speedBoostPower = 1.8f;
-    private float speedBoostDuration = 5f;
-    private float speedBoostCD = 8f;
-    private bool speedBoostOnCd = false;
-
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
  
 
-    private void Start () {
+    protected override void Start () {
         base.Start();
         isOnCoolDown = cdManager.GetFairyCooldown();
         circleCollider = GetComponent<CircleCollider2D>();
@@ -29,7 +21,12 @@ public class Fairy : Player, CooldownObserver {
         this.baseDamage = 20; //Damage of Fairy AOE Attack
     }
 
-    private void FixedUpdate()
+    private void OnDestroy()
+    {
+        target.resetEnchantments();
+    }
+
+    protected override void FixedUpdate()
     {
         
     }
@@ -63,81 +60,35 @@ public class Fairy : Player, CooldownObserver {
         circleCollider.enabled = false;
     }
 
-
-
-    public IEnumerator applyFireEnchantment()
+    protected override void FirstAbility()
     {
         if (!target.getOnEnchantmentCD())
         {
-            print("Fire enchantment activated");
+            isOnCoolDown[1] = true;
+            cdManager.StartCooldown(1, 3);
+            cdManager.StartCooldown(1, 2);
             target.activateFireEnchantment();
-            yield return new WaitForSeconds(enchantmentEffectDuration);
-            target.resetEnchantments();
-            yield return new WaitForSeconds(enchantmentCD);
-            target.resetEnchantmentCooldown();
         }
-        
     }
 
 
-    public IEnumerator applyIceEnchantment()
+    protected override void SecondAbility()
     {
         if (!target.getOnEnchantmentCD())
         {
-            print("Ice enchantment activated");
+            isOnCoolDown[2] = true;
+            cdManager.StartCooldown(2, 3);
+            cdManager.StartCooldown(2, 2);
             target.activateIceEnchantment();
-            yield return new WaitForSeconds(enchantmentEffectDuration);
-            target.resetEnchantments();
-            yield return new WaitForSeconds(enchantmentCD);
-            target.resetEnchantmentCooldown();
         }
     }
 
-    public void speedBoost()
+    protected override void ThirdAbility()
     {
-        StartCoroutine(SpeedBoostCoroutine());
-    }
-
-    private IEnumerator SpeedBoostCoroutine()
-    {
-        if (!speedBoostOnCd)
-        {
-            speedBoostOnCd = true;
-            target.moveSpeed = target.moveSpeed * speedBoostPower;
-            yield return new WaitForSeconds(speedBoostDuration);
-            target.moveSpeed = target.moveSpeed / speedBoostPower;
-            yield return new WaitForSeconds(speedBoostCD);
-            speedBoostOnCd = false;
-        }
-    }
-
-    //Checks if enchantment spell is ready again, 10 second Cooldown (default value)
-    private void CheckEnchantmentCD()
-    {
-        if (target.getOnEnchantmentCD())
-        {
-            if (enchantmentTimer > 0)
-            {
-                enchantmentTimer -= Time.deltaTime;
-            }
-            else
-            {
-                target.resetEnchantmentCooldown();
-            }
-        }
-    }
-
-    //Checks remaining enchantment duration, disables enchantment after 5 seconds (default value)
-    private void CheckEnchantmentDuration()
-    {
-        if(enchantmentEffectTimer > 0)
-        {
-            enchantmentEffectTimer -= Time.deltaTime;
-        }
-        else
-        {
-            target.resetEnchantments();
-        }
+        isOnCoolDown[3] = true;
+        cdManager.StartCooldown(3, 3);
+        cdManager.StartCooldown(3, 2);
+        target.moveSpeed = target.moveSpeed * speedBoostPower;
     }
 
     public void OnNotify(string gameEvent, int cooldownIndex)
