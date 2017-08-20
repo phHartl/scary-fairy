@@ -85,7 +85,10 @@ public abstract class MovingObj : MonoBehaviour
     {
         iceEnchantment = false;
         fireEnchantment = false;
-        particles.Stop();
+        if (particles != null)
+        {
+            particles.Stop();
+        }
     }
 
     public void resetEnchantmentCooldown()

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MovingObj
+public class Player : MovingObj, CooldownObserver
 {
     public float maxVerticalDistance = 8.0f;
     public float maxHorizontalDistance = 12.0f;
@@ -217,6 +217,21 @@ public class Player : MovingObj
         else if (fireEnchantment)
         {
             _damage = baseDamage * 2;
+        }
+    }
+
+    public virtual void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        switch (gameEvent)
+        {
+            case "BuffOver":
+                if (this != null)
+                {
+                    resetEnchantments();
+                    moveSpeed = 5;
+                    onEnchantmentCD = cdManager.GetBuffCooldown();
+                }
+                break;
         }
     }
 }

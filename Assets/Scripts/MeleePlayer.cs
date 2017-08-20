@@ -9,7 +9,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
     private float damageReduce = 0; //How much should the damage be reduced?
     private float defensiveStateDuration = 5f; //Duration of buff
     public float defensiveDebuff = 0.5f; //Factor to debuff other values
-    
+
 
 
     public int knockBackLength = 2;
@@ -113,7 +113,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
             case "HealthPickup":
                 print("procced");
                 _hitpoints += 5;
-                if(_hitpoints > 100)
+                if (_hitpoints > 100)
                 {
                     _hitpoints = 100;
                 }
@@ -123,21 +123,17 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
 
     public override void applyDamage(int damage)
     {
-        damage = Mathf.RoundToInt(damage * (1- damageReduce));
+        damage = Mathf.RoundToInt(damage * (1 - damageReduce));
         base.applyDamage(damage);
     }
 
-    public void OnNotify(string gameEvent, int cooldownIndex)
+    public override void OnNotify(string gameEvent, int cooldownIndex)
     {
+        base.OnNotify(gameEvent, cooldownIndex);
         switch (gameEvent)
         {
             case "WarriorCDOver":
                 isOnCoolDown[cooldownIndex] = false;
-                break;
-            case "BuffOver":
-                resetEnchantments();
-                moveSpeed = 5;
-                onEnchantmentCD = cdManager.GetBuffCooldown();
                 break;
         }
     }

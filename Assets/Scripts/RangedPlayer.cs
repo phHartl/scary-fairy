@@ -112,17 +112,13 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         }
     }
 
-    public void OnNotify(string gameEvent, int cooldownIndex)
+    public override void OnNotify(string gameEvent, int cooldownIndex)
     {
+        base.OnNotify(gameEvent, cooldownIndex);
         switch (gameEvent)
         {
             case "RangerCDOver":
                 isOnCoolDown[cooldownIndex] = false;
-                break;
-            case "BuffOver":
-                resetEnchantments();
-                moveSpeed = 5;
-                onEnchantmentCD = cdManager.GetBuffCooldown();
                 break;
         }
     }
