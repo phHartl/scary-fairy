@@ -138,7 +138,7 @@ public class Player : MovingObj
         AIMove ai = other.GetComponent<AIMove>();
         if (iceEnchantment)
         {
-            enemy.applyDamage(_damage);
+            enemy.applyDamage(_damage, ICE_ENCHANTMENT);
             ai.hitByIceEnchantment();
             print("IceEnchanted Attack");
         }

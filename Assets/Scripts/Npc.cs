@@ -13,8 +13,8 @@ public abstract class Npc : MovingObj
     private Vector3 currentDir;
     private potionHealing potion;
     public float iceEnchantSlowModifier = 0.5f;
-    private bool isBurning = false;
-    private bool durationRefreshed = false;
+    protected bool isBurning = false;
+    protected bool durationRefreshed = false;
 
     // Use this for initialization
     protected override void Start()
@@ -113,6 +113,11 @@ public abstract class Npc : MovingObj
             {
                 durationRefreshed = true;
             }
+        }
+        if (enchantment == ICE_ENCHANTMENT)
+        {
+            _hitpoints -= damage;
+            checkDeath();
         }
     }
 

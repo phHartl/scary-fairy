@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GolemBoss : Npc
-{
+public class FireGolemBoss : Npc {
 
     private bool activated = false;
     private AIMove moveScript;
@@ -12,10 +10,10 @@ public class GolemBoss : Npc
     public GameObject projectileObject;
 
     // Use this for initialization
-    protected override void Start ()
+    protected override void Start()
     {
         base.Start();
-        this._hitpoints = 50;
+        this._hitpoints = 100;
         this._damage = 0;
         setupGolem();
     }
@@ -43,14 +41,14 @@ public class GolemBoss : Npc
     }
 
     // Update is called once per frame
-    protected override void Update ()
+    protected override void Update()
     {
         base.Update();
-	}
+    }
 
     protected IEnumerator startProjectileAttack()
     {
-        while(_hitpoints > 0)
+        while (_hitpoints > 0)
         {
             GameObject projectileClone = projectileObject;
             projectileClone.transform.position = this.transform.position;
@@ -62,12 +60,12 @@ public class GolemBoss : Npc
 
     public override void applyDamage(int damage)
     {
-        print("Golem invulnerable to non-fire attacks");
+        print("Golem invulnerable to non-ice attacks");
     }
 
     public override void applyDamage(int damage, string enchantment)
     {
-        if (enchantment == FIRE_ENCHANTMENT)
+        if (enchantment == ICE_ENCHANTMENT)
         {
             if (!activated)
             {
@@ -75,39 +73,7 @@ public class GolemBoss : Npc
             }
             _hitpoints -= damage;
             checkDeath();
-            print("Enemy took damage, health: " + _hitpoints);
-
-
-            if (!isBurning)
-            {
-                StartCoroutine(applyBurnDamage());
-            }
-            if (isBurning)
-            {
-                durationRefreshed = true;
-            }
         }
     }
-
-    private IEnumerator applyBurnDamage()
-    {
-        isBurning = true;
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
-        {
-            if (durationRefreshed)
-            {
-                print("Burn Refreshed");
-                i = 0;
-                durationRefreshed = false;
-            }
-            _hitpoints -= 2;
-            print("Enemy got burned");
-            yield return new WaitForSeconds(BURN_TICKRATE);
-        }
-        isBurning = false;
-        GetComponent<Renderer>().material.color = Color.white;
-    }
-
 
 }

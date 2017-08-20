@@ -21,6 +21,7 @@ public abstract class MovingObj : MonoBehaviour
     protected ParticleSystem.MainModule particleSettings;
     private Color blue = new Color(0.1f, 0.3f, 1.0f);
     private Color red = new Color(1.0f, 0.3f, 0.1f);
+    [HideInInspector]public bool alive = true;
 
     public float HEALTH_POTION_CHANCE = 0.5f;
 
@@ -103,6 +104,7 @@ public abstract class MovingObj : MonoBehaviour
     {
         if (_hitpoints <= 0)
         {
+            alive = false;
             gameObject.SetActive(false);
             dropHealthPotion();
         }
