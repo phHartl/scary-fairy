@@ -56,14 +56,13 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         }
     }
 
-    //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
-    //This function enables the triggers attached to the player in dependence of which direction the player is facing
     protected override void Attack()
     {
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown[0] = true;
         sound.Play();
+        //Start corresponding cooldown -> first parameter is cd index (zero is basic attack) and second parameter is classindex for warrior
         cdManager.StartCooldown(0, 0);
     }
 

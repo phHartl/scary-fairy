@@ -20,7 +20,7 @@ public static class Subject
 
     public static void Notify(string gameEvent, Vector3 position)
     {
-        for (int i = 0; i < observers.Count; i++)
+        for (int i = 0; i < transformObservers.Count; i++)
         {
             transformObservers[i].OnNotify(gameEvent, position);
         }
@@ -28,7 +28,7 @@ public static class Subject
 
     public static void Notify(string gameEvent, int cooldownIndex)
     {
-        for (int i = 0; i < observers.Count; i++)
+        for (int i = 0; i < cdObservers.Count; i++)
         {
             cdObservers[i].OnNotify(gameEvent, cooldownIndex);
         }

@@ -7,7 +7,7 @@ public class Fairy : Player, CooldownObserver {
     public MovingObj target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
 
-    private float speedBoostPower = 1.8f;
+    private float speedBoostPower = 1.5f;
     protected CircleCollider2D circleCollider;
     private Animator novaAnimator;
  

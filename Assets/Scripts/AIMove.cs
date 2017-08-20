@@ -184,6 +184,11 @@ public class AIMove : AIBase, IObserver {
     {
         if (canMove && canSearch && path != null)
         {
+            int pathLength = path.vectorPath.Count;
+            if (currentWaypoint >= pathLength) //Prevent too huge steps - may appear on short paths
+            {
+                currentWaypoint = pathLength - 1;
+            }
             Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
             return direction;
         }

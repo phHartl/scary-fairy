@@ -12,7 +12,7 @@ public class CooldownManager : MonoBehaviour {
     private bool changeClassOnCooldown = false;
     private float[] warriorAbilityCooldowns = { 1f, 10f }; //Attack, defensiveState
     private float[] rangerAbilityCooldowns = { 1f, 5f }; //Attack, multiShot
-    private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed
+    private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
     private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
     private float classChangeCooldown = 10f;
 
@@ -55,13 +55,18 @@ public class CooldownManager : MonoBehaviour {
         return changeClassOnCooldown;
     }
 
-    //This function is needed, because IEnumerator are getting stuck when calling object gets destroyed
+    //This function is needed, because IEnumerator are getting stuck when the calling object gets destroyed
     public void StartCooldown(int cooldownIndex, int playerClassIndex)
     {
         StartCoroutine(StartCD(cooldownIndex, playerClassIndex));
     }
 
-    private IEnumerator StartCD(int cooldownIndex, int playerClassIndex) //Start a CD based on which class calls this
+    /* Params needed are the index of the corresponding global cooldowns (warrior, ranger, fairy or general buff)
+     * the index of the corresponding class witch calls this: zero - warrior, one - ranger, two - fairy &
+     * any other number for a buff
+     * When a cooldown is over an event gets send to the corresponding class(es)
+     */
+    private IEnumerator StartCD(int cooldownIndex, int playerClassIndex)
     {
         if (playerClassIndex == 0) //Warrior
         {
