@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        GolemBoss golem = GameObject.FindObjectOfType<GolemBoss>();
+        Golem golem = GameObject.FindObjectOfType<Golem>();
         if (other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();

@@ -3,19 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GolemBoss : Npc
-{
+public class Golem : Npc {
 
     private bool activated = false;
     private AIMove moveScript;
+    public string vulnerableEnchantment;
 
     public GameObject projectileObject;
 
     // Use this for initialization
-    protected override void Start ()
+    protected override void Start()
     {
         base.Start();
-        this._hitpoints = 50;
+        this._hitpoints = 100;
         this._damage = 0;
         setupGolem();
     }
@@ -43,14 +43,14 @@ public class GolemBoss : Npc
     }
 
     // Update is called once per frame
-    protected override void Update ()
+    protected override void Update()
     {
         base.Update();
-	}
+    }
 
     protected IEnumerator startProjectileAttack()
     {
-        while(_hitpoints > 0)
+        while (_hitpoints > 0)
         {
             GameObject projectileClone = projectileObject;
             projectileClone.transform.position = this.transform.position;
@@ -59,33 +59,56 @@ public class GolemBoss : Npc
         }
     }
 
-
     public override void applyDamage(int damage)
     {
-        print("Golem invulnerable to non-fire attacks");
+        print("immune");
     }
 
     public override void applyDamage(int damage, string enchantment)
     {
-        if (enchantment == FIRE_ENCHANTMENT)
+        if(enchantment.Equals(vulnerableEnchantment))
         {
-            if (!activated)
+            switch (enchantment)
             {
-                activateGolem();
+                case "FIRE_ENCHANTMENT":
+                    applyFireDamage(damage);
+                    break;
+
+                case "ICE_ENCHANTMENT":
+                    applyIceDamage(damage);
+                    break;
             }
-            _hitpoints -= damage;
-            checkDeath();
-            print("Enemy took damage, health: " + _hitpoints);
+        }
+    }
+
+    private void applyIceDamage(int damage)
+    {
+        if (!activated)
+        {
+            activateGolem();
+        }
+        _hitpoints -= damage;
+        checkDeath();
+    }
+
+    private void applyFireDamage(int damage)
+    {
+        if (!activated)
+        {
+            activateGolem();
+        }
+        _hitpoints -= damage;
+        checkDeath();
+        print("Enemy took damage, health: " + _hitpoints);
 
 
-            if (!isBurning)
-            {
-                StartCoroutine(applyBurnDamage());
-            }
-            if (isBurning)
-            {
-                durationRefreshed = true;
-            }
+        if (!isBurning)
+        {
+            StartCoroutine(applyBurnDamage());
+        }
+        if (isBurning)
+        {
+            durationRefreshed = true;
         }
     }
 
@@ -108,6 +131,4 @@ public class GolemBoss : Npc
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;
     }
-
-
 }
