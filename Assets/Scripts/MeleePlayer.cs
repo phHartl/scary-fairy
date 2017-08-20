@@ -1,14 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class MeleePlayer : Player, IObserver
+public class MeleePlayer : Player, IObserver, CooldownObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
     private float damageReduce = 0; //How much should the damage be reduced?
     private float defensiveStateDuration = 5f; //Duration of buff
     public float defensiveDebuff = 0.5f; //Factor to debuff other values
-    
+
 
 
     public int knockBackLength = 2;
@@ -17,25 +18,24 @@ public class MeleePlayer : Player, IObserver
     private void Awake()
     {
         this._hitpoints = 100;
-        this.attackCD = 1f;
         this.baseDamage = 20;
     }
 
     // use this for initializing dependencies
-    private void Start()
+    protected override void Start()
     {
         base.Start();
+        isOnCoolDown = cdManager.GetWarriorCooldowns();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
         sound = GameObject.FindObjectOfType<AudioSource>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
-        this.attackCD = 1f;
-        abilityCDs[0] = 5f;
         this._hitpoints = 50;
         this.baseDamage = 20;
         Subject.AddObserver(this);
+        Subject.AddCDObserver(this);
     }
 
     protected override void Update()
@@ -56,45 +56,34 @@ public class MeleePlayer : Player, IObserver
         }
     }
 
-    //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
-    //This function enables the triggers attached to the player in dependence of which direction the player is facing
-    protected override IEnumerator Attack()
+    protected override void Attack()
     {
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown[0] = true;
         sound.Play();
-        yield return new WaitForSeconds(attackCD); //Waiting for cooldown
-        isOnCoolDown[0] = false;
+        //Start corresponding cooldown -> first parameter is cd index (zero is basic attack) and second parameter is classindex for warrior
+        cdManager.StartCooldown(0, 0);
     }
 
-    protected override IEnumerator FirstAbility()
+    protected override void FirstAbility()
+    {
+        StartCoroutine(DefensiveState());
+        isOnCoolDown[1] = true;
+        cdManager.StartCooldown(1, 0);
+    }
+
+    private IEnumerator DefensiveState()
     {
         firstAbility = true;
-        DefensiveState(firstAbility);
-        isOnCoolDown[1] = true;
-        yield return new WaitForSeconds(abilityCDs[0]);
-        firstAbility = false;
-        DefensiveState(firstAbility);
+        moveSpeed *= defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, (1 / defensiveDebuff));
+        damageReduce = 0.8f;
         yield return new WaitForSeconds(defensiveStateDuration);
-        isOnCoolDown[1] = false;
-    }
-
-    private void DefensiveState(bool isDefensive)
-    {
-        if (isDefensive)
-        {
-            moveSpeed *= defensiveDebuff;
-            attackCD *= 1 / defensiveDebuff;
-            damageReduce = 0.8f;
-            return;
-        }
-        else
-        {
-            moveSpeed *= 1 / defensiveDebuff;
-            attackCD *= defensiveDebuff;
-            damageReduce = 0;
-        }
+        moveSpeed *= 1 / defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, defensiveDebuff);
+        damageReduce = 0;
+        firstAbility = false;
     }
 
     //This function gets called when the attack animation starts (see animations events)
@@ -124,7 +113,7 @@ public class MeleePlayer : Player, IObserver
             case "HealthPickup":
                 print("procced");
                 _hitpoints += 5;
-                if(_hitpoints > 100)
+                if (_hitpoints > 100)
                 {
                     _hitpoints = 100;
                 }
@@ -134,8 +123,18 @@ public class MeleePlayer : Player, IObserver
 
     public override void applyDamage(int damage)
     {
-        damage = Mathf.RoundToInt(damage * (1- damageReduce));
+        damage = Mathf.RoundToInt(damage * (1 - damageReduce));
         base.applyDamage(damage);
     }
 
+    public override void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        base.OnNotify(gameEvent, cooldownIndex);
+        switch (gameEvent)
+        {
+            case "WarriorCDOver":
+                isOnCoolDown[cooldownIndex] = false;
+                break;
+        }
+    }
 }

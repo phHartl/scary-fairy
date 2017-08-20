@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class Player : MovingObj
+public class Player : MovingObj, CooldownObserver
 {
     public float maxVerticalDistance = 8.0f;
     public float maxHorizontalDistance = 12.0f;
@@ -15,15 +16,18 @@ public class Player : MovingObj
     protected int baseDamage;
     protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
-    
+    public CooldownManager cdManager;
+
 
     // Use this for initialization
-    protected void Start()
+    protected override void Start()
     {
         base.Start();
+        cdManager = GetComponentInParent<CooldownManager>();
         lastMove.x = 0;
         lastMove.y = -1;
         animator = GetComponent<Animator>();
+        onEnchantmentCD = cdManager.GetBuffCooldown();
     }
 
     protected override void Update()
@@ -39,7 +43,7 @@ public class Player : MovingObj
         //animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         rb2D.MovePosition(Move());
     }
@@ -103,25 +107,47 @@ public class Player : MovingObj
     {
         if (!isOnCoolDown[0])
         {
-            StartCoroutine(Attack()); //Coroutines don't need to be finished within the updateframe
+            Attack();
         }
     }
 
     public void AttemptSpecialAbility()
     {
         if(!isOnCoolDown[1])
-            StartCoroutine(FirstAbility());
+            FirstAbility();
+    }
+
+    public void AttemptSecondSpecialAbility()
+    {
+        if (!isOnCoolDown[2])
+            SecondAbility();
+    }
+
+    public void AttemptThirdSpecialAbility()
+    {
+        if (!isOnCoolDown[3])
+            ThirdAbility();
     }
 
     // This method is needed in order to call Attack from the PlayerManager in a secure way
-    protected virtual IEnumerator Attack()
+    protected virtual void Attack()
     {
-        return null;
+        return;
     }
 
-    protected virtual IEnumerator FirstAbility()
+    protected virtual void FirstAbility()
     {
-        return null;
+        return;
+    }
+
+    protected virtual void SecondAbility()
+    {
+        return;
+    }
+
+    protected virtual void ThirdAbility()
+    {
+        return;
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -160,26 +186,26 @@ public class Player : MovingObj
         if (!isInvincible)
         {
             base.applyDamage(damage);
-            StartCoroutine(playerInvincible());
+            StartCoroutine(PlayerInvincible());
         }
     }
 
-       IEnumerator playerInvincible()
+       IEnumerator PlayerInvincible()
     {
         isInvincible = true;
-        setPlayerTransparency(0.5f); // 50% transparent
+        SetPlayerTransparency(0.5f); // 50% transparent
         yield return new WaitForSeconds(0.5f);
-        setPlayerTransparency(1.0f);
+        SetPlayerTransparency(1.0f);
         isInvincible = false;
     }
 
 
     //This methodes makes the player transparent, input variable is transparency in percent
-    private void setPlayerTransparency(float alpha)
+    private void SetPlayerTransparency(float alpha)
     {
         gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha);
     }
-   
+
 
     protected void CheckForEnchantment()
     {
@@ -191,6 +217,21 @@ public class Player : MovingObj
         else if (fireEnchantment)
         {
             _damage = baseDamage * 2;
+        }
+    }
+
+    public virtual void OnNotify(string gameEvent, int cooldownIndex)
+    {
+        switch (gameEvent)
+        {
+            case "BuffOver":
+                if (this != null)
+                {
+                    resetEnchantments();
+                    moveSpeed = 5;
+                    onEnchantmentCD = cdManager.GetBuffCooldown();
+                }
+                break;
         }
     }
 }

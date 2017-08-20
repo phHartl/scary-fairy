@@ -16,7 +16,7 @@ public class CasualEnemy : Npc
 
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
@@ -26,7 +26,7 @@ public class CasualEnemy : Npc
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
         base.FixedUpdate();
     }
@@ -50,7 +50,7 @@ public class CasualEnemy : Npc
      * and is used to apply special effects from enchantments (eg. slow from ice attacks)
      */
 
-    public void applyDamage(int damage)
+    public override void applyDamage(int damage)
     {
         _hitpoints -= damage;
         checkDeath();
