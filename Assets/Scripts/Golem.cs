@@ -66,11 +66,12 @@ public class Golem : Npc {
 
     public override void applyDamage(int damage, string enchantment)
     {
-        if(enchantment.Equals(vulnerableEnchantment))
+        if(enchantment == vulnerableEnchantment)
         {
             switch (enchantment)
             {
                 case "FIRE_ENCHANTMENT":
+                    print("I faild this city");
                     applyFireDamage(damage);
                     break;
 
@@ -83,7 +84,7 @@ public class Golem : Npc {
 
     private void applyIceDamage(int damage)
     {
-        if (!activated)
+        if (!activated && vulnerableEnchantment.Equals(ICE_ENCHANTMENT))
         {
             activateGolem();
         }
@@ -93,7 +94,7 @@ public class Golem : Npc {
 
     private void applyFireDamage(int damage)
     {
-        if (!activated)
+        if (!activated && vulnerableEnchantment.Equals(FIRE_ENCHANTMENT))
         {
             activateGolem();
         }
