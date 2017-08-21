@@ -82,7 +82,6 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         if (isDead)
         {
             isDead = false;
-            moveSpeed = 5;
             rb2D.simulated = true;
         }
         _hitpoints += healpoints;
