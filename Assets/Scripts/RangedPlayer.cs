@@ -49,7 +49,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     protected override void SecondAbility()
     {
         Player otherPlayer = gameObject.GetComponentInParent<PlayerManager>().otherPlayer;
-        if (isOnCoolDown[2] || _hitpoints < 25 || !otherPlayer.isDead) return;
+        if (_hitpoints < 25 || !otherPlayer.isDead) return;
         isOnCoolDown[2] = true;
         cdManager.StartCooldown(2, 1);
         otherPlayer.applyHealing(_hitpoints / 2);
@@ -62,6 +62,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         {
             isDead = false;
             moveSpeed = 5;
+            rb2D.simulated = true;
         }
         _hitpoints += healpoints;
     }

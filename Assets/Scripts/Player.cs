@@ -196,6 +196,7 @@ public class Player : MovingObj, CooldownObserver
                 _hitpoints = 0;
                 isDead = true;
                 moveSpeed = 0;
+                rb2D.simulated = false;
                 Subject.Notify("Player Died");
             }
             StartCoroutine(PlayerInvincible());
