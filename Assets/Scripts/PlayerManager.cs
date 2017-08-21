@@ -305,6 +305,10 @@ public class PlayerManager : MonoBehaviour, IObserver
             case "Player Died":
                 checkForPlayersDeath();
                 break;
+            case "Player changed class":
+                thisPlayer = gameObject.GetComponentInChildren<Player>();
+                otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
+                break;
         }
     }
 
