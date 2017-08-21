@@ -20,6 +20,8 @@ public class PlayerManager : MonoBehaviour, IObserver
     private int currentClassIndex;
     private CameraControl cameraControl;
     private CooldownManager cdmanager;
+    public Player thisPlayer;
+    public Player otherPlayer;
 
     [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
     [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
@@ -38,6 +40,8 @@ public class PlayerManager : MonoBehaviour, IObserver
     private void Start()
     {
         SetFairyTarget();
+        thisPlayer = gameObject.GetComponentInChildren<Player>();
+        otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
@@ -89,7 +93,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         }
 
         // Change Class
-        if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
+        if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown() && !thisPlayer.isDead)
         {
             bool down = false;
             if (Input.GetButtonDown(changeClassDownInput))
@@ -298,9 +302,19 @@ public class PlayerManager : MonoBehaviour, IObserver
             case "Next Level":
                 SavePlayerState();
                 break;
+            case "Player Died":
+                checkForPlayersDeath();
+                break;
         }
     }
 
+    private void checkForPlayersDeath()
+    {
+        if(thisPlayer.isDead && otherPlayer.isDead)
+        {
+            Subject.Notify("Players Dead");
+        }
+    }
 
     private void OnDestroy()
     {

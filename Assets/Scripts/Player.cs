@@ -17,9 +17,14 @@ public class Player : MovingObj, CooldownObserver
     protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
     public CooldownManager cdManager;
-
+    public bool isDead;
 
     // Use this for initialization
+    private void Awake()
+    {
+        isDead = false;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -183,12 +188,20 @@ public class Player : MovingObj, CooldownObserver
     //Overrides applyDamage in MovingObj, player gets invincible for 0.5 seconds if hit by an enemy
     public override void applyDamage(int damage)
     {
-        if (!isInvincible)
+        if (!isInvincible && !isDead)
         {
-            base.applyDamage(damage);
+            _hitpoints -= damage;
+            if(_hitpoints <= 0)
+            {
+                _hitpoints = 0;
+                isDead = true;
+                moveSpeed = 0;
+                Subject.Notify("Player Died");
+            }
             StartCoroutine(PlayerInvincible());
         }
     }
+
 
        IEnumerator PlayerInvincible()
     {
@@ -204,6 +217,11 @@ public class Player : MovingObj, CooldownObserver
     private void SetPlayerTransparency(float alpha)
     {
         gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha);
+    }
+
+    public virtual void applyHealing(int healpoints)
+    {
+
     }
 
 

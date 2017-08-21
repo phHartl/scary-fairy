@@ -45,7 +45,28 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         cdManager.StartCooldown(1, 1);
     }
 
-     // This function gets called from the animator(see animations events) to check if it is a normal attack or not
+    // Revive
+    protected override void SecondAbility()
+    {
+        Player otherPlayer = gameObject.GetComponentInParent<PlayerManager>().otherPlayer;
+        if (isOnCoolDown[2] || _hitpoints < 25 || !otherPlayer.isDead) return;
+        isOnCoolDown[2] = true;
+        cdManager.StartCooldown(2, 1);
+        otherPlayer.applyHealing(_hitpoints / 2);
+        _hitpoints /= 2;
+    }
+
+    public override void applyHealing(int healpoints)
+    {
+        if (isDead)
+        {
+            isDead = false;
+            moveSpeed = 5;
+        }
+        _hitpoints += healpoints;
+    }
+
+    // This function gets called from the animator(see animations events) to check if it is a normal attack or not
     private void GenArrows(int currentDir)
     {
         if(firstAbility) {
