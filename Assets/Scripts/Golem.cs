@@ -20,7 +20,10 @@ public class Golem : Npc {
         setupGolem();
     }
 
-
+    /*
+     *  This method sets up the golem in its frozen state. It makes the golem deal no damage
+     *  and unable to move before being activated.
+     */
     private void setupGolem()
     {
         animator = GetComponent<Animator>();
@@ -31,6 +34,12 @@ public class Golem : Npc {
         moveScript.canMove = false;
         moveScript.canSearch = false;
     }
+
+    /*
+     * This method activates the golem upon being hit by an attack with the enchantment specified in the
+     * VULNERABLE_ENCHANTMENT constant. After being hit, the golem can move, deal damage on contact and shoot
+     * projectiles via the startProjectileAttack() Coroutine
+     */
 
     private void activateGolem()
     {
@@ -49,6 +58,9 @@ public class Golem : Npc {
         base.Update();
     }
 
+    /*
+     * Instantiates a projectile object every 5 seconds and sets its position to the golems current position
+     */
     protected IEnumerator startProjectileAttack()
     {
         while (_hitpoints > 0)
