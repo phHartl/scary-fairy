@@ -32,7 +32,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
-        this._hitpoints = 50;
+        this._hitpoints = 100;
         this.baseDamage = 20;
         Subject.AddObserver(this);
         Subject.AddCDObserver(this);

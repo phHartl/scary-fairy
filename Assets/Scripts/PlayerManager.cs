@@ -17,9 +17,10 @@ public class PlayerManager : MonoBehaviour, IObserver
     // The hasFairy-attribute is used to check and set if any player is a fairy or not
     private static bool hasFairy;
     public GameObject[] classes;
-    private int currentClassIndex;
+    public int currentClassIndex;
     private CameraControl cameraControl;
     private CooldownManager cdmanager;
+    private UIManager uiManager;
 
     [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
     [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
@@ -30,6 +31,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
         cdmanager = GetComponent<CooldownManager>();
+        uiManager = GetComponent<UIManager>();
         currentClassIndex = 0;
         InitPlayerObject();
         SetAxis();
@@ -38,6 +40,21 @@ public class PlayerManager : MonoBehaviour, IObserver
     private void Start()
     {
         SetFairyTarget();
+        // Initializes the UI
+        uiManager.InitUI();
+        UpdateHealthBar();
+    }
+    
+    private void UpdateHealthBar()
+    {
+        uiManager.UpdateHealth(playerObject.GetComponent<Player>()._hitpoints);
+    }
+
+    // This method is used to change the UI components that are related to a class
+    private void UpdateClassUI()
+    {
+        uiManager.UpdateClass(currentClassIndex);
+        uiManager.StartSwapCooldown(cdmanager.classChangeCooldown);
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
@@ -50,10 +67,10 @@ public class PlayerManager : MonoBehaviour, IObserver
             playerObject = SpawnPlayer();
             if (PlayerPrefs.GetInt("hasFairy") == 1)
             {
-                hasFairy = true;           
+                hasFairy = true;
             }
             gameObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
-            ChangePortrait();
+            uiManager.UpdateClass(currentClassIndex);
         }
         else if (gameObject.GetComponentInChildren<Player>())
         {
@@ -100,6 +117,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         }
 
         checkLayer();
+        UpdateHealthBar();
     }
 
 
@@ -171,7 +189,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         cameraControl.SetTarget(playerNumber - 1, playerObject);
 
         // Change the portrait to fit the new class
-        ChangePortrait();
+        UpdateClassUI();
         cdmanager.StartChangeClassCD();
         yield return new WaitForSeconds(0.25f);
         Subject.Notify("Player changed class");
@@ -246,12 +264,6 @@ public class PlayerManager : MonoBehaviour, IObserver
         }
     }
 
-    // This method is used to change the portrais of the player to fit the current class
-    private void ChangePortrait()
-    {
-
-    }
-
     private void LateUpdate()
     {
         // Fire Enchant
@@ -291,6 +303,11 @@ public class PlayerManager : MonoBehaviour, IObserver
         player.AttemptThirdSpecialAbility();
     }
 
+    public void ShowBuffIcons(int buffIndex, float buffDuration)
+    {
+        OtherPlayer().GetComponentInParent<UIManager>().StartBuffCoolDown(buffIndex, buffDuration, OtherPlayer().GetComponentInParent<PlayerManager>().currentClassIndex);
+    }
+
     public void OnNotify(string gameEvent)
     {
         switch (gameEvent)
@@ -300,7 +317,6 @@ public class PlayerManager : MonoBehaviour, IObserver
                 break;
         }
     }
-
 
     private void OnDestroy()
     {

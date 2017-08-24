@@ -11,7 +11,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     private void Awake()
     {
         this.baseDamage = 10;
-        this._hitpoints = 50;
+        this._hitpoints = 100;
     }
 
     // Use this for initializing dependencies
