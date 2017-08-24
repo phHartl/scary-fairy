@@ -15,7 +15,7 @@ public class Golem : Npc {
     protected override void Start()
     {
         base.Start();
-        this._hitpoints = 100;
+        this._hitpoints = 250;
         this._damage = 0;
         setupGolem();
     }
@@ -27,6 +27,7 @@ public class Golem : Npc {
         moveScript = GetComponent<AIMove>();
         animator.speed = 0;
         rb2D.bodyType = RigidbodyType2D.Static;
+        rb2D.freezeRotation = true;
         moveScript.canMove = false;
         moveScript.canSearch = false;
     }
