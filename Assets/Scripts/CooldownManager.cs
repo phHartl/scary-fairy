@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class CooldownManager : MonoBehaviour {
 
-    private bool[] warriorOnCooldown = new bool[2];
-    private bool[] rangerOnCooldown = new bool[2];
+    private bool[] warriorOnCooldown = new bool[3];
+    private bool[] rangerOnCooldown = new bool[3];
     private bool[] fairyOnCooldown = new bool[4];
     private bool buffOnCooldown = false;
     private bool changeClassOnCooldown = false;
-    private float[] warriorAbilityCooldowns = { 1f, 10f }; //Attack, defensiveState
-    private float[] rangerAbilityCooldowns = { 1f, 5f }; //Attack, multiShot
+    private float[] warriorAbilityCooldowns = { 1f, 10f, 10f }; //Attack, defensiveState, revive
+    private float[] rangerAbilityCooldowns = { 1f, 5f, 10f }; //Attack, multiShot, revive
     private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
     private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
     private float classChangeCooldown = 10f;
@@ -62,7 +62,7 @@ public class CooldownManager : MonoBehaviour {
     }
 
     /* Params needed are the index of the corresponding global cooldowns (warrior, ranger, fairy or general buff)
-     * the index of the corresponding class witch calls this: zero - warrior, one - ranger, two - fairy &
+     * the index of the corresponding class which calls this: zero - warrior, one - ranger, two - fairy &
      * any other number for a buff
      * When a cooldown is over an event gets send to the corresponding class(es)
      */

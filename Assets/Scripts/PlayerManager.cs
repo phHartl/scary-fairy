@@ -20,6 +20,8 @@ public class PlayerManager : MonoBehaviour, IObserver
     private int currentClassIndex;
     private CameraControl cameraControl;
     private CooldownManager cdmanager;
+    public Player thisPlayer;
+    public Player otherPlayer;
 
     [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
     [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
@@ -38,6 +40,8 @@ public class PlayerManager : MonoBehaviour, IObserver
     private void Start()
     {
         SetFairyTarget();
+        thisPlayer = gameObject.GetComponentInChildren<Player>();
+        otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
@@ -82,21 +86,25 @@ public class PlayerManager : MonoBehaviour, IObserver
 
     // Update is called once per frame
     private void Update () {
-        // Attack
-        if (Input.GetButtonDown(attackInput))
+        //Prevent player from doing anything while being dead
+        if (!thisPlayer.isDead)
         {
-            Attack();
-        }
-
-        // Change Class
-        if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
-        {
-            bool down = false;
-            if (Input.GetButtonDown(changeClassDownInput))
+            // Attack
+            if (Input.GetButtonDown(attackInput))
             {
-                down = true;
+                Attack();
             }
-            StartCoroutine(ChangeClass(down));
+
+            // Change Class
+            if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
+            {
+                bool down = false;
+                if (Input.GetButtonDown(changeClassDownInput))
+                {
+                    down = true;
+                }
+                StartCoroutine(ChangeClass(down));
+            }
         }
 
         checkLayer();
@@ -146,7 +154,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         UpdateCurrentClassIndex(changedDownwards);
 
         // This prohibits both players from being a fairy at the same time
-        if (classes[currentClassIndex].name == "fairy" && hasFairy)
+        if (classes[currentClassIndex].name == "fairy" && (hasFairy|| otherPlayer.isDead))
         {
             UpdateCurrentClassIndex(changedDownwards);
         }
@@ -254,22 +262,20 @@ public class PlayerManager : MonoBehaviour, IObserver
 
     private void LateUpdate()
     {
-        // Fire Enchant
-        if (Input.GetButtonDown(firstSpecialAbility))
+        if (!thisPlayer.isDead)
         {
-            firstAbility();
-        }
-
-        // Ice Enchant
-        if (Input.GetButtonDown(secondSpecialAbility))
-        {
-            secondAbility();
-        }
-
-        //Speed Boost
-        if (Input.GetButtonDown(speedBoostInput))
-        {
-            thirdAbility();
+            if (Input.GetButtonDown(firstSpecialAbility))
+            {
+                firstAbility();
+            }
+            if (Input.GetButtonDown(secondSpecialAbility))
+            {
+                secondAbility();
+            }
+            if (Input.GetButtonDown(speedBoostInput))
+            {
+                thirdAbility();
+            }
         }
     }
 
@@ -298,9 +304,23 @@ public class PlayerManager : MonoBehaviour, IObserver
             case "Next Level":
                 SavePlayerState();
                 break;
+            case "Player Died":
+                checkForPlayersDeath();
+                break;
+            case "Player changed class":
+                thisPlayer = gameObject.GetComponentInChildren<Player>();
+                otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
+                break;
         }
     }
 
+    private void checkForPlayersDeath()
+    {
+        if(thisPlayer.isDead && otherPlayer.isDead)
+        {
+            Subject.Notify("Players Dead");
+        }
+    }
 
     private void OnDestroy()
     {

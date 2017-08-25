@@ -66,6 +66,27 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         cdManager.StartCooldown(0, 0);
     }
 
+    // Revive
+    protected override void SecondAbility()
+    {
+        Player otherPlayer = gameObject.GetComponentInParent<PlayerManager>().otherPlayer;
+        if ( _hitpoints < 25 || !otherPlayer.isDead) return;
+        isOnCoolDown[2] = true;
+        cdManager.StartCooldown(2, 0);
+        otherPlayer.applyHealing(_hitpoints / 2);
+        _hitpoints /= 2;
+    }
+
+    public override void applyHealing(int healpoints)
+    {
+        if (isDead)
+        {
+            isDead = false;
+            rb2D.simulated = true;
+        }
+        _hitpoints += healpoints;
+    }
+
     protected override void FirstAbility()
     {
         StartCoroutine(DefensiveState());

@@ -60,8 +60,12 @@ public abstract class Npc : MovingObj
     {
         if (other.gameObject.CompareTag("Player") && !isKnockedBack)
         {
-            other.gameObject.GetComponent<MovingObj>().applyDamage(_damage);
-            rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy
+            Player player = other.gameObject.GetComponent<Player>();
+            player.applyDamage(_damage);
+            if (!player.isDead)
+            {
+                rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy
+            }
             rb2D.velocity = Vector2.zero;
         }
     }
