@@ -8,13 +8,19 @@ public class SpeedTrial : MonoBehaviour {
     public GameObject finish;
     public const float TRIAL_TIME = 7f;
     public FinishLine finishLine;
+    private AudioSource clock;
 
+    private void Start()
+    {
+        clock = gameObject.GetComponent<AudioSource>();
+    }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             StartCoroutine(startCountdown());
+            clock.Play();
         }
     }
 
