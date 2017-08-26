@@ -18,4 +18,9 @@ public class LoadSceneOnClick : MonoBehaviour {
     {
         Subject.Notify("Main Menu");
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }
