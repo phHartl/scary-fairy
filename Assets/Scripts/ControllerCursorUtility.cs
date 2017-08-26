@@ -12,12 +12,12 @@ public class ControllerCursorUtility : MonoBehaviour, ISelectHandler
 
     private void Start()
     {
-        ButtonPosition = GetComponentInParent<RectTransform>().position;
+        ButtonPosition = GetComponentInParent<RectTransform>().localPosition;
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        ControllerCursorTransform.position = ButtonPosition;
-        ControllerCursorTransform.position += new Vector3(-294, 0, 0);
+        ControllerCursorTransform.localPosition = ButtonPosition;
+        ControllerCursorTransform.localPosition += new Vector3(-294, 0, 0);
     }
 }
