@@ -19,6 +19,8 @@ public class PauseMenu : MonoBehaviour {
             {
                 gameObject.transform.GetChild(i).gameObject.SetActive(true);
             }
+            Time.timeScale = 0;
+            Subject.Notify("DisableHUD");
         }
     }
 }

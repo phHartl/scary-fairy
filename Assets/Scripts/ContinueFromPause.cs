@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class ContinueFromPause : MonoBehaviour {
 
-    public GameObject menu = GameObject.Find("Container");
+    public GameObject container;
 
 	public void resumeGame()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 0; i < container.transform.childCount; i++)
         {
-            gameObject.transform.GetChild(i).gameObject.SetActive(false);
+            container.transform.GetChild(i).gameObject.SetActive(false);
         }
+        Subject.Notify("EnableHUD");
         Time.timeScale = 1;
     }
 
