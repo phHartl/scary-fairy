@@ -7,6 +7,7 @@ public class Golem : Npc {
 
     private bool activated = false;
     private AIMove moveScript;
+    private Rigidbody2D rigid;
     public string vulnerableEnchantment;
 
     public GameObject projectileObject;
@@ -33,6 +34,7 @@ public class Golem : Npc {
         rb2D.freezeRotation = true;
         moveScript.canMove = false;
         moveScript.canSearch = false;
+        rb2D.mass = 5000;
     }
 
     /*
@@ -46,11 +48,13 @@ public class Golem : Npc {
         activated = true;
         animator.speed = 1;
         this._damage = 30;
-        rb2D.bodyType = RigidbodyType2D.Dynamic;
         moveScript.canMove = true;
         moveScript.canSearch = true;
         StartCoroutine(startProjectileAttack());
+        rb2D.bodyType = RigidbodyType2D.Dynamic;
+        rb2D.mass = 1;
     }
+
 
     // Update is called once per frame
     protected override void Update()
