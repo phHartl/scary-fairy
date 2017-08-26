@@ -47,6 +47,9 @@ public class GameManager : MonoBehaviour, IObserver
             case "Current Level":
                 SceneManager.LoadScene(levelNum);
                 break;
+            case "Instructions":
+                SceneManager.LoadSceneAsync(4);
+                break;
 	    case "Players Dead":
                 StartCoroutine(restartLevel(reloadDelay));
                 break;
