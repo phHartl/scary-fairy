@@ -106,8 +106,20 @@ public class PlayerManager : MonoBehaviour, IObserver
                 StartCoroutine(ChangeClass(down));
             }
         }
-
+        checkFairyAutoswitch();
         checkLayer();
+    }
+
+
+    /*
+     * Switches to another class if the player is a fairy and its host dies
+     */
+    private void checkFairyAutoswitch()
+    {
+        if(hasFairy && otherPlayer.isDead)
+        {
+            StartCoroutine(ChangeClass(true));
+        }
     }
 
 
