@@ -20,7 +20,6 @@ public class CasualEnemy : Npc
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-        //animator = GetComponent<Animator>();
         this._hitpoints = 100;
         this._damage = 30;
     }
