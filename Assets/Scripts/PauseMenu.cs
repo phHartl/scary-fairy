@@ -5,22 +5,31 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour {
 
     public string pause;
+    private bool isPaused;
 
 	// Use this for initialization
 	void Start () {
-
+        isPaused = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         if (Input.GetButtonDown(pause))
         {
-            for(int i = 0; i < gameObject.transform.childCount; i++)
+            if (!isPaused)
             {
-                gameObject.transform.GetChild(i).gameObject.SetActive(true);
+                for (int i = 0; i < gameObject.transform.childCount; i++)
+                {
+                    gameObject.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                Time.timeScale = 0;
+                isPaused = true;
+                Subject.Notify("DisableHUD");
+            } else
+            {
+                GetComponent<ContinueFromPause>().resumeGame();
+                isPaused = false;
             }
-            Time.timeScale = 0;
-            Subject.Notify("DisableHUD");
         }
     }
 }
