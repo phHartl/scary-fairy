@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Constants : MonoBehaviour {
 
-    //EVENTS
+    //EVENTS & TAGS
     public const string PLAYER_FOREGROUND = "PlayerForeground";
     public const string PLAYER_BACKGROUND = "PlayerBackground";
     public const string NEXT_LEVEL = "Next Level";
@@ -19,21 +19,24 @@ public abstract class Constants : MonoBehaviour {
     public const string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
     public const string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
     public const string HEALTH_PICKUP = "HealthPickup";
-    
+    public const string BUFF_OVER = "BuffOver";
+    public const string PLAYER_TAG = "Player";
+    public const string FEET_HITBOX = "feetHitbox";
+    public const string FAIRY_CD_OVER = "FairyCDOver";
+    public const string WARRIOR_CD_OVER = "WarriorCDOver";
+    public const string RANGER_CD_OVER = "RangerCDOver";
 
-    
+
+
 
     //PLAYER
     public const int PLAYER_MAX_HITPOINTS = 100;
     public const int MINIMAL_HP_TO_REVIVE = PLAYER_MAX_HITPOINTS / 4;
-    public const int HEALTH_POTION_RECOVERY = 5;
 
     public const float PLAYER_REVIVE_COOLDOWN = 10f;
     public const float PLAYER_DEFAULT_MOVEMENTSPEED = 5f;
 
-    public const string BUFF_OVER = "BuffOver";
-    public const string PLAYER_TAG = "Player";
-    public const string FEET_HITBOX = "feetHitbox";
+    
 
 
     //RANGER
@@ -46,16 +49,19 @@ public abstract class Constants : MonoBehaviour {
     public const float RANGER_MULTISHOT_COOLDOWN = 5f;
     public const float ARROW_TRAVEL_TIME = 1f;
 
-    public const string RANGER_CD_OVER = "RangerCDOver";
+    
 
     //WARRIOR
     public const int WARRIOR_BASE_DAMAGE = 20;
     public const int WARRIOR_CLASS_INDEX = 0;
 
     public const float WARRIOR_ATTACK_COOLDOWN = 1f;
+    public const float WARRIOR_SHIELD_DAMAGE_REDUCTION = 0.8f;
+    public const float WARRIOR_DEFENSIVE_DEBUFF = 0.5f;
+    public const float WARRIOR_BASE_DAMAGE_REDUCTION = 0f;  //Reduction of damage that the Warrior TAKES
     public const float WARRIOR_SHIELD_COOLDOWN = 10f;
 
-    public const string WARRIOR_CD_OVER = "WarriorCDOver";
+   
 
     //FAIRY
     public const int FAIRY_BASE_DAMAGE = 20;
@@ -75,12 +81,17 @@ public abstract class Constants : MonoBehaviour {
     public const float FAIRY_SPEED_BUFF_DURATION = 8f;
     public const float FAIRY_SPEED_BOOST_MULTIPLIER = 1.5f;
 
-    public const string FAIRY_CD_OVER = "FairyCDOver";
+    
 
     //ENEMIES
     public const int CASUAL_ENEMY_MAX_HEALTH = 100;
     public const int CASUAL_ENEMY_BASE_DAMAGE = 15;
 
-    public const float HEALTH_POTION_DROP_CHANCE = 0.3f;
     public const float ICE_ENCHANTMENT_SLOW_MODIFIER = 0.5f;
+
+
+    //HEALTH POTION
+    public const int HEALTH_POTION_RECOVERY = 5;
+
+    public const float HEALTH_POTION_DROP_CHANCE = 0.3f;
 }

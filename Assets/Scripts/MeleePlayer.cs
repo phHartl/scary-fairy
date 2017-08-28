@@ -6,9 +6,8 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
-    private float damageReduce = 0; //How much should the damage be reduced?
+    private float damageReduce = Constants.WARRIOR_BASE_DAMAGE_REDUCTION; //How much should the damage be reduced?
     private float defensiveStateDuration = 5f; //Duration of buff
-    public float defensiveDebuff = 0.5f; //Factor to debuff other values
 
 
 
@@ -95,13 +94,13 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
     private IEnumerator DefensiveState()
     {
         firstAbility = true;
-        moveSpeed *= defensiveDebuff;
-        cdManager.SetWarriorCooldowns(0, (1 / defensiveDebuff));
-        damageReduce = 0.8f;
+        moveSpeed *= Constants.WARRIOR_DEFENSIVE_DEBUFF;
+        cdManager.SetWarriorCooldowns(0, (1 / Constants.WARRIOR_DEFENSIVE_DEBUFF));
+        damageReduce = Constants.WARRIOR_SHIELD_DAMAGE_REDUCTION;
         yield return new WaitForSeconds(defensiveStateDuration);
-        moveSpeed *= 1 / defensiveDebuff;
-        cdManager.SetWarriorCooldowns(0, defensiveDebuff);
-        damageReduce = 0;
+        moveSpeed *= 1 / Constants.WARRIOR_DEFENSIVE_DEBUFF;
+        cdManager.SetWarriorCooldowns(0, Constants.WARRIOR_DEFENSIVE_DEBUFF);
+        damageReduce = Constants.WARRIOR_BASE_DAMAGE_REDUCTION;
         firstAbility = false;
     }
 
