@@ -78,9 +78,10 @@ public class PlayerManager : MonoBehaviour, IObserver
         } 
         else
         {
-            // No child-object
+            // No child-object -> first init -> set hp to max
             GameObject newPlayer = SpawnPlayer();
             playerObject = newPlayer;
+            playerObject.GetComponentInChildren<MovingObj>()._hitpoints = 100;
         }
     }
 
@@ -108,6 +109,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         // Change Class
         if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
         {
+            SavePlayerState();
             bool down = false;
             if (Input.GetButtonDown(changeClassDownInput))
             {
@@ -184,6 +186,8 @@ public class PlayerManager : MonoBehaviour, IObserver
 
         // Sets the target for the fairy
         SetFairyTarget();
+
+        playerObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
 
         // Setting the new player as target of the camera
         cameraControl.SetTarget(playerNumber - 1, playerObject);

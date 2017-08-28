@@ -14,13 +14,6 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
 
     public int knockBackLength = 2;
 
-    // Use this for initialization
-    private void Awake()
-    {
-        this._hitpoints = 100;
-        this.baseDamage = 20;
-    }
-
     // use this for initializing dependencies
     protected override void Start()
     {
@@ -32,7 +25,6 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
-        this._hitpoints = 100;
         this.baseDamage = 20;
         Subject.AddObserver(this);
         Subject.AddCDObserver(this);

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour, IObserver
             case "Current Level":
                 SceneManager.LoadScene(levelNum);
                 break;
-	    case "Player Died":
+	        case "Player Died":
                 restartLevel(); //If one player has died reload the current scene -> alternative respawn mechanic?
                 break;
             default:
