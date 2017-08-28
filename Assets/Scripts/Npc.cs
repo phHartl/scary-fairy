@@ -12,7 +12,7 @@ public abstract class Npc : MovingObj
     protected AIMove AI;
     private Vector3 currentDir;
 
-    public potionHealing potion;
+    public Rigidbody2D potion;
     public float iceEnchantSlowModifier = 0.5f;
     protected bool isBurning = false;
     protected bool durationRefreshed = false;
@@ -99,7 +99,7 @@ public abstract class Npc : MovingObj
     public override void createPotion(Vector3 position)
     {
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
-        potionHealing potionClone = Instantiate(potion, position, rotation);
+        Rigidbody2D potionClone = Instantiate(potion, position, rotation);
     }
 
     public override void applyDamage(int damage)
@@ -133,7 +133,7 @@ public abstract class Npc : MovingObj
         }
     }
 
-    private IEnumerator applyBurnDamage()
+    protected IEnumerator applyBurnDamage()
     {
         isBurning = true;
         gameObject.GetComponent<Renderer>().material.color = Color.red;
@@ -152,5 +152,7 @@ public abstract class Npc : MovingObj
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;
     }
+
+    
 
 }

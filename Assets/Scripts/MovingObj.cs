@@ -115,7 +115,7 @@ public abstract class MovingObj : MonoBehaviour
     private void dropHealthPotion()
     {
         float randomFloat = Random.Range(0f, 1f);
-        if(randomFloat <= HEALTH_POTION_CHANCE)
+        if (randomFloat <= HEALTH_POTION_CHANCE)
         {
             createPotion(transform.position);
         }
@@ -123,7 +123,7 @@ public abstract class MovingObj : MonoBehaviour
 
     public virtual void createPotion(Vector3 position)
     {
-       
+
     }
 
 }

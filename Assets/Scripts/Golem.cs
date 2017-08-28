@@ -128,23 +128,4 @@ public class Golem : Npc {
         }
     }
 
-    private IEnumerator applyBurnDamage()
-    {
-        isBurning = true;
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
-        {
-            if (durationRefreshed)
-            {
-                print("Burn Refreshed");
-                i = 0;
-                durationRefreshed = false;
-            }
-            _hitpoints -= 2;
-            print("Enemy got burned");
-            yield return new WaitForSeconds(BURN_TICKRATE);
-        }
-        isBurning = false;
-        GetComponent<Renderer>().material.color = Color.white;
-    }
 }
