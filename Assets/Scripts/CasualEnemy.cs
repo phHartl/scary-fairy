@@ -9,10 +9,6 @@ public class CasualEnemy : Npc
 
     UnityEngine.UI.Slider slider;
 
-    public float iceEnchantSlowModifier = 0.5f;
-    private Boolean isBurning = false;
-    private Boolean durationRefreshed = false;
-
 
     // Use this for initialization
     protected override void Start()
@@ -39,7 +35,6 @@ public class CasualEnemy : Npc
     {
         return rb2D.position;
     }
-
     
     /* 
      * applyDamage (int damage) takes only an integer as an argument and should be used for
@@ -55,7 +50,7 @@ public class CasualEnemy : Npc
         print("Enemy took damage, health: " + _hitpoints);
     }
 
-    public void applyDamage(int damage, string enchantment)
+    public override void applyDamage(int damage, string enchantment)
     {
         _hitpoints -= damage;
         checkDeath();
@@ -93,6 +88,4 @@ public class CasualEnemy : Npc
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;
     }
-
-   
 }

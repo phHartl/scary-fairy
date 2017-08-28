@@ -16,6 +16,7 @@ public class Player : MovingObj, CooldownObserver
     protected int baseDamage;
     protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
+    [HideInInspector]
     public CooldownManager cdManager;
     public bool isDead;
 
@@ -165,23 +166,23 @@ public class Player : MovingObj, CooldownObserver
 
     public void CalcEnemyDamage(Collider2D other) //This methode can be called by projectiles, removed duplicate code in arrow and meleeplayer
     {
-        CasualEnemy ce = other.GetComponent<CasualEnemy>();
+        Npc enemy = other.GetComponent<Npc>();
         AIMove ai = other.GetComponent<AIMove>();
         CheckForEnchantment();
         if (iceEnchantment)
         {
-            ce.applyDamage(_damage);
+            enemy.applyDamage(_damage, ICE_ENCHANTMENT);
             ai.hitByIceEnchantment();
             print("IceEnchanted Attack");
         }
         if (fireEnchantment)
         {
-            ce.applyDamage(_damage, FIRE_ENCHANTMENT);
+            enemy.applyDamage(_damage, FIRE_ENCHANTMENT);
             print("FireEnchanted Attack");
         }
         if (!iceEnchantment && !fireEnchantment)
         {
-            ce.applyDamage(_damage);
+            enemy.applyDamage(_damage);
             print("normal Attack");
         }
     }
@@ -232,10 +233,12 @@ public class Player : MovingObj, CooldownObserver
         if (iceEnchantment)
         {
             _damage = baseDamage * 3;
+            return;
         }
         else if (fireEnchantment)
         {
             _damage = baseDamage * 2;
+            return;
         }
     }
 

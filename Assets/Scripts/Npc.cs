@@ -12,6 +12,11 @@ public abstract class Npc : MovingObj
     protected AIMove AI;
     private Vector3 currentDir;
 
+    public potionHealing potion;
+    public float iceEnchantSlowModifier = 0.5f;
+    protected bool isBurning = false;
+    protected bool durationRefreshed = false;
+
     // Use this for initialization
     protected override void Start()
     {
@@ -55,7 +60,7 @@ public abstract class Npc : MovingObj
 
 
 
-    protected void OnTriggerStay2D(Collider2D other)
+    protected virtual void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player") && !isKnockedBack)
         {
@@ -70,7 +75,7 @@ public abstract class Npc : MovingObj
     }
 
  
-    protected void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         rb2D.bodyType = RigidbodyType2D.Dynamic; //Set rigidbody dynamic again;
     }
@@ -90,10 +95,62 @@ public abstract class Npc : MovingObj
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
     }
 
+
     public override void createPotion(Vector3 position)
     {
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
-        Rigidbody2D potionClone = Instantiate(potion, position, rotation);
+        potionHealing potionClone = Instantiate(potion, position, rotation);
+    }
+
+    public override void applyDamage(int damage)
+    {
+        _hitpoints -= damage;
+        checkDeath();
+        print("Enemy took damage, health: " + _hitpoints);
+    }
+
+    public virtual void applyDamage(int damage, string enchantment)
+    {
+        _hitpoints -= damage;
+        checkDeath();
+        print("Enemy took damage, health: " + _hitpoints);
+
+        if (enchantment == FIRE_ENCHANTMENT)
+        {
+            if (!isBurning)
+            {
+                StartCoroutine(applyBurnDamage());
+            }
+            if (isBurning)
+            {
+                durationRefreshed = true;
+            }
+        }
+        if (enchantment == ICE_ENCHANTMENT)
+        {
+            _hitpoints -= damage;
+            checkDeath();
+        }
+    }
+
+    private IEnumerator applyBurnDamage()
+    {
+        isBurning = true;
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
+        {
+            if (durationRefreshed)
+            {
+                print("Burn Refreshed");
+                i = 0;
+                durationRefreshed = false;
+            }
+            _hitpoints -= 2;
+            print("Enemy got burned");
+            yield return new WaitForSeconds(BURN_TICKRATE);
+        }
+        isBurning = false;
+        GetComponent<Renderer>().material.color = Color.white;
     }
 
 }

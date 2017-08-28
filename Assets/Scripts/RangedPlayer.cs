@@ -90,7 +90,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         float degrees = degree;
         for (int i = 0; i < arrowCount; i++)
         {
-            arrows[i] = arrow.GetComponent<Arrow>().createArrow(rb2D.position, transform.rotation, timeToTravel);
+            arrows[i] = arrow.GetComponent<PlayerProjectile>().CreateProjectile(rb2D.position, transform.rotation, timeToTravel);
             Quaternion velocityAngle = Quaternion.Euler(0, 0, (i - arrowCount/2) * degrees);
             if (currentDir == 1)
             {
