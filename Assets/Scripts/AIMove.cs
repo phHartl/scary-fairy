@@ -29,7 +29,7 @@ public class AIMove : AIBase, IObserver {
 
     private int currentWaypoint = 0;
 
-    public float speedDebuff = 0.5f;
+    public float speedDebuff = Constants.ICE_ENCHANTMENT_SLOW_MODIFIER;
 
     private List<GameObject> targets;
 

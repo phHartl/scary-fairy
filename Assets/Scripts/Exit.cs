@@ -9,9 +9,9 @@ public class Exit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.CompareTag("feetHitbox"))
+        if (collider.CompareTag(Constants.FEET_HITBOX))
         {
-            Subject.Notify("Next Level");
+            Subject.Notify(Constants.NEXT_LEVEL);
         }
     }
 

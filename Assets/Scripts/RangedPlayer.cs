@@ -5,13 +5,13 @@ using UnityEngine;
 public class RangedPlayer : Player, IObserver, CooldownObserver
 {
     public Rigidbody2D arrow;
-    private float timeToTravel = 1f;
+    private float timeToTravel = Constants.ARROW_TRAVEL_TIME;
 
     // Use this for initialization
     private void Awake()
     {
-        this.baseDamage = 10;
-        this._hitpoints = 50;
+        this.baseDamage = Constants.RANGER_BASE_DAMAGE;
+        this._hitpoints = Constants.PLAYER_MAX_HITPOINTS;
     }
 
     // Use this for initializing dependencies
@@ -34,7 +34,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         CheckForEnchantment();
         isAttacking = true;
         isOnCoolDown[0] = true;
-        cdManager.StartCooldown(0, 1);
+        cdManager.StartCooldown(0, Constants.RANGER_CLASS_INDEX);
     }
 
     protected override void FirstAbility()
@@ -42,16 +42,16 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         CheckForEnchantment();
         firstAbility = true;
         isOnCoolDown[1] = true;
-        cdManager.StartCooldown(1, 1);
+        cdManager.StartCooldown(1, Constants.RANGER_CLASS_INDEX);
     }
 
     // Revive
     protected override void SecondAbility()
     {
         Player otherPlayer = gameObject.GetComponentInParent<PlayerManager>().otherPlayer;
-        if (_hitpoints < 25 || !otherPlayer.isDead) return;
+        if (_hitpoints < Constants.MINIMAL_HP_TO_REVIVE || !otherPlayer.isDead) return;
         isOnCoolDown[2] = true;
-        cdManager.StartCooldown(2, 1);
+        cdManager.StartCooldown(2, Constants.RANGER_CLASS_INDEX);
         otherPlayer.applyHealing(_hitpoints / 2);
         _hitpoints /= 2;
     }
@@ -70,7 +70,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     private void GenArrows(int currentDir)
     {
         if(firstAbility) {
-            multiShot(currentDir, 3, 15);
+            multiShot(currentDir, Constants.MULTISHOT_ARROW_COUNT, Constants.MULTISHOT_ANGLE);
         }
         else
         {
@@ -123,11 +123,11 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     {
         switch (gameEvent)
         {
-            case "HealthPickup":
-                _hitpoints += 5;
-                if (_hitpoints > 100)
+            case Constants.HEALTH_PICKUP:
+                _hitpoints += Constants.HEALTH_POTION_RECOVERY;
+                if (_hitpoints > Constants.PLAYER_MAX_HITPOINTS)
                 {
-                    _hitpoints = 100;
+                    _hitpoints = Constants.PLAYER_MAX_HITPOINTS;
                 }
                 break;
         }
@@ -138,7 +138,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         base.OnNotify(gameEvent, cooldownIndex);
         switch (gameEvent)
         {
-            case "RangerCDOver":
+            case Constants.RANGER_CD_OVER:
                 isOnCoolDown[cooldownIndex] = false;
                 break;
         }

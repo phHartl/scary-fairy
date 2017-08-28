@@ -18,10 +18,9 @@ public class Arrow : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Player player = GameObject.FindObjectOfType<RangedPlayer>();
-        if (other.CompareTag("CasualEnemy"))
+        if (other.CompareTag(Constants.CASUAL_ENEMY))
         {
             player.CalcEnemyDamage(other);
-            print("Arrow hit enemy");
         }
     }
 }

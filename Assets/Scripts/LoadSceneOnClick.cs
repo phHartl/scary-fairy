@@ -6,17 +6,17 @@ public class LoadSceneOnClick : MonoBehaviour {
 
     public void loadCurrentLevel()
     {
-        Subject.Notify("Current Level");
+        Subject.Notify(Constants.CURRENT_LEVEL);
     }
 
     public void loadInstructions()
     {
-        Subject.Notify("Instructions");
+        Subject.Notify(Constants.INSTRUCTIONS);
     }
 
     public void loadMainMenu()
     {
-        Subject.Notify("Main Menu");
+        Subject.Notify(Constants.MAIN_MENU);
     }
 
     public void ExitGame()

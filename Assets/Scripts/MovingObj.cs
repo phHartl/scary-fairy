@@ -2,7 +2,7 @@
 
 public abstract class MovingObj : MonoBehaviour
 {
-    public float moveSpeed;
+    public float moveSpeed = Constants.PLAYER_DEFAULT_MOVEMENTSPEED;
     public LayerMask collisionLayer;
     protected Rigidbody2D rb2D;
     protected BoxCollider2D boxCollider;
@@ -20,18 +20,9 @@ public abstract class MovingObj : MonoBehaviour
     private Color blue = new Color(0.1f, 0.3f, 1.0f);
     private Color red = new Color(1.0f, 0.3f, 0.1f);
 
-    public float HEALTH_POTION_CHANCE = 0.5f;
 
     public bool iceEnchantment;
     public bool fireEnchantment;
-
-    public float BURN_DAMAGE_DURATION = 4f;
-    public float BURN_TICKRATE = 0.5f;
-
-    [HideInInspector] public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
-    [HideInInspector] public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
-
-
 
 
     // Use this for initialization
@@ -113,9 +104,9 @@ public abstract class MovingObj : MonoBehaviour
     private void dropHealthPotion()
     {
         float randomFloat = Random.Range(0f, 1f);
-        if(randomFloat <= HEALTH_POTION_CHANCE)
+        if(randomFloat <= Constants.HEALTH_POTION_DROP_CHANCE)
         {
-            Subject.Notify("HealthPotionDropped", transform.position);
+            Subject.Notify(Constants.HEALTH_POTION_DROPPED, transform.position);
         }
     }
 

@@ -10,10 +10,10 @@ public class CooldownManager : MonoBehaviour {
     private bool[] fairyOnCooldown = new bool[4];
     private bool buffOnCooldown = false;
     private bool changeClassOnCooldown = false;
-    private float[] warriorAbilityCooldowns = { 1f, 10f, 10f }; //Attack, defensiveState, revive
-    private float[] rangerAbilityCooldowns = { 1f, 5f, 10f }; //Attack, multiShot, revive
-    private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
-    private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
+    private float[] warriorAbilityCooldowns = { Constants.WARRIOR_ATTACK_COOLDOWN, Constants.WARRIOR_SHIELD_COOLDOWN, Constants.PLAYER_REVIVE_COOLDOWN }; //Attack, defensiveState, revive
+    private float[] rangerAbilityCooldowns = { Constants.RANGER_ATTACK_COOLDOWN, Constants.RANGER_MULTISHOT_COOLDOWN, Constants.PLAYER_REVIVE_COOLDOWN }; //Attack, multiShot, revive
+    private float[] fairyAbilityCooldowns = { Constants.FAIRY_ATTACK_COOLDOWN, Constants.FAIRY_FIRE_COOLDOWN, Constants.FAIRY_ICE_COOLDOWN, Constants.FAIRY_SPEED_COOLDOWN}; //Attack, fire, ice, speed (all are duration + cooldown)
+    private float[] buffDurations = { Constants.FAIRY_FIRE_BUFF_DURATION, Constants.FAIRY_ICE_BUFF_DURATION, Constants.FAIRY_SPEED_BUFF_DURATION }; //Fire, ice & speedbuff
     private float classChangeCooldown = 10f;
 
 	// Use this for initialization
@@ -68,33 +68,33 @@ public class CooldownManager : MonoBehaviour {
      */
     private IEnumerator StartCD(int cooldownIndex, int playerClassIndex)
     {
-        if (playerClassIndex == 0) //Warrior
+        if (playerClassIndex == Constants.WARRIOR_CLASS_INDEX) //Warrior
         {
             warriorOnCooldown[cooldownIndex] = true;
             yield return new WaitForSeconds(warriorAbilityCooldowns[cooldownIndex]);
             warriorOnCooldown[cooldownIndex] = false;
-            Subject.Notify("WarriorCDOver", cooldownIndex);
+            Subject.Notify(Constants.WARRIOR_CD_OVER, cooldownIndex);
         }
-        else if (playerClassIndex == 1) //Ranger
+        else if (playerClassIndex == Constants.RANGER_CLASS_INDEX) //Ranger
         {
             rangerOnCooldown[cooldownIndex] = true;
             yield return new WaitForSeconds(rangerAbilityCooldowns[cooldownIndex]);
             rangerOnCooldown[cooldownIndex] = false;
-            Subject.Notify("RangerCDOver", cooldownIndex);
+            Subject.Notify(Constants.RANGER_CD_OVER, cooldownIndex);
         }
-        else if (playerClassIndex == 2) //Fairy
+        else if (playerClassIndex == Constants.FAIRY_CLASS_INDEX) //Fairy
         {
             fairyOnCooldown[cooldownIndex] = true;
             yield return new WaitForSeconds(fairyAbilityCooldowns[cooldownIndex]);
             fairyOnCooldown[cooldownIndex] = false;
-            Subject.Notify("FairyCDOver", cooldownIndex);
+            Subject.Notify(Constants.FAIRY_CD_OVER, cooldownIndex);
         }
         else //Target of fairy buff
         {
             buffOnCooldown = true;
             yield return new WaitForSeconds(buffDurations[cooldownIndex-1]);
             buffOnCooldown = false;
-            Subject.Notify("BuffOver", cooldownIndex);
+            Subject.Notify(Constants.BUFF_OVER, cooldownIndex);
         }
     }
 

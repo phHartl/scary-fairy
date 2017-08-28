@@ -9,7 +9,6 @@ public class CasualEnemy : Npc
 
     UnityEngine.UI.Slider slider;
 
-    public float iceEnchantSlowModifier = 0.5f;
     private Boolean isBurning = false;
     private Boolean durationRefreshed = false;
     public Rigidbody2D potion;
@@ -20,8 +19,8 @@ public class CasualEnemy : Npc
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-        this._hitpoints = 100;
-        this._damage = 30;
+        this._hitpoints = Constants.CASUAL_ENEMY_MAX_HEALTH;
+        this._damage = Constants.CASUAL_ENEMY_BASE_DAMAGE;
     }
 
     // Update is called once per frame
@@ -62,7 +61,7 @@ public class CasualEnemy : Npc
         checkDeath();
         print("Enemy took damage, health: " + _hitpoints);
 
-        if(enchantment == FIRE_ENCHANTMENT)
+        if(enchantment == Constants.FIRE_ENCHANTMENT)
         {
             if (!isBurning)
             {
@@ -79,7 +78,7 @@ public class CasualEnemy : Npc
     {
         isBurning = true;
         gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
+        for (int i = 0; i < Constants.BURN_DAMAGE_DURATION; i++)
         {
             if (durationRefreshed)
             {
@@ -89,7 +88,7 @@ public class CasualEnemy : Npc
             }
             _hitpoints -= 2;
             print("Enemy got burned");
-            yield return new WaitForSeconds(BURN_TICKRATE);
+            yield return new WaitForSeconds(Constants.BURN_DAMAGE_TICKRATE);
         }
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;

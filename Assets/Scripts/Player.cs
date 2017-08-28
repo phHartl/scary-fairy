@@ -44,8 +44,6 @@ public class Player : MovingObj, CooldownObserver
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
         animator.SetInteger("Hitpoints", _hitpoints);
-        //animator.SetBool("IceEnchantment", iceEnchantment);
-        //animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
     protected virtual void FixedUpdate()
@@ -157,7 +155,7 @@ public class Player : MovingObj, CooldownObserver
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (isAttacking == true && other.CompareTag("CasualEnemy"))
+        if (isAttacking == true && other.CompareTag(Constants.CASUAL_ENEMY))
         {
             CalcEnemyDamage(other);
         }
@@ -172,17 +170,14 @@ public class Player : MovingObj, CooldownObserver
         {
             ce.applyDamage(_damage);
             ai.hitByIceEnchantment();
-            print("IceEnchanted Attack");
         }
         if (fireEnchantment)
         {
-            ce.applyDamage(_damage, FIRE_ENCHANTMENT);
-            print("FireEnchanted Attack");
+            ce.applyDamage(_damage, Constants.FIRE_ENCHANTMENT);
         }
         if (!iceEnchantment && !fireEnchantment)
         {
             ce.applyDamage(_damage);
-            print("normal Attack");
         }
     }
 
@@ -197,7 +192,7 @@ public class Player : MovingObj, CooldownObserver
                 _hitpoints = 0;
                 isDead = true;
                 rb2D.simulated = false;
-                Subject.Notify("Player Died");
+                Subject.Notify(Constants.PLAYER_DIED);
             }
             StartCoroutine(PlayerInvincible());
         }
@@ -231,11 +226,11 @@ public class Player : MovingObj, CooldownObserver
         _damage = baseDamage;
         if (iceEnchantment)
         {
-            _damage = baseDamage * 3;
+            _damage = baseDamage * Constants.ICE_ENCHANTMENT_DAMAGE_MULTIPLIER;
         }
         else if (fireEnchantment)
         {
-            _damage = baseDamage * 2;
+            _damage = baseDamage * Constants.FIRE_ENCHANTMENT_DAMAGE_MULTIPLIER;
         }
     }
 
@@ -243,11 +238,11 @@ public class Player : MovingObj, CooldownObserver
     {
         switch (gameEvent)
         {
-            case "BuffOver":
+            case Constants.BUFF_OVER:
                 if (this != null)
                 {
                     resetEnchantments();
-                    moveSpeed = 5;
+                    moveSpeed = Constants.PLAYER_DEFAULT_MOVEMENTSPEED;
                     onEnchantmentCD = cdManager.GetBuffCooldown();
                 }
                 break;

@@ -38,20 +38,20 @@ public class GameManager : MonoBehaviour, IObserver
     {
         switch (gameEvent)
         {
-            case "Next Level":
+            case Constants.NEXT_LEVEL:
                 levelNum += 1;
                 SceneManager.LoadScene(levelNum);
                 break;
-            case "Main Menu":
+            case Constants.MAIN_MENU:
                 SceneManager.LoadScene("MainMenu");
                 break;
-            case "Current Level":
+            case Constants.CURRENT_LEVEL:
                 SceneManager.LoadScene(levelNum);
                 break;
-            case "Instructions":
+            case Constants.INSTRUCTIONS:
                 SceneManager.LoadSceneAsync(instructions);
                 break;
-	    case "Players Dead":
+	        case Constants.ALL_PLAYERS_DEAD:
                 StartCoroutine(restartLevel(reloadDelay));
                 break;
             default:
