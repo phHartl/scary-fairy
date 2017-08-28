@@ -167,6 +167,7 @@ public class Player : MovingObj, CooldownObserver
     {
         CasualEnemy ce = other.GetComponent<CasualEnemy>();
         AIMove ai = other.GetComponent<AIMove>();
+        CheckForEnchantment();
         if (iceEnchantment)
         {
             ce.applyDamage(_damage);
