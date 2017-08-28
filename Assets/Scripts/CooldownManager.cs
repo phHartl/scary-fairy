@@ -14,7 +14,7 @@ public class CooldownManager : MonoBehaviour {
     private float[] rangerAbilityCooldowns = { 1f, 5f, 10f }; //Attack, multiShot, revive
     private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
     private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
-    private float classChangeCooldown = 10f;
+    
 
 	// Use this for initialization
 	void Awake () { 
@@ -106,7 +106,7 @@ public class CooldownManager : MonoBehaviour {
     private IEnumerator StartClassCD()
     {
         changeClassOnCooldown = true;
-        yield return new WaitForSeconds(classChangeCooldown);
+        yield return new WaitForSeconds(Constants.PLAYER_CLASS_CHANGE_COOLDOWN);
         changeClassOnCooldown = false;
     }
 }

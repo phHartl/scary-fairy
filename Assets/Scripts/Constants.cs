@@ -45,6 +45,7 @@ public abstract class Constants : MonoBehaviour {
     public const float CAMERA_MAX_VERTICAL_DISTANCE = 8f;
     public const float CAMERA_MAX_HORIZONTAL_DISTANCE = 12f;
     public const float PLAYER_INVINCIBILITY_ON_HIT = 1f;
+    public const float PLAYER_CLASS_CHANGE_COOLDOWN = 3f;
 
     
 
