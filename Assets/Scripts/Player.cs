@@ -256,4 +256,42 @@ public class Player : MovingObj, CooldownObserver
                 break;
         }
     }
+
+    public virtual void activateFireEnchantment()
+    {
+        iceEnchantment = false;
+        fireEnchantment = true;
+        onEnchantmentCD = true;
+        particleSettings.startColor = red;
+        particles.Play();
+    }
+
+    public void activateIceEnchantment()
+    {
+        fireEnchantment = false;
+        iceEnchantment = true;
+        onEnchantmentCD = true;
+        particleSettings.startColor = blue;
+        particles.Play();
+    }
+
+    public void resetEnchantments()
+    {
+        iceEnchantment = false;
+        fireEnchantment = false;
+        if (particles != null)
+        {
+            particles.Stop();
+        }
+    }
+
+    public void resetEnchantmentCooldown()
+    {
+        onEnchantmentCD = false;
+    }
+
+    public bool getOnEnchantmentCD()
+    {
+        return onEnchantmentCD;
+    }
 }

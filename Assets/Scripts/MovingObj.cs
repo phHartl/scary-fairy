@@ -17,8 +17,8 @@ public abstract class MovingObj : MonoBehaviour
     protected Animator animator;
     protected ParticleSystem particles;
     protected ParticleSystem.MainModule particleSettings;
-    private Color blue = new Color(0.1f, 0.3f, 1.0f);
-    private Color red = new Color(1.0f, 0.3f, 0.1f);
+    protected Color blue = new Color(0.1f, 0.3f, 1.0f);
+    protected Color red = new Color(1.0f, 0.3f, 0.1f);
     [HideInInspector]public bool alive = true;
 
     public float HEALTH_POTION_CHANCE = 0.5f;
@@ -64,43 +64,7 @@ public abstract class MovingObj : MonoBehaviour
         print(this.name + " took damage. HP: " + _hitpoints);
     }
 
-    public virtual void activateFireEnchantment()
-    {
-        iceEnchantment = false;
-        fireEnchantment = true;
-        onEnchantmentCD = true;
-        particleSettings.startColor = red;
-        particles.Play();
-    }
-
-    public void activateIceEnchantment()
-    {
-        fireEnchantment = false;
-        iceEnchantment = true;
-        onEnchantmentCD = true;
-        particleSettings.startColor = blue;
-        particles.Play();
-    }
-
-    public void resetEnchantments()
-    {
-        iceEnchantment = false;
-        fireEnchantment = false;
-        if (particles != null)
-        {
-            particles.Stop();
-        }
-    }
-
-    public void resetEnchantmentCooldown()
-    {
-        onEnchantmentCD = false;
-    }
-
-    public bool getOnEnchantmentCD()
-    {
-        return onEnchantmentCD;
-    }
+    
     protected void checkDeath()
     {
         if (_hitpoints <= 0)

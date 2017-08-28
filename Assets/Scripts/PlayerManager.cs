@@ -241,12 +241,12 @@ public class PlayerManager : MonoBehaviour, IObserver
             if (classes[currentClassIndex].name == "fairy")
             {
                 // The player is a fairy and the target needs to be set
-                playerObject.GetComponent<Fairy>().target = OtherPlayer().GetComponent<MovingObj>();
+                playerObject.GetComponent<Fairy>().target = OtherPlayer().GetComponent<Player>();
             }
             else
             {
                 // The other player is a fairy and the target needs to be set
-                OtherPlayer().GetComponent<Fairy>().target = playerObject.GetComponent<MovingObj>();
+                OtherPlayer().GetComponent<Fairy>().target = playerObject.GetComponent<Player>();
             }
 
 

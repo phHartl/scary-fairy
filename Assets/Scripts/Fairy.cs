@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fairy : Player, CooldownObserver {
 
-    public MovingObj target;
+    public Player target;
     public Vector3 FAIRY_DISTANCE;                  //Distance between fairy and other player
 
     private float speedBoostPower = 1.5f;
