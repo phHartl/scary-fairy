@@ -31,6 +31,8 @@ public abstract class MovingObj : MonoBehaviour
     [HideInInspector] public string ICE_ENCHANTMENT = "ICE_ENCHANTMENT";
     [HideInInspector] public string FIRE_ENCHANTMENT = "FIRE_ENCHANTMENT";
 
+    public Rigidbody2D potion;
+
 
 
 
@@ -104,8 +106,8 @@ public abstract class MovingObj : MonoBehaviour
     {
         if (_hitpoints <= 0)
         {
-            gameObject.SetActive(false);
             dropHealthPotion();
+            gameObject.SetActive(false);
         }
     }
 
@@ -115,8 +117,13 @@ public abstract class MovingObj : MonoBehaviour
         float randomFloat = Random.Range(0f, 1f);
         if(randomFloat <= HEALTH_POTION_CHANCE)
         {
-            Subject.Notify("HealthPotionDropped", transform.position);
+            createPotion(transform.position);
         }
+    }
+
+    public virtual void createPotion(Vector3 position)
+    {
+       
     }
 
 }

@@ -11,7 +11,6 @@ public abstract class Npc : MovingObj
     private bool isKnockedBack = false;
     protected AIMove AI;
     private Vector3 currentDir;
-    private potionHealing potion;
 
     // Use this for initialization
     protected override void Start()
@@ -89,6 +88,12 @@ public abstract class Npc : MovingObj
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
+    }
+
+    public override void createPotion(Vector3 position)
+    {
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
+        Rigidbody2D potionClone = Instantiate(potion, position, rotation);
     }
 
 }
