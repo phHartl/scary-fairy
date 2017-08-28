@@ -17,6 +17,10 @@ public abstract class Npc : MovingObj
     protected bool isBurning = false;
     protected bool durationRefreshed = false;
 
+    private float player1Pos;
+    private float player2Pos;
+    private float thisPos;
+
     // Use this for initialization
     protected override void Start()
     {
@@ -50,6 +54,11 @@ public abstract class Npc : MovingObj
         {
             animator.SetFloat("MoveY", currentDir.y);
         }
+        player1Pos = GameObject.Find("Player1").transform.GetChild(0).transform.position.y;
+        player2Pos = GameObject.Find("Player2").transform.GetChild(0).transform.position.y;
+        thisPos = transform.position.y;
+        checkLayer();
+        print(player1Pos);
     }
 
     public void checkMovement()
@@ -153,6 +162,20 @@ public abstract class Npc : MovingObj
         GetComponent<Renderer>().material.color = Color.white;
     }
 
-    
+    private void checkLayer()
+    {
+        if (thisPos > player1Pos && thisPos > player2Pos)
+        {
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterBackground";
+        }
+        else if ((thisPos > player1Pos && thisPos < player2Pos) || (thisPos < player1Pos && thisPos > player2Pos))
+        {
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterMiddle";
+        }
+        else if (thisPos < player1Pos && thisPos < player2Pos)
+        {
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterForeground";
+        }
+    }
 
 }
