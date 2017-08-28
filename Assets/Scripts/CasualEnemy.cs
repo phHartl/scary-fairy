@@ -12,6 +12,7 @@ public class CasualEnemy : Npc
     public float iceEnchantSlowModifier = 0.5f;
     private Boolean isBurning = false;
     private Boolean durationRefreshed = false;
+    public Rigidbody2D potion;
 
 
     // Use this for initialization
