@@ -10,7 +10,7 @@ public class EnemyProjectile : PlayerProjectile
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         Golem golem = GameObject.FindObjectOfType<Golem>();
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constants.PLAYER_TAG))
         {
             Player player = other.GetComponent<Player>();
             player.applyDamage(PROJECTILE_DAMAGE);

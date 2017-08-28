@@ -15,8 +15,8 @@ public class CasualEnemy : Npc
     {
         base.Start();
         slider = GetComponentInChildren<UnityEngine.UI.Slider>();
-        this._hitpoints = 100;
-        this._damage = 30;
+        this._hitpoints = Constants.CASUAL_ENEMY_MAX_HEALTH;
+        this._damage = Constants.CASUAL_ENEMY_BASE_DAMAGE;
     }
 
     // Update is called once per frame
@@ -36,56 +36,5 @@ public class CasualEnemy : Npc
         return rb2D.position;
     }
     
-    /* 
-     * applyDamage (int damage) takes only an integer as an argument and should be used for
-     * standard damage.
-     * apply damage (int damage, string enchantment) needs both an integer and a string as arguments
-     * and is used to apply special effects from enchantments (eg. slow from ice attacks)
-     */
 
-    public override void applyDamage(int damage)
-    {
-        _hitpoints -= damage;
-        checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
-    }
-
-    public override void applyDamage(int damage, string enchantment)
-    {
-        _hitpoints -= damage;
-        checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
-
-        if(enchantment == FIRE_ENCHANTMENT)
-        {
-            if (!isBurning)
-            {
-                StartCoroutine(applyBurnDamage());
-            }
-            if (isBurning)
-            {
-                durationRefreshed = true;
-            }
-        }
-    }
-
-    private IEnumerator applyBurnDamage()
-    {
-        isBurning = true;
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
-        {
-            if (durationRefreshed)
-            {
-                print("Burn Refreshed");
-                i = 0;
-                durationRefreshed = false;
-            }
-            _hitpoints -= 2;
-            print("Enemy got burned");
-            yield return new WaitForSeconds(BURN_TICKRATE);
-        }
-        isBurning = false;
-        GetComponent<Renderer>().material.color = Color.white;
-    }
 }

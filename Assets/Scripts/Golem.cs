@@ -16,7 +16,7 @@ public class Golem : Npc {
     protected override void Start()
     {
         base.Start();
-        this._hitpoints = 250;
+        this._hitpoints = Constants.GOLEM_BASE_HEALTH;
         this._damage = 0;
         setupGolem();
     }
@@ -47,7 +47,7 @@ public class Golem : Npc {
     {
         activated = true;
         animator.speed = 1;
-        this._damage = 30;
+        this._damage = Constants.GOLEM_BASE_DAMAGE;
         moveScript.canSearch = true;
         moveScript.canMove = true;
         StartCoroutine(startProjectileAttack());
@@ -69,8 +69,9 @@ public class Golem : Npc {
     {
         while (_hitpoints > 0)
         {
-            Rigidbody2D projectileClone = projectileObject.CreateProjectile(transform.position, transform.rotation, UnityEngine.Random.Range(2f, 5f));
-            yield return new WaitForSeconds(5f);
+            Rigidbody2D projectileClone = projectileObject.CreateProjectile(transform.position, transform.rotation, UnityEngine.Random.Range(Constants.GOLEM_PROJECTILE_MIN_TRAVEL_TIME,
+                Constants.GOLEM_PROJECTILE_MAX_TRAVEL_TIME));
+            yield return new WaitForSeconds(Constants.GOLEM_TIME_BETWEEN_PROJECTILES);
         }
     }
 
@@ -85,12 +86,11 @@ public class Golem : Npc {
         {
             switch (enchantment)
             {
-                case "FIRE_ENCHANTMENT":
-                    print("I faild this city");
+                case Constants.FIRE_ENCHANTMENT:
                     applyFireDamage(damage);
                     break;
 
-                case "ICE_ENCHANTMENT":
+                case Constants.ICE_ENCHANTMENT:
                     applyIceDamage(damage);
                     break;
             }
@@ -99,7 +99,7 @@ public class Golem : Npc {
 
     private void applyIceDamage(int damage)
     {
-        if (!activated && vulnerableEnchantment.Equals(ICE_ENCHANTMENT))
+        if (!activated && vulnerableEnchantment.Equals(Constants.ICE_ENCHANTMENT))
         {
             activateGolem();
         }
@@ -109,14 +109,12 @@ public class Golem : Npc {
 
     private void applyFireDamage(int damage)
     {
-        if (!activated && vulnerableEnchantment.Equals(FIRE_ENCHANTMENT))
+        if (!activated && vulnerableEnchantment.Equals(Constants.FIRE_ENCHANTMENT))
         {
             activateGolem();
         }
         _hitpoints -= damage;
         checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
-
 
         if (!isBurning)
         {

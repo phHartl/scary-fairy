@@ -13,7 +13,6 @@ public abstract class Npc : MovingObj
     private Vector3 currentDir;
 
     public Rigidbody2D potion;
-    public float iceEnchantSlowModifier = 0.5f;
     protected bool isBurning = false;
     protected bool durationRefreshed = false;
 
@@ -58,7 +57,6 @@ public abstract class Npc : MovingObj
         player2Pos = GameObject.Find("Player2").transform.GetChild(0).transform.position.y;
         thisPos = transform.position.y;
         checkLayer();
-        print(player1Pos);
     }
 
     public void checkMovement()
@@ -71,7 +69,7 @@ public abstract class Npc : MovingObj
 
     protected virtual void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player") && !isKnockedBack)
+        if (other.gameObject.CompareTag(Constants.PLAYER_TAG) && !isKnockedBack)
         {
             Player player = other.gameObject.GetComponent<Player>();
             player.applyDamage(_damage);
@@ -124,7 +122,7 @@ public abstract class Npc : MovingObj
         checkDeath();
         print("Enemy took damage, health: " + _hitpoints);
 
-        if (enchantment == FIRE_ENCHANTMENT)
+        if (enchantment == Constants.FIRE_ENCHANTMENT)
         {
             if (!isBurning)
             {
@@ -135,7 +133,7 @@ public abstract class Npc : MovingObj
                 durationRefreshed = true;
             }
         }
-        if (enchantment == ICE_ENCHANTMENT)
+        if (enchantment == Constants.ICE_ENCHANTMENT)
         {
             _hitpoints -= damage;
             checkDeath();
@@ -146,17 +144,15 @@ public abstract class Npc : MovingObj
     {
         isBurning = true;
         gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < BURN_DAMAGE_DURATION; i++)
+        for (int i = 0; i < Constants.BURN_DAMAGE_DURATION; i++)
         {
             if (durationRefreshed)
             {
-                print("Burn Refreshed");
                 i = 0;
                 durationRefreshed = false;
             }
-            _hitpoints -= 2;
-            print("Enemy got burned");
-            yield return new WaitForSeconds(BURN_TICKRATE);
+            _hitpoints -= Constants.FAIRY_BURN_TICK_DAMAGE;
+            yield return new WaitForSeconds(Constants.BURN_DAMAGE_TICKRATE);
         }
         isBurning = false;
         GetComponent<Renderer>().material.color = Color.white;
@@ -166,15 +162,15 @@ public abstract class Npc : MovingObj
     {
         if (thisPos > player1Pos && thisPos > player2Pos)
         {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterBackground";
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_BACKGROUND;
         }
         else if ((thisPos > player1Pos && thisPos < player2Pos) || (thisPos < player1Pos && thisPos > player2Pos))
         {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterMiddle";
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_MIDDLE;
         }
         else if (thisPos < player1Pos && thisPos < player2Pos)
         {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "MonsterForeground";
+            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_FOREGROUND;
         }
     }
 

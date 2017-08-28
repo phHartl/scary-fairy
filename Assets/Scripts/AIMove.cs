@@ -29,8 +29,6 @@ public class AIMove : AIBase, IObserver {
 
     private int currentWaypoint = 0;
 
-    public float speedDebuff = 0.5f;
-
     private List<GameObject> targets;
 
 
@@ -215,9 +213,9 @@ public class AIMove : AIBase, IObserver {
     protected IEnumerator applyIceSlow()
     {
         gameObject.GetComponent<Renderer>().material.color = Color.blue;
-        speed = speed * speedDebuff;
+        speed *= Constants.ICE_ENCHANTMENT_SLOW_MODIFIER;
         yield return new WaitForSeconds(1f);
-        speed = speed / speedDebuff;
+        speed = speed / Constants.ICE_ENCHANTMENT_SLOW_MODIFIER;
         gameObject.GetComponent<Renderer>().material.color = Color.white;
     }
 }

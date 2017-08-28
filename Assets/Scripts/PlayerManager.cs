@@ -23,8 +23,6 @@ public class PlayerManager : MonoBehaviour, IObserver
     public Player thisPlayer;
     public Player otherPlayer;
 
-    [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
-    [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
 
     // Use this for initialization
     private void Awake () {
@@ -131,10 +129,10 @@ public class PlayerManager : MonoBehaviour, IObserver
     {
         if(OtherPlayer().transform.GetChild(0).transform.position.y > gameObject.transform.GetChild(0).transform.position.y)
         {
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = PLAYER_FOREGROUND;
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = Constants.PLAYER_FOREGROUND;
         } else
         {
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = PLAYER_BACKGROUND;
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = Constants.PLAYER_BACKGROUND;
         }
     }
 
@@ -313,13 +311,13 @@ public class PlayerManager : MonoBehaviour, IObserver
     {
         switch (gameEvent)
         {
-            case "Next Level":
+            case Constants.NEXT_LEVEL:
                 SavePlayerState();
                 break;
-            case "Player Died":
+            case Constants.PLAYER_DIED:
                 checkForPlayersDeath();
                 break;
-            case "Player changed class":
+            case Constants.PLAYER_CHANGED_CLASS:
                 thisPlayer = gameObject.GetComponentInChildren<Player>();
                 otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
                 break;
@@ -330,7 +328,7 @@ public class PlayerManager : MonoBehaviour, IObserver
     {
         if(thisPlayer.isDead && otherPlayer.isDead)
         {
-            Subject.Notify("Players Dead");
+            Subject.Notify(Constants.ALL_PLAYERS_DEAD);
         }
     }
 
