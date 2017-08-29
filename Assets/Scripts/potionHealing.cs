@@ -30,9 +30,9 @@ public class potionHealing : MonoBehaviour, TransformObserver {
      */
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(Constants.PLAYER_TAG))
+        if (other.CompareTag("Player"))
         {
-            Subject.Notify(Constants.HEALTH_PICKUP);
+            Subject.Notify("HealthPickup");
             Destroy(this.gameObject);
         }
     }
@@ -46,7 +46,7 @@ public class potionHealing : MonoBehaviour, TransformObserver {
     {
         switch (gameEvent)
         {
-            case Constants.HEALTH_POTION_DROPPED:
+            case "HealthPotionDropped":
                 createPotion(position);
                 break;
         }

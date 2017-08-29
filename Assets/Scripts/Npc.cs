@@ -11,14 +11,7 @@ public abstract class Npc : MovingObj
     private bool isKnockedBack = false;
     protected AIMove AI;
     private Vector3 currentDir;
-
-    public Rigidbody2D potion;
-    protected bool isBurning = false;
-    protected bool durationRefreshed = false;
-
-    private float player1Pos;
-    private float player2Pos;
-    private float thisPos;
+    private potionHealing potion;
 
     // Use this for initialization
     protected override void Start()
@@ -53,10 +46,6 @@ public abstract class Npc : MovingObj
         {
             animator.SetFloat("MoveY", currentDir.y);
         }
-        player1Pos = GameObject.Find("Player1").transform.GetChild(0).transform.position.y;
-        player2Pos = GameObject.Find("Player2").transform.GetChild(0).transform.position.y;
-        thisPos = transform.position.y;
-        checkLayer();
     }
 
     public void checkMovement()
@@ -67,22 +56,18 @@ public abstract class Npc : MovingObj
 
 
 
-    protected virtual void OnTriggerStay2D(Collider2D other)
+    protected void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag(Constants.PLAYER_TAG) && !isKnockedBack)
+        if (other.gameObject.CompareTag("Player") && !isKnockedBack)
         {
-            Player player = other.gameObject.GetComponent<Player>();
-            player.applyDamage(_damage);
-            if (!player.isDead)
-            {
-                rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy
-            }
+            other.gameObject.GetComponent<MovingObj>().applyDamage(_damage);
+            rb2D.bodyType = RigidbodyType2D.Kinematic; //Set rigidbody to kinematic to prevent player from pushing enemy
             rb2D.velocity = Vector2.zero;
         }
     }
 
  
-    protected virtual void OnTriggerExit2D(Collider2D collision)
+    protected void OnTriggerExit2D(Collider2D collision)
     {
         rb2D.bodyType = RigidbodyType2D.Dynamic; //Set rigidbody dynamic again;
     }
@@ -100,79 +85,6 @@ public abstract class Npc : MovingObj
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.AddForce(force,ForceMode2D.Impulse); //Add force in direction using an impulse
         rb2D.velocity = rb2D.velocity * playerMass; //If a player is heavier, knockBack further
-    }
-
-
-    public override void createPotion(Vector3 position)
-    {
-        Quaternion rotation = new Quaternion(0, 0, 0, 0);
-        Rigidbody2D potionClone = Instantiate(potion, position, rotation);
-    }
-
-    public override void applyDamage(int damage)
-    {
-        _hitpoints -= damage;
-        checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
-    }
-
-    public virtual void applyDamage(int damage, string enchantment)
-    {
-        _hitpoints -= damage;
-        checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
-
-        if (enchantment == Constants.FIRE_ENCHANTMENT)
-        {
-            if (!isBurning)
-            {
-                StartCoroutine(applyBurnDamage());
-            }
-            if (isBurning)
-            {
-                durationRefreshed = true;
-            }
-        }
-        if (enchantment == Constants.ICE_ENCHANTMENT)
-        {
-            _hitpoints -= damage;
-            checkDeath();
-        }
-    }
-
-    protected IEnumerator applyBurnDamage()
-    {
-        isBurning = true;
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-        for (int i = 0; i < Constants.BURN_DAMAGE_DURATION; i++)
-        {
-            if (durationRefreshed)
-            {
-                i = 0;
-                durationRefreshed = false;
-            }
-            _hitpoints -= Constants.FAIRY_BURN_TICK_DAMAGE;
-            checkDeath();
-            yield return new WaitForSeconds(Constants.BURN_DAMAGE_TICKRATE);
-        }
-        isBurning = false;
-        GetComponent<Renderer>().material.color = Color.white;
-    }
-
-    private void checkLayer()
-    {
-        if (thisPos > player1Pos && thisPos > player2Pos)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_BACKGROUND;
-        }
-        else if ((thisPos > player1Pos && thisPos < player2Pos) || (thisPos < player1Pos && thisPos > player2Pos))
-        {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_MIDDLE;
-        }
-        else if (thisPos < player1Pos && thisPos < player2Pos)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sortingLayerName = Constants.MONSTER_FOREGROUND;
-        }
     }
 
 }

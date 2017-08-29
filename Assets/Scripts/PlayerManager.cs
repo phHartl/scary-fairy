@@ -17,12 +17,13 @@ public class PlayerManager : MonoBehaviour, IObserver
     // The hasFairy-attribute is used to check and set if any player is a fairy or not
     private static bool hasFairy;
     public GameObject[] classes;
-    private int currentClassIndex;
+    public int currentClassIndex;
     private CameraControl cameraControl;
     private CooldownManager cdmanager;
-    public Player thisPlayer;
-    public Player otherPlayer;
+    private UIManager uiManager;
 
+    [HideInInspector]public const string PLAYER_FOREGROUND = "PlayerForeground";
+    [HideInInspector]public const string PLAYER_BACKGROUND = "PlayerBackground";
 
     // Use this for initialization
     private void Awake () {
@@ -30,6 +31,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         hasFairy = false;
         cameraControl = GameObject.Find("CameraRig").GetComponent<CameraControl>();
         cdmanager = GetComponent<CooldownManager>();
+        uiManager = GetComponent<UIManager>();
         currentClassIndex = 0;
         InitPlayerObject();
         SetAxis();
@@ -38,8 +40,21 @@ public class PlayerManager : MonoBehaviour, IObserver
     private void Start()
     {
         SetFairyTarget();
-        thisPlayer = gameObject.GetComponentInChildren<Player>();
-        otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
+        // Initializes the UI
+        uiManager.InitUI();
+        UpdateHealthBar();
+    }
+    
+    private void UpdateHealthBar()
+    {
+        uiManager.UpdateHealth(playerObject.GetComponent<Player>()._hitpoints);
+    }
+
+    // This method is used to change the UI components that are related to a class
+    private void UpdateClassUI()
+    {
+        uiManager.UpdateClass(currentClassIndex);
+        uiManager.StartSwapCooldown(cdmanager.classChangeCooldown);
     }
 
     // This method initializes a new player child-object depending on the first entry of the classes array
@@ -52,10 +67,10 @@ public class PlayerManager : MonoBehaviour, IObserver
             playerObject = SpawnPlayer();
             if (PlayerPrefs.GetInt("hasFairy") == 1)
             {
-                hasFairy = true;           
+                hasFairy = true;
             }
             gameObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
-            ChangePortrait();
+            uiManager.UpdateClass(currentClassIndex);
         }
         else if (gameObject.GetComponentInChildren<Player>())
         {
@@ -63,9 +78,10 @@ public class PlayerManager : MonoBehaviour, IObserver
         } 
         else
         {
-            // No child-object
+            // No child-object -> first init -> set hp to max
             GameObject newPlayer = SpawnPlayer();
             playerObject = newPlayer;
+            playerObject.GetComponentInChildren<MovingObj>()._hitpoints = 100;
         }
     }
 
@@ -84,40 +100,26 @@ public class PlayerManager : MonoBehaviour, IObserver
 
     // Update is called once per frame
     private void Update () {
-        //Prevent player from doing anything while being dead
-        if (!thisPlayer.isDead)
+        // Attack
+        if (Input.GetButtonDown(attackInput))
         {
-            // Attack
-            if (Input.GetButtonDown(attackInput))
-            {
-                Attack();
-            }
-
-            // Change Class
-            if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
-            {
-                bool down = false;
-                if (Input.GetButtonDown(changeClassDownInput))
-                {
-                    down = true;
-                }
-                StartCoroutine(ChangeClass(down));
-            }
+            Attack();
         }
-        checkFairyAutoswitch();
+
+        // Change Class
+        if ((Input.GetButtonDown(changeClassUpInput) || Input.GetButtonDown(changeClassDownInput)) && !cdmanager.GetClassChangeCooldown())
+        {
+            SavePlayerState();
+            bool down = false;
+            if (Input.GetButtonDown(changeClassDownInput))
+            {
+                down = true;
+            }
+            StartCoroutine(ChangeClass(down));
+        }
+
         checkLayer();
-    }
-
-
-    /*
-     * Switches to another class if the player is a fairy and its host dies
-     */
-    private void checkFairyAutoswitch()
-    {
-        if(hasFairy && otherPlayer.isDead)
-        {
-            StartCoroutine(ChangeClass(true));
-        }
+        UpdateHealthBar();
     }
 
 
@@ -129,10 +131,10 @@ public class PlayerManager : MonoBehaviour, IObserver
     {
         if(OtherPlayer().transform.GetChild(0).transform.position.y > gameObject.transform.GetChild(0).transform.position.y)
         {
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = Constants.PLAYER_FOREGROUND;
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = PLAYER_FOREGROUND;
         } else
         {
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = Constants.PLAYER_BACKGROUND;
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = PLAYER_BACKGROUND;
         }
     }
 
@@ -164,7 +166,7 @@ public class PlayerManager : MonoBehaviour, IObserver
         UpdateCurrentClassIndex(changedDownwards);
 
         // This prohibits both players from being a fairy at the same time
-        if (classes[currentClassIndex].name == "fairy" && (hasFairy|| otherPlayer.isDead))
+        if (classes[currentClassIndex].name == "fairy" && hasFairy)
         {
             UpdateCurrentClassIndex(changedDownwards);
         }
@@ -185,11 +187,13 @@ public class PlayerManager : MonoBehaviour, IObserver
         // Sets the target for the fairy
         SetFairyTarget();
 
+        playerObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
+
         // Setting the new player as target of the camera
         cameraControl.SetTarget(playerNumber - 1, playerObject);
 
         // Change the portrait to fit the new class
-        ChangePortrait();
+        UpdateClassUI();
         cdmanager.StartChangeClassCD();
         yield return new WaitForSeconds(0.25f);
         Subject.Notify("Player changed class");
@@ -239,12 +243,12 @@ public class PlayerManager : MonoBehaviour, IObserver
             if (classes[currentClassIndex].name == "fairy")
             {
                 // The player is a fairy and the target needs to be set
-                playerObject.GetComponent<Fairy>().target = OtherPlayer().GetComponent<Player>();
+                playerObject.GetComponent<Fairy>().target = OtherPlayer().GetComponent<MovingObj>();
             }
             else
             {
                 // The other player is a fairy and the target needs to be set
-                OtherPlayer().GetComponent<Fairy>().target = playerObject.GetComponent<Player>();
+                OtherPlayer().GetComponent<Fairy>().target = playerObject.GetComponent<MovingObj>();
             }
 
 
@@ -264,28 +268,24 @@ public class PlayerManager : MonoBehaviour, IObserver
         }
     }
 
-    // This method is used to change the portrais of the player to fit the current class
-    private void ChangePortrait()
-    {
-
-    }
-
     private void LateUpdate()
     {
-        if (!thisPlayer.isDead)
+        // Fire Enchant
+        if (Input.GetButtonDown(firstSpecialAbility))
         {
-            if (Input.GetButtonDown(firstSpecialAbility))
-            {
-                firstAbility();
-            }
-            if (Input.GetButtonDown(secondSpecialAbility))
-            {
-                secondAbility();
-            }
-            if (Input.GetButtonDown(speedBoostInput))
-            {
-                thirdAbility();
-            }
+            firstAbility();
+        }
+
+        // Ice Enchant
+        if (Input.GetButtonDown(secondSpecialAbility))
+        {
+            secondAbility();
+        }
+
+        //Speed Boost
+        if (Input.GetButtonDown(speedBoostInput))
+        {
+            thirdAbility();
         }
     }
 
@@ -307,28 +307,18 @@ public class PlayerManager : MonoBehaviour, IObserver
         player.AttemptThirdSpecialAbility();
     }
 
+    public void ShowBuffIcons(int buffIndex, float buffDuration)
+    {
+        OtherPlayer().GetComponentInParent<UIManager>().StartBuffCoolDown(buffIndex, buffDuration, OtherPlayer().GetComponentInParent<PlayerManager>().currentClassIndex);
+    }
+
     public void OnNotify(string gameEvent)
     {
         switch (gameEvent)
         {
-            case Constants.NEXT_LEVEL:
+            case "Next Level":
                 SavePlayerState();
                 break;
-            case Constants.PLAYER_DIED:
-                checkForPlayersDeath();
-                break;
-            case Constants.PLAYER_CHANGED_CLASS:
-                thisPlayer = gameObject.GetComponentInChildren<Player>();
-                otherPlayer = OtherPlayer().GetComponentInChildren<Player>();
-                break;
-        }
-    }
-
-    private void checkForPlayersDeath()
-    {
-        if(thisPlayer.isDead && otherPlayer.isDead)
-        {
-            Subject.Notify(Constants.ALL_PLAYERS_DEAD);
         }
     }
 

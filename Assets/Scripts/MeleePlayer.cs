@@ -6,18 +6,13 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
-    private float damageReduce = Constants.WARRIOR_BASE_DAMAGE_REDUCTION; //How much should the damage be reduced?
-    private float defensiveStateDuration = Constants.WARRIOR_SHIELD_DURATION; //Duration of buff
+    private float damageReduce = 0; //How much should the damage be reduced?
+    private float defensiveStateDuration = 5f; //Duration of buff
+    public float defensiveDebuff = 0.5f; //Factor to debuff other values
+
 
 
     public int knockBackLength = 2;
-
-    // Use this for initialization
-    private void Awake()
-    {
-        this._hitpoints = Constants.PLAYER_MAX_HITPOINTS;
-        this.baseDamage = Constants.WARRIOR_BASE_DAMAGE;
-    }
 
     // use this for initializing dependencies
     protected override void Start()
@@ -30,6 +25,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
+        this.baseDamage = 20;
         Subject.AddObserver(this);
         Subject.AddCDObserver(this);
     }
@@ -43,7 +39,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-        if (other.CompareTag(Constants.CASUAL_ENEMY) && isAttacking)
+        if (other.CompareTag("CasualEnemy") && isAttacking)
         {
             Npc ce = other.GetComponent<Npc>();
             // knockVector = direction of knockBack times strength of knockback
@@ -59,47 +55,26 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         isOnCoolDown[0] = true;
         sound.Play();
         //Start corresponding cooldown -> first parameter is cd index (zero is basic attack) and second parameter is classindex for warrior
-        cdManager.StartCooldown(0, Constants.WARRIOR_CLASS_INDEX);
-    }
-
-    // Revive
-    protected override void SecondAbility()
-    {
-        Player otherPlayer = gameObject.GetComponentInParent<PlayerManager>().otherPlayer;
-        if ( _hitpoints < Constants.MINIMAL_HP_TO_REVIVE || !otherPlayer.isDead) return;
-        isOnCoolDown[2] = true;
-        cdManager.StartCooldown(2, Constants.WARRIOR_CLASS_INDEX);
-        otherPlayer.applyHealing(_hitpoints / 2);
-        _hitpoints /= 2;
-    }
-
-    public override void applyHealing(int healpoints)
-    {
-        if (isDead)
-        {
-            isDead = false;
-            rb2D.simulated = true;
-        }
-        _hitpoints += healpoints;
+        cdManager.StartCooldown(0, 0);
     }
 
     protected override void FirstAbility()
     {
         StartCoroutine(DefensiveState());
         isOnCoolDown[1] = true;
-        cdManager.StartCooldown(1, Constants.WARRIOR_CLASS_INDEX);
+        cdManager.StartCooldown(1, 0);
     }
 
     private IEnumerator DefensiveState()
     {
         firstAbility = true;
-        moveSpeed *= Constants.WARRIOR_DEFENSIVE_DEBUFF;
-        cdManager.SetWarriorCooldowns(0, (1 / Constants.WARRIOR_DEFENSIVE_DEBUFF));
-        damageReduce = Constants.WARRIOR_SHIELD_DAMAGE_REDUCTION;
+        moveSpeed *= defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, (1 / defensiveDebuff));
+        damageReduce = 0.8f;
         yield return new WaitForSeconds(defensiveStateDuration);
-        moveSpeed *= 1 / Constants.WARRIOR_DEFENSIVE_DEBUFF;
-        cdManager.SetWarriorCooldowns(0, Constants.WARRIOR_DEFENSIVE_DEBUFF);
-        damageReduce = Constants.WARRIOR_BASE_DAMAGE_REDUCTION;
+        moveSpeed *= 1 / defensiveDebuff;
+        cdManager.SetWarriorCooldowns(0, defensiveDebuff);
+        damageReduce = 0;
         firstAbility = false;
     }
 
@@ -127,11 +102,12 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
     {
         switch (gameEvent)
         {
-            case Constants.HEALTH_PICKUP:
-                _hitpoints += Constants.HEALTH_POTION_RECOVERY;
-                if (_hitpoints > Constants.PLAYER_MAX_HITPOINTS)
+            case "HealthPickup":
+                print("procced");
+                _hitpoints += 5;
+                if (_hitpoints > 100)
                 {
-                    _hitpoints = Constants.PLAYER_MAX_HITPOINTS;
+                    _hitpoints = 100;
                 }
                 break;
         }
@@ -148,7 +124,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         base.OnNotify(gameEvent, cooldownIndex);
         switch (gameEvent)
         {
-            case Constants.WARRIOR_CD_OVER:
+            case "WarriorCDOver":
                 isOnCoolDown[cooldownIndex] = false;
                 break;
         }

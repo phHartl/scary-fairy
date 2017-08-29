@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class CooldownManager : MonoBehaviour {
 
-    private bool[] warriorOnCooldown = new bool[3];
-    private bool[] rangerOnCooldown = new bool[3];
+    private bool[] warriorOnCooldown = new bool[2];
+    private bool[] rangerOnCooldown = new bool[2];
     private bool[] fairyOnCooldown = new bool[4];
     private bool buffOnCooldown = false;
     private bool changeClassOnCooldown = false;
-    private float[] warriorAbilityCooldowns = { 1f, 10f, 10f }; //Attack, defensiveState, revive
-    private float[] rangerAbilityCooldowns = { 1f, 5f, 10f }; //Attack, multiShot, revive
+    private float[] warriorAbilityCooldowns = { 1f, 10f }; //Attack, defensiveState
+    private float[] rangerAbilityCooldowns = { 1f, 5f }; //Attack, multiShot
     private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
     private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
-    
+    public float classChangeCooldown = 10f;
+    private UIManager uiManager;
 
 	// Use this for initialization
 	void Awake () { 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        uiManager = GetComponentInParent<UIManager>();
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
     
@@ -62,7 +66,7 @@ public class CooldownManager : MonoBehaviour {
     }
 
     /* Params needed are the index of the corresponding global cooldowns (warrior, ranger, fairy or general buff)
-     * the index of the corresponding class which calls this: zero - warrior, one - ranger, two - fairy &
+     * the index of the corresponding class witch calls this: zero - warrior, one - ranger, two - fairy &
      * any other number for a buff
      * When a cooldown is over an event gets send to the corresponding class(es)
      */
@@ -71,6 +75,7 @@ public class CooldownManager : MonoBehaviour {
         if (playerClassIndex == 0) //Warrior
         {
             warriorOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, warriorAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(warriorAbilityCooldowns[cooldownIndex]);
             warriorOnCooldown[cooldownIndex] = false;
             Subject.Notify("WarriorCDOver", cooldownIndex);
@@ -78,6 +83,7 @@ public class CooldownManager : MonoBehaviour {
         else if (playerClassIndex == 1) //Ranger
         {
             rangerOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, rangerAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(rangerAbilityCooldowns[cooldownIndex]);
             rangerOnCooldown[cooldownIndex] = false;
             Subject.Notify("RangerCDOver", cooldownIndex);
@@ -85,6 +91,7 @@ public class CooldownManager : MonoBehaviour {
         else if (playerClassIndex == 2) //Fairy
         {
             fairyOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, fairyAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(fairyAbilityCooldowns[cooldownIndex]);
             fairyOnCooldown[cooldownIndex] = false;
             Subject.Notify("FairyCDOver", cooldownIndex);
@@ -92,6 +99,7 @@ public class CooldownManager : MonoBehaviour {
         else //Target of fairy buff
         {
             buffOnCooldown = true;
+            gameObject.GetComponent<PlayerManager>().ShowBuffIcons(cooldownIndex - 1, buffDurations[cooldownIndex - 1]);
             yield return new WaitForSeconds(buffDurations[cooldownIndex-1]);
             buffOnCooldown = false;
             Subject.Notify("BuffOver", cooldownIndex);
@@ -106,7 +114,7 @@ public class CooldownManager : MonoBehaviour {
     private IEnumerator StartClassCD()
     {
         changeClassOnCooldown = true;
-        yield return new WaitForSeconds(Constants.PLAYER_CLASS_CHANGE_COOLDOWN);
+        yield return new WaitForSeconds(classChangeCooldown);
         changeClassOnCooldown = false;
     }
 }

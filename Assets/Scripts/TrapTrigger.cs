@@ -31,7 +31,7 @@ public class TrapTrigger : MonoBehaviour {
     //Spawn enemies and close entrance when stepped on trap
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(Constants.FEET_HITBOX))
+        if (other.CompareTag("feetHitbox"))
         {
             enemiesSpawned = true;
             trapEnemies.SetActive(true);
