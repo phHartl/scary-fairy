@@ -107,7 +107,8 @@ public abstract class Constants : MonoBehaviour {
     public const int GOLEM_BASE_HEALTH = 250;
     public const int GOLEM_PROJECTILE_DAMAGE = 10;
 
-    public const float GOLEM_PROJECTILE_TRAVEL_TIME = 3f;
+    public const float GOLEM_PROJECTILE_MIN_TRAVEL_TIME = 3f;
+    public const float GOLEM_PROJECTILE_MAX_TRAVEL_TIME = 5f;
     public const float GOLEM_TIME_BETWEEN_PROJECTILES = 6f;
 
 

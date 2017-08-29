@@ -6,19 +6,14 @@ public class EnemyProjectile : MonoBehaviour
 {
     public Rigidbody2D projectile;
 
-    protected void Update()
-    {
-        Destroy(this.gameObject, Constants.GOLEM_PROJECTILE_TRAVEL_TIME);
-    }
-
-    public Rigidbody2D CreateProjectile(Vector3 position, Quaternion rotation, float travelTime)
+    public virtual Rigidbody2D CreateProjectile(Vector3 position, Quaternion rotation, float travelTime)
     {
         Rigidbody2D projectileClone = Instantiate(projectile, position, rotation);
         Destroy(projectileClone.gameObject, travelTime);
         return projectileClone;
     }
 
-    protected void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         Golem golem = GameObject.FindObjectOfType<Golem>();
         if (other.CompareTag(Constants.PLAYER_TAG))
