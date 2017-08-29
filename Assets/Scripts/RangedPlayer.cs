@@ -12,6 +12,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
     {
         this.baseDamage = Constants.RANGER_BASE_DAMAGE;
         this._hitpoints = Constants.PLAYER_MAX_HITPOINTS;
+        this.baseDamage = 10;
     }
 
     // Use this for initializing dependencies

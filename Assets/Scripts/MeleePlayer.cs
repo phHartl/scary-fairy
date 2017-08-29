@@ -12,6 +12,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
 
     public int knockBackLength = 2;
 
+
     // Use this for initialization
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         particleSettings = particles.main;
         particles.Stop();
         DisableAttackColliders();
+        this.baseDamage = 20;
         Subject.AddObserver(this);
         Subject.AddCDObserver(this);
     }
