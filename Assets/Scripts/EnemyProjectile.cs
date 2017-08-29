@@ -2,18 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyProjectile : PlayerProjectile
+public class EnemyProjectile : MonoBehaviour
 {
+    public Rigidbody2D projectile;
 
-    public const int PROJECTILE_DAMAGE = 10;
+    protected void Update()
+    {
+        Destroy(this.gameObject, Constants.GOLEM_PROJECTILE_TRAVEL_TIME);
+    }
 
-    protected override void OnTriggerEnter2D(Collider2D other)
+    public Rigidbody2D CreateProjectile(Vector3 position, Quaternion rotation, float travelTime)
+    {
+        Rigidbody2D projectileClone = Instantiate(projectile, position, rotation);
+        Destroy(projectileClone.gameObject, travelTime);
+        return projectileClone;
+    }
+
+    protected void OnTriggerEnter2D(Collider2D other)
     {
         Golem golem = GameObject.FindObjectOfType<Golem>();
         if (other.CompareTag(Constants.PLAYER_TAG))
         {
             Player player = other.GetComponent<Player>();
-            player.applyDamage(PROJECTILE_DAMAGE);
+            player.applyDamage(Constants.GOLEM_PROJECTILE_DAMAGE);
             Destroy(this.gameObject);
         }
     }

@@ -69,8 +69,7 @@ public class Golem : Npc {
     {
         while (_hitpoints > 0)
         {
-            Rigidbody2D projectileClone = projectileObject.CreateProjectile(transform.position, transform.rotation, UnityEngine.Random.Range(Constants.GOLEM_PROJECTILE_MIN_TRAVEL_TIME,
-                Constants.GOLEM_PROJECTILE_MAX_TRAVEL_TIME));
+            Rigidbody2D projectileClone = projectileObject.CreateProjectile(transform.position, transform.rotation, 3f);
             yield return new WaitForSeconds(Constants.GOLEM_TIME_BETWEEN_PROJECTILES);
         }
     }
