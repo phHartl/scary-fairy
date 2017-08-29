@@ -29,9 +29,7 @@ public class AIMove : AIBase, IObserver {
 
     private int currentWaypoint = 0;
 
-    public float speedDebuff = 0.5f;
-
-    private GameObject[] targets = new GameObject[2];
+    private List<GameObject> targets;
 
 
 
@@ -51,6 +49,10 @@ public class AIMove : AIBase, IObserver {
                     getPlayers();
                     SearchPlayer();
                 break;
+            case "Player Died":
+                getPlayers();
+                SearchPlayer();
+                break;
             default:
                 break;
         }
@@ -69,7 +71,15 @@ public class AIMove : AIBase, IObserver {
 
     public void getPlayers()
     {
-        targets = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        targets = new List<GameObject>();
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (!players[i].GetComponentInChildren<Player>().isDead)
+            {
+                targets.Add(players[i]);
+            }
+        }
     }
 
     private IEnumerator RepeatTrySearchPath()
@@ -108,7 +118,7 @@ public class AIMove : AIBase, IObserver {
     {
         float closestDistance = float.MaxValue;
         int targetIndex = -1;
-        for (int i = 0; i < targets.Length; i++)
+        for (int i = 0; i < targets.Count; i++)
         {
             if(target == null)
             {
@@ -203,9 +213,9 @@ public class AIMove : AIBase, IObserver {
     protected IEnumerator applyIceSlow()
     {
         gameObject.GetComponent<Renderer>().material.color = Color.blue;
-        speed = speed * speedDebuff;
+        speed *= Constants.ICE_ENCHANTMENT_SLOW_MODIFIER;
         yield return new WaitForSeconds(1f);
-        speed = speed / speedDebuff;
+        speed = speed / Constants.ICE_ENCHANTMENT_SLOW_MODIFIER;
         gameObject.GetComponent<Renderer>().material.color = Color.white;
     }
 }

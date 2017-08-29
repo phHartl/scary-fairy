@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-
 public class GameManager : MonoBehaviour, IObserver
 {
 
@@ -13,6 +12,8 @@ public class GameManager : MonoBehaviour, IObserver
     //levelNum: in welchem Level befinden wir uns gerade - wird inkrementiert wenn das Levelende erreicht wird
     //und ein neues Level geladen werden soll
     private int levelNum = 1;
+    private int instructions = 4;
+    private int reloadDelay;
 
     void Awake()
     {
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour, IObserver
         //delete player states so first level starts with full health ranger and warrior
         PlayerPrefs.DeleteAll();
 
+        reloadDelay = 3;
+
         //lade erstes Level
         initGame();
     }
@@ -35,18 +38,21 @@ public class GameManager : MonoBehaviour, IObserver
     {
         switch (gameEvent)
         {
-            case "Next Level":
+            case Constants.NEXT_LEVEL:
                 levelNum += 1;
                 SceneManager.LoadScene(levelNum);
                 break;
-            case "Main Menu":
+            case Constants.MAIN_MENU:
                 SceneManager.LoadScene("MainMenu");
                 break;
-            case "Current Level":
+            case Constants.CURRENT_LEVEL:
                 SceneManager.LoadScene(levelNum);
                 break;
-	        case "Player Died":
-                restartLevel(); //If one player has died reload the current scene -> alternative respawn mechanic?
+            case Constants.INSTRUCTIONS:
+                SceneManager.LoadSceneAsync(instructions);
+                break;
+	        case Constants.ALL_PLAYERS_DEAD:
+                StartCoroutine(restartLevel(reloadDelay));
                 break;
             default:
                 break;
@@ -71,8 +77,9 @@ public class GameManager : MonoBehaviour, IObserver
 
     }
 
-    void restartLevel()
+    IEnumerator restartLevel(int numberOfSeconds)
     {
+        yield return new WaitForSeconds(numberOfSeconds);
         SceneManager.LoadSceneAsync(levelNum); //Async is better here, because there is already a scene displayed
     }
 }
