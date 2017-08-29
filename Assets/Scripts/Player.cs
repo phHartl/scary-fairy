@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MovingObj, CooldownObserver
 {
-    public float maxVerticalDistance = Constants.CAMERA_MAX_VERTICAL_DISTANCE;
-    public float maxHorizontalDistance = Constants.CAMERA_MAX_HORIZONTAL_DISTANCE;
+    public float maxVerticalDistance = 8.0f;
+    public float maxHorizontalDistance = 12.0f;
     public float currentDistance;
     private Vector2 horizontalMovement;
     private Vector2 verticalMovement;
@@ -16,16 +16,10 @@ public class Player : MovingObj, CooldownObserver
     protected int baseDamage;
     protected bool firstAbility;
     protected int currentDir; // Current facing direction north(1), east(2), south(3), west(4)
-    [HideInInspector]
     public CooldownManager cdManager;
-    public bool isDead;
+
 
     // Use this for initialization
-    private void Awake()
-    {
-        isDead = false;
-    }
-
     protected override void Start()
     {
         base.Start();
@@ -45,6 +39,8 @@ public class Player : MovingObj, CooldownObserver
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
         animator.SetInteger("Hitpoints", _hitpoints);
+        //animator.SetBool("IceEnchantment", iceEnchantment);
+        //animator.SetBool("FireEnchantment", fireEnchantment);
     }
 
     protected virtual void FixedUpdate()
@@ -74,11 +70,11 @@ public class Player : MovingObj, CooldownObserver
                 lastMove = new Vector2(axisH, 0);
                 if (axisH > 0)
                 {
-                    currentDir = Constants.PLAYER_FACING_EAST;
+                    currentDir = 2;
                 }
                 else
                 {
-                    currentDir = Constants.PLAYER_FACING_WEST;
+                    currentDir = 4;
                 }
             }
         }
@@ -94,11 +90,11 @@ public class Player : MovingObj, CooldownObserver
                 lastMove = new Vector2(0, axisV);
                 if (axisV > 0)
                 {
-                    currentDir = Constants.PLAYER_FACING_NORTH;
+                    currentDir = 1;
                 }
                 else
                 {
-                    currentDir = Constants.PLAYER_FACING_SOUTH;
+                    currentDir = 3;
                 }
             }
         }
@@ -156,7 +152,7 @@ public class Player : MovingObj, CooldownObserver
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (isAttacking == true && other.CompareTag(Constants.CASUAL_ENEMY))
+        if (isAttacking == true && other.CompareTag("CasualEnemy"))
         {
             CalcEnemyDamage(other);
         }
@@ -164,47 +160,41 @@ public class Player : MovingObj, CooldownObserver
 
     public void CalcEnemyDamage(Collider2D other) //This methode can be called by projectiles, removed duplicate code in arrow and meleeplayer
     {
-        Npc enemy = other.GetComponent<Npc>();
+        CasualEnemy ce = other.GetComponent<CasualEnemy>();
         AIMove ai = other.GetComponent<AIMove>();
-        CheckForEnchantment();
         if (iceEnchantment)
         {
-            enemy.applyDamage(_damage, Constants.ICE_ENCHANTMENT);
+            ce.applyDamage(_damage);
             ai.hitByIceEnchantment();
+            print("IceEnchanted Attack");
         }
         if (fireEnchantment)
         {
-            enemy.applyDamage(_damage, Constants.FIRE_ENCHANTMENT);
+            ce.applyDamage(_damage, FIRE_ENCHANTMENT);
+            print("FireEnchanted Attack");
         }
         if (!iceEnchantment && !fireEnchantment)
         {
-            enemy.applyDamage(_damage);
+            ce.applyDamage(_damage);
+            print("normal Attack");
         }
     }
 
     //Overrides applyDamage in MovingObj, player gets invincible for 0.5 seconds if hit by an enemy
     public override void applyDamage(int damage)
     {
-        if (!isInvincible && !isDead)
+        if (!isInvincible)
         {
-            _hitpoints -= damage;
-            if(_hitpoints <= 0)
-            {
-                _hitpoints = 0;
-                isDead = true;
-                rb2D.simulated = false;
-                Subject.Notify(Constants.PLAYER_DIED);
-            }
+            base.applyDamage(damage);
             StartCoroutine(PlayerInvincible());
         }
     }
-
 
        IEnumerator PlayerInvincible()
     {
         isInvincible = true;
         SetPlayerTransparency(0.5f); // 50% transparent
-        yield return new WaitForSeconds(Constants.PLAYER_INVINCIBILITY_ON_HIT);
+        yield return new WaitForSeconds(0.5f);
         SetPlayerTransparency(1.0f);
         isInvincible = false;
     }
@@ -216,24 +206,17 @@ public class Player : MovingObj, CooldownObserver
         gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha);
     }
 
-    public virtual void applyHealing(int healpoints)
-    {
-
-    }
-
 
     protected void CheckForEnchantment()
     {
         _damage = baseDamage;
         if (iceEnchantment)
         {
-            _damage = baseDamage * Constants.ICE_ENCHANTMENT_DAMAGE_MULTIPLIER;
-            return;
+            _damage = baseDamage * 3;
         }
         else if (fireEnchantment)
         {
-            _damage = baseDamage * Constants.FIRE_ENCHANTMENT_DAMAGE_MULTIPLIER;
-            return;
+            _damage = baseDamage * 2;
         }
     }
 
@@ -241,52 +224,14 @@ public class Player : MovingObj, CooldownObserver
     {
         switch (gameEvent)
         {
-            case Constants.BUFF_OVER:
+            case "BuffOver":
                 if (this != null)
                 {
                     resetEnchantments();
-                    moveSpeed = Constants.PLAYER_DEFAULT_MOVEMENTSPEED;
+                    moveSpeed = 5;
                     onEnchantmentCD = cdManager.GetBuffCooldown();
                 }
                 break;
         }
-    }
-
-    public virtual void activateFireEnchantment()
-    {
-        iceEnchantment = false;
-        fireEnchantment = true;
-        onEnchantmentCD = true;
-        particleSettings.startColor = red;
-        particles.Play();
-    }
-
-    public void activateIceEnchantment()
-    {
-        fireEnchantment = false;
-        iceEnchantment = true;
-        onEnchantmentCD = true;
-        particleSettings.startColor = blue;
-        particles.Play();
-    }
-
-    public void resetEnchantments()
-    {
-        iceEnchantment = false;
-        fireEnchantment = false;
-        if (particles != null)
-        {
-            particles.Stop();
-        }
-    }
-
-    public void resetEnchantmentCooldown()
-    {
-        onEnchantmentCD = false;
-    }
-
-    public bool getOnEnchantmentCD()
-    {
-        return onEnchantmentCD;
     }
 }
