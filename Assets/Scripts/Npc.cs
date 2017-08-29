@@ -152,6 +152,7 @@ public abstract class Npc : MovingObj
                 durationRefreshed = false;
             }
             _hitpoints -= Constants.FAIRY_BURN_TICK_DAMAGE;
+            checkDeath();
             yield return new WaitForSeconds(Constants.BURN_DAMAGE_TICKRATE);
         }
         isBurning = false;
