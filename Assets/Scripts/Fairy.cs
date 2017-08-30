@@ -18,6 +18,7 @@ public class Fairy : Player, CooldownObserver {
         circleCollider = GetComponent<CircleCollider2D>();
         novaAnimator = GetComponentsInChildren<Animator>()[1];
         circleCollider.enabled = false;
+        Subject.AddCDObserver(this);
         this.baseDamage = Constants.FAIRY_BASE_DAMAGE; //Damage of Fairy AOE Attack
     }
 
@@ -89,7 +90,7 @@ public class Fairy : Player, CooldownObserver {
         target.moveSpeed = target.moveSpeed * speedBoostPower;
     }
 
-    public void OnNotify(string gameEvent, int cooldownIndex)
+    public override void OnNotify(string gameEvent, int cooldownIndex)
     {
         switch (gameEvent)
         {
