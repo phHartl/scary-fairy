@@ -41,18 +41,22 @@ public class GameManager : MonoBehaviour, IObserver
             case Constants.NEXT_LEVEL:
                 levelNum += 1;
                 SceneManager.LoadScene(levelNum);
+                Time.timeScale = 1;
                 break;
             case Constants.MAIN_MENU:
                 SceneManager.LoadScene("MainMenu");
+                Time.timeScale = 1;
                 break;
             case Constants.CURRENT_LEVEL:
                 SceneManager.LoadScene(levelNum);
+                Time.timeScale = 1;
                 break;
             case Constants.INSTRUCTIONS:
                 SceneManager.LoadSceneAsync(instructions);
                 break;
 	        case Constants.ALL_PLAYERS_DEAD:
                 StartCoroutine(restartLevel(reloadDelay));
+                Time.timeScale = 1;
                 break;
             default:
                 break;
