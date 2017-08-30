@@ -1,0 +1,39 @@
+fileFormatVersion: 2
+guid: 3221a27b4300a5e48b36d4da41472229
+timeCreated: 1504052896
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - PlayerClassPortrait: {instanceID: 0}
+  - PlayerHealthBarSlider: {instanceID: 0}
+  - PlayerHealthBarText: {instanceID: 0}
+  - PlayerSwapCooldownImage: {instanceID: 0}
+  - PlayerSwapCooldownText: {instanceID: 0}
+  - WarriorPortrait: {fileID: 21300000, guid: d424d4d564bba4340a6e7e59eef8fe09, type: 3}
+  - WarriorSkill1: {fileID: 21300000, guid: 5e0c7a6dba971ff44b840f8a08a5f2ae, type: 3}
+  - WarriorSkill1Fire: {fileID: 21300000, guid: 114c0e6cc9c88ae4ea25021e55cbee6c,
+      type: 3}
+  - WarriorSkill1Ice: {fileID: 21300000, guid: 99258bef14f57b74496012f8f28c660d, type: 3}
+  - WarriorSkill2: {fileID: 21300000, guid: 29cde79678b7f7645b27f864390b87aa, type: 3}
+  - WarriorSkill2Fire: {fileID: 21300000, guid: e4345163164c612488f640e4451e9358,
+      type: 3}
+  - WarriorSkill2Ice: {fileID: 21300000, guid: 834b459f74a0e1a4e804610f35472ded, type: 3}
+  - RangerPortrait: {fileID: 21300000, guid: c64cc615cda21644984db9b5705e1877, type: 3}
+  - RangerSkill1: {fileID: 21300000, guid: 5e0c7a6dba971ff44b840f8a08a5f2ae, type: 3}
+  - RangerSkill1Fire: {fileID: 21300000, guid: 114c0e6cc9c88ae4ea25021e55cbee6c, type: 3}
+  - RangerSkill1Ice: {fileID: 21300000, guid: 99258bef14f57b74496012f8f28c660d, type: 3}
+  - RangerSkill2: {fileID: 21300000, guid: 6692ca79c814f0146b547177053a3bd9, type: 3}
+  - RangerSkill2Fire: {fileID: 21300000, guid: 328d73e1e2e8714498eaeaf9cb5a287d, type: 3}
+  - RangerSkill2Ice: {fileID: 21300000, guid: 6ad9fc914685e1f4fb3098d995adcf32, type: 3}
+  - FairyPortrait: {fileID: 21300000, guid: 25391ad87f2e81447a65c5c409ba613a, type: 3}
+  - FairySkill1: {fileID: 21300000, guid: e8504b1e8923a80448b17290690f80f2, type: 3}
+  - FairySkill2: {fileID: 21300000, guid: 46a16a5f5ca206e4197863de224ba003, type: 3}
+  - FairySkill3: {fileID: 21300000, guid: fae29daa500655947804e66c8d63f160, type: 3}
+  - FairySkill4: {fileID: 21300000, guid: 650dbb8395f8a4c49a5f30327f9ec090, type: 3}
+  - SkillPlaceholder: {fileID: 21300000, guid: b4bb648a9616d204b84c5d028941824d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
