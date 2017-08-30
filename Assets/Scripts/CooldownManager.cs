@@ -14,14 +14,20 @@ public class CooldownManager : MonoBehaviour {
     private float[] rangerAbilityCooldowns = { 1f, 5f, 10f }; //Attack, multiShot, revive
     private float[] fairyAbilityCooldowns = { 2f, 15f, 15f, 18f }; //Attack, fire, ice, speed (all are duration + cooldown)
     private float[] buffDurations = { 5f, 5f, 8f }; //Fire, ice & speedbuff
-    
+    private UIManager uiManager;
 
-	// Use this for initialization
-	void Awake () { 
+
+    // Use this for initialization
+    void Awake () { 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        uiManager = GetComponentInParent<UIManager>();
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
     
@@ -71,6 +77,7 @@ public class CooldownManager : MonoBehaviour {
         if (playerClassIndex == 0) //Warrior
         {
             warriorOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, warriorAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(warriorAbilityCooldowns[cooldownIndex]);
             warriorOnCooldown[cooldownIndex] = false;
             Subject.Notify("WarriorCDOver", cooldownIndex);
@@ -78,6 +85,7 @@ public class CooldownManager : MonoBehaviour {
         else if (playerClassIndex == 1) //Ranger
         {
             rangerOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, rangerAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(rangerAbilityCooldowns[cooldownIndex]);
             rangerOnCooldown[cooldownIndex] = false;
             Subject.Notify("RangerCDOver", cooldownIndex);
@@ -85,6 +93,7 @@ public class CooldownManager : MonoBehaviour {
         else if (playerClassIndex == 2) //Fairy
         {
             fairyOnCooldown[cooldownIndex] = true;
+            uiManager.StartSkillCooldown(cooldownIndex, fairyAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(fairyAbilityCooldowns[cooldownIndex]);
             fairyOnCooldown[cooldownIndex] = false;
             Subject.Notify("FairyCDOver", cooldownIndex);
@@ -92,6 +101,7 @@ public class CooldownManager : MonoBehaviour {
         else //Target of fairy buff
         {
             buffOnCooldown = true;
+            gameObject.GetComponent<PlayerManager>().ShowBuffIcons(cooldownIndex - 1, buffDurations[cooldownIndex - 1]);
             yield return new WaitForSeconds(buffDurations[cooldownIndex-1]);
             buffOnCooldown = false;
             Subject.Notify("BuffOver", cooldownIndex);
