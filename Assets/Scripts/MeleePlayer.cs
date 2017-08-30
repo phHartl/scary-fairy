@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class MeleePlayer : Player, IObserver, CooldownObserver
+public class MeleePlayer : Player, CooldownObserver
 {
     private BoxCollider2D[] attackColliders = new BoxCollider2D[5];
     private AudioSource sound;
@@ -123,19 +123,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         isAttacking = false;
     }
 
-    public void OnNotify(string gameEvent)
-    {
-        switch (gameEvent)
-        {
-            case Constants.HEALTH_PICKUP:
-                _hitpoints += Constants.HEALTH_POTION_RECOVERY;
-                if (_hitpoints > Constants.PLAYER_MAX_HITPOINTS)
-                {
-                    _hitpoints = Constants.PLAYER_MAX_HITPOINTS;
-                }
-                break;
-        }
-    }
+    
 
     public override void applyDamage(int damage)
     {

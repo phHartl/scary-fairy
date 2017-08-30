@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class RangedPlayer : Player, IObserver, CooldownObserver
+public class RangedPlayer : Player, CooldownObserver
 {
     public Rigidbody2D arrow;
     private float timeToTravel = Constants.RANGER_ARROW_TRAVEL_TIME;
@@ -119,19 +119,7 @@ public class RangedPlayer : Player, IObserver, CooldownObserver
         }
     }
 
-    public void OnNotify(string gameEvent)
-    {
-        switch (gameEvent)
-        {
-            case Constants.HEALTH_PICKUP:
-                _hitpoints += Constants.HEALTH_POTION_RECOVERY;
-                if (_hitpoints > Constants.PLAYER_MAX_HITPOINTS)
-                {
-                    _hitpoints = Constants.PLAYER_MAX_HITPOINTS;
-                }
-                break;
-        }
-    }
+   
 
     public override void OnNotify(string gameEvent, int cooldownIndex)
     {

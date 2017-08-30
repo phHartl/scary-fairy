@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MovingObj, CooldownObserver
+public class Player : MovingObj, CooldownObserver, IObserver
 {
     public float maxVerticalDistance = Constants.CAMERA_MAX_VERTICAL_DISTANCE;
     public float maxHorizontalDistance = Constants.CAMERA_MAX_HORIZONTAL_DISTANCE;
@@ -289,4 +289,23 @@ public class Player : MovingObj, CooldownObserver
     {
         return onEnchantmentCD;
     }
+
+    public void OnNotify(string gameEvent)
+    {
+        switch (gameEvent)
+        {
+            case Constants.HEALTH_PICKUP:
+                if (!isDead)
+                {
+                    _hitpoints += Constants.HEALTH_POTION_RECOVERY;
+                    if (_hitpoints > Constants.PLAYER_MAX_HITPOINTS)
+                    {
+                        _hitpoints = Constants.PLAYER_MAX_HITPOINTS;
+                    }
+                }
+                break;
+
+        }
+    }
+
 }
