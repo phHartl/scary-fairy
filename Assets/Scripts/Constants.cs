@@ -41,6 +41,7 @@ public abstract class Constants : MonoBehaviour {
     public const int PLAYER_FACING_EAST = 2;
     public const int PLAYER_FACING_SOUTH = 3;
     public const int PLAYER_FACING_WEST = 4;
+    public const int MIN_HITPOINTS_ON_LEVEL_LOAD = 25;
 
     public const float PLAYER_REVIVE_COOLDOWN = 10f;
     public const float PLAYER_DEFAULT_MOVEMENTSPEED = 5f;
@@ -48,6 +49,7 @@ public abstract class Constants : MonoBehaviour {
     public const float CAMERA_MAX_HORIZONTAL_DISTANCE = 12f;
     public const float PLAYER_INVINCIBILITY_ON_HIT = 1f;
     public const float PLAYER_CLASS_CHANGE_COOLDOWN = 3f;
+    public const float PLAYER_NEXT_LEVEL_REVIVE_TIME = 1f;
 
     
 

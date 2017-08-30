@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Player : MovingObj, CooldownObserver, IObserver
@@ -34,6 +35,15 @@ public class Player : MovingObj, CooldownObserver, IObserver
         lastMove.y = -1;
         animator = GetComponent<Animator>();
         onEnchantmentCD = cdManager.GetBuffCooldown();
+        if(_hitpoints <= 0)
+        {
+            isDead = true;
+        }
+        if (isDead)
+        {
+            reviveOnLevelLoad();
+        }
+        //SceneManager.sceneLoaded += onSceneLoaded;
     }
 
     protected override void Update()
@@ -304,7 +314,18 @@ public class Player : MovingObj, CooldownObserver, IObserver
                     }
                 }
                 break;
+        }
+    }
 
+  
+
+    private void reviveOnLevelLoad()
+    {
+        if (isDead)
+        {
+            isDead = false;
+            _hitpoints = Constants.MIN_HITPOINTS_ON_LEVEL_LOAD;
+            print("on scene loaded used");
         }
     }
 
