@@ -25,7 +25,7 @@ public class MeleePlayer : Player, IObserver, CooldownObserver
         base.Start();
         isOnCoolDown = cdManager.GetWarriorCooldowns();
         attackColliders = GetComponentsInChildren<BoxCollider2D>();
-        sound = GameObject.FindObjectOfType<AudioSource>();
+        sound = GetComponent<AudioSource>();
         particles = GetComponentInChildren<ParticleSystem>();
         particleSettings = particles.main;
         particles.Stop();
