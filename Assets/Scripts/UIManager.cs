@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +16,8 @@ public class UIManager : MonoBehaviour {
     public Text PlayerHealthBarText;
     public Image PlayerSwapCooldownImage;
     public Text PlayerSwapCooldownText;
-    public Image[] PlayerSkillImages;
-    public Image[] PlayerSkillImageCDs;
+    public List<Image> PlayerSkillImages;
+    public List<Image> PlayerSkillImageCDs;
 
     // Warrior sprites
     public Sprite WarriorPortrait;
@@ -45,15 +47,77 @@ public class UIManager : MonoBehaviour {
 
     // Universal sprites
     public Sprite SkillPlaceholder;
+    public Sprite Revive;
+
+    private GameObject HUD;
 
     // Constants
     private const String PLAYER_HEALTH_BAR_TEXT_ATTACHMENT = "/100";
+    private const String PLAYER_HEALTHBAR = "HealthbarBackground";
+    private const String PLAYER_CLASSPORTRAIT = "ClassPortrait";
+    private const String PLAYER_HEALTH_SLIDER = "Health";
+    private const String PLAYER_HEALTH_TEXT = "HealthText";
+    private const String PLAYER_SWAP_CD = "SwapCD";
+    private const String PLAYER_SWAP_CD_TEXT = "SwapCDText";
+    private const String PLAYER_ONE = "P1";
+    private const String PLAYER_TWO = "P2";
 
     // Initializes the UI -> nothing is on cooldown
     public void InitUI()
     {
+        InitPlayerUIComponents();
         InitPlayerSwapCooldown();
         InitSkillCooldowns();
+    }
+
+    private void InitPlayerUIComponents()
+    {
+        int currentPlayer = GetComponent<PlayerManager>().playerNumber;
+        HUD = GameObject.Find("HUD");
+        InitHealthBarComponents(currentPlayer);
+        InitSkillImages(currentPlayer);
+    }
+
+
+    //Inits the healthbar components automatically
+    private void InitHealthBarComponents(int playerNumber)
+    {
+        string playerString = "";
+        if (playerNumber == 1)
+        {
+            playerString += PLAYER_ONE;
+        }
+        else if (playerNumber == 2)
+        {
+            playerString += PLAYER_TWO;
+        }
+        GameObject HealthBar = HUD.transform.Find(PLAYER_HEALTHBAR + playerString).gameObject;
+        PlayerClassPortrait = HealthBar.transform.Find(PLAYER_CLASSPORTRAIT + playerString).GetComponent<Image>();
+        PlayerHealthBarSlider = HealthBar.transform.Find(PLAYER_HEALTH_SLIDER + playerString).GetComponent<Slider>();
+        PlayerHealthBarText = HealthBar.transform.Find(PLAYER_HEALTH_TEXT + playerString).GetComponent<Text>();
+        PlayerSwapCooldownImage = HealthBar.transform.Find(PLAYER_SWAP_CD + playerString).GetComponent<Image>();
+        PlayerSwapCooldownText = HealthBar.transform.Find(PLAYER_SWAP_CD_TEXT + playerString).GetComponent<Text>();
+    }
+
+    //Inits all skill images automatically
+    private void InitSkillImages(int playerNumber)
+    {
+        GameObject[] SkillImages = GameObject.FindGameObjectsWithTag("SkillImages").OrderBy(go => go.name).ToArray();
+        if (playerNumber == 1)
+        {
+            for (int i = 0; i < SkillImages.Length / 2; i++)
+            {
+                PlayerSkillImages.Add(SkillImages[i].GetComponent<Image>());
+                PlayerSkillImageCDs.Add(SkillImages[i].GetComponentsInChildren<Image>()[1]);
+            }
+        }else if(playerNumber == 2)
+        {
+            for(int i = 4; i < SkillImages.Length; i++)
+            {
+                PlayerSkillImages.Add(SkillImages[i].GetComponent<Image>());
+                PlayerSkillImageCDs.Add(SkillImages[i].GetComponentsInChildren<Image>()[1]);
+            }
+        }
     }
 
     // Initializes the swap-cooldown
@@ -81,7 +145,7 @@ public class UIManager : MonoBehaviour {
             PlayerClassPortrait.sprite = WarriorPortrait;
             PlayerSkillImages[0].sprite = WarriorSkill1;
             PlayerSkillImages[1].sprite = WarriorSkill2;
-            PlayerSkillImages[2].sprite = SkillPlaceholder;
+            PlayerSkillImages[2].sprite = Revive;
             PlayerSkillImages[3].sprite = SkillPlaceholder;
         }
         else if (playerClassIndex == Constants.RANGER_CLASS_INDEX) //Ranger
@@ -89,7 +153,7 @@ public class UIManager : MonoBehaviour {
             PlayerClassPortrait.sprite = RangerPortrait;
             PlayerSkillImages[0].sprite = RangerSkill1;
             PlayerSkillImages[1].sprite = RangerSkill2;
-            PlayerSkillImages[2].sprite = SkillPlaceholder;
+            PlayerSkillImages[2].sprite = Revive;
             PlayerSkillImages[3].sprite = SkillPlaceholder;
         }
         else if (playerClassIndex == Constants.FAIRY_CLASS_INDEX) //Fairy
