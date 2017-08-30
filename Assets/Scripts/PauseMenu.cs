@@ -24,7 +24,7 @@ public class PauseMenu : MonoBehaviour {
                 }
                 Time.timeScale = 0;
                 isPaused = true;
-                Subject.Notify("DisableHUD");
+                Subject.Notify(Constants.DISABLE_HUD);
             } else
             {
                 GetComponentInChildren<ContinueFromPause>().resumeGame();

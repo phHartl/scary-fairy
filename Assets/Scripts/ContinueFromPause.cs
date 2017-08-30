@@ -14,7 +14,7 @@ public class ContinueFromPause : MonoBehaviour {
             GetComponentInParent<PauseMenu>().isPaused = false;
 
         }
-        Subject.Notify("EnableHUD");
+        Subject.Notify(Constants.ENABLE_HUD);
         Time.timeScale = 1;
     }
 

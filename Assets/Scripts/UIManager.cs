@@ -75,7 +75,8 @@ public class UIManager : MonoBehaviour {
     // This method updates all parts of the UI related to a specific class (portrait and skills)
     public void UpdateClass(int playerClassIndex)
     {
-        if (playerClassIndex == 0) //Warrior
+        print(playerClassIndex);
+        if (playerClassIndex == Constants.WARRIOR_CLASS_INDEX) //Warrior
         {
             PlayerClassPortrait.sprite = WarriorPortrait;
             PlayerSkillImages[0].sprite = WarriorSkill1;
@@ -83,7 +84,7 @@ public class UIManager : MonoBehaviour {
             PlayerSkillImages[2].sprite = SkillPlaceholder;
             PlayerSkillImages[3].sprite = SkillPlaceholder;
         }
-        else if (playerClassIndex == 1) //Ranger
+        else if (playerClassIndex == Constants.RANGER_CLASS_INDEX) //Ranger
         {
             PlayerClassPortrait.sprite = RangerPortrait;
             PlayerSkillImages[0].sprite = RangerSkill1;
@@ -91,7 +92,7 @@ public class UIManager : MonoBehaviour {
             PlayerSkillImages[2].sprite = SkillPlaceholder;
             PlayerSkillImages[3].sprite = SkillPlaceholder;
         }
-        else if (playerClassIndex == 2) //Fairy
+        else if (playerClassIndex == Constants.FAIRY_CLASS_INDEX) //Fairy
         {
             PlayerClassPortrait.sprite = FairyPortrait;
             PlayerSkillImages[0].sprite = FairySkill1;

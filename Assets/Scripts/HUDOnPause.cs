@@ -13,11 +13,11 @@ public class HUDOnPause : MonoBehaviour, IObserver {
     {
         switch (gameEvent)
         {
-            case "DisableHUD":
+            case Constants.DISABLE_HUD:
                 gameObject.SetActive(false);
                 break;
 
-            case "EnableHUD":
+            case Constants.ENABLE_HUD:
                 gameObject.SetActive(true);
                 break;
         }
