@@ -11,6 +11,8 @@ public class ContinueFromPause : MonoBehaviour {
         for (int i = 0; i < container.transform.childCount; i++)
         {
             container.transform.GetChild(i).gameObject.SetActive(false);
+            GetComponentInParent<PauseMenu>().isPaused = false;
+
         }
         Subject.Notify("EnableHUD");
         Time.timeScale = 1;

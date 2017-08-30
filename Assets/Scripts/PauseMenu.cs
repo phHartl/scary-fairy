@@ -5,7 +5,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour {
 
     public string pause;
-    private bool isPaused;
+    public bool isPaused;
 
 	// Use this for initialization
 	void Start () {
@@ -27,7 +27,7 @@ public class PauseMenu : MonoBehaviour {
                 Subject.Notify("DisableHUD");
             } else
             {
-                GetComponent<ContinueFromPause>().resumeGame();
+                GetComponentInChildren<ContinueFromPause>().resumeGame();
                 isPaused = false;
             }
         }
