@@ -70,7 +70,8 @@ public class UIManager : MonoBehaviour {
         InitSkillCooldowns();
     }
 
-    private void InitPlayerUIComponents()
+
+    public void InitPlayerUIComponents()
     {
         int currentPlayer = GetComponent<PlayerManager>().playerNumber;
         HUD = GameObject.Find("HUD");

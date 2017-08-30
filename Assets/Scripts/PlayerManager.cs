@@ -71,6 +71,7 @@ public class PlayerManager : MonoBehaviour, IObserver
                 hasFairy = true;           
             }
             gameObject.GetComponentInChildren<MovingObj>()._hitpoints = PlayerPrefs.GetInt("HP" + gameObject.name);
+            uiManager.InitPlayerUIComponents();
             uiManager.UpdateClass(currentClassIndex);
         }
         else if (gameObject.GetComponentInChildren<Player>())
