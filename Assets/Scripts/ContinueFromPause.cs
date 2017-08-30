@@ -15,6 +15,7 @@ public class ContinueFromPause : MonoBehaviour {
 
         }
         Subject.Notify(Constants.ENABLE_HUD);
+        print("continue from pause");
         Time.timeScale = 1;
     }
 
