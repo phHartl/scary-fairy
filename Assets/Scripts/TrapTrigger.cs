@@ -22,6 +22,10 @@ public class TrapTrigger : MonoBehaviour {
         {
             entrance.SetActive(true);
             enemiesSpawned = checkIfEnemiesAlive();     //Entrance closed as long as at least one enemy spawned by trap is alive
+            if (!enemiesSpawned)
+            {
+                exit.SetActive(false);
+            }
         } else
         {
             entrance.SetActive(false);
@@ -50,7 +54,6 @@ public class TrapTrigger : MonoBehaviour {
         {
             if (trapEnemies.transform.GetChild(i).gameObject.activeSelf)
             {
-                exit.SetActive(false);
                 return true;
             }
         }
