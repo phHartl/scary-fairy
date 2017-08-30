@@ -363,4 +363,9 @@ public class PlayerManager : MonoBehaviour, IObserver
     {
         Subject.RemoveObserver(this);
     }
+
+    public bool getHasFairy()
+    {
+        return hasFairy;
+    }
 }
