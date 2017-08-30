@@ -13,6 +13,6 @@ public class LoadMainMenu : MonoBehaviour {
     private IEnumerator LoadMainMenuFromCredits()
     {
         yield return new WaitForSeconds(5f);
-        Subject.Notify("CreditsEnd");
+        Subject.Notify(Constants.CREDITS_END);
     }
 }

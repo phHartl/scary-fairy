@@ -30,6 +30,7 @@ public abstract class Constants : MonoBehaviour {
     public const string MONSTER_BACKGROUND = "MonsterBackground";
     public const string DISABLE_HUD = "DisableHUD";
     public const string ENABLE_HUD = "EnableHUD";
+    public const string CREDITS_END = "Credits_End";
 
 
 

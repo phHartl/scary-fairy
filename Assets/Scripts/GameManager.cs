@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour, IObserver
                 StartCoroutine(restartLevel(reloadDelay));
                 Time.timeScale = 1;
                 break;
-            case "CreditsEnd":
+            case Constants.CREDITS_END:
                 PlayerPrefs.DeleteAll();
                 levelNum = 1;
                 SceneManager.LoadScene("MainMenu");

@@ -9,6 +9,7 @@ public class FollowPlayer : MonoBehaviour {
     private Player player;
     private PlayerManager playerManager;
     private Canvas canvas;
+    private float playerMarkerOffset = 0.55f;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +26,7 @@ public class FollowPlayer : MonoBehaviour {
             player = playerObject.GetComponentInChildren<Player>();
         }
         transform.position = player.transform.position;
-        transform.position = new Vector3(transform.position.x, transform.position.y - 0.55f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - playerMarkerOffset, transform.position.z);
         if (player.GetComponent<Fairy>() != null)
         {
             canvas.enabled = false;
