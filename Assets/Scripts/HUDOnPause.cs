@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class HUDOnPause : MonoBehaviour, IObserver {
 
+    private GameObject HUD;
+
     private void Start()
     {
         Subject.AddObserver(this);
+        HUD = GameObject.Find("HUD");
+        DontDestroyOnLoad(gameObject);
     }
 
     public void OnNotify(string gameEvent)
@@ -14,11 +18,11 @@ public class HUDOnPause : MonoBehaviour, IObserver {
         switch (gameEvent)
         {
             case Constants.DISABLE_HUD:
-                gameObject.SetActive(false);
+                HUD.SetActive(false);
                 break;
 
             case Constants.ENABLE_HUD:
-                gameObject.SetActive(true);
+                HUD.SetActive(true);
                 break;
         }
     }
