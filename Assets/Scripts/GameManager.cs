@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour, IObserver
     //levelNum: in welchem Level befinden wir uns gerade - wird inkrementiert wenn das Levelende erreicht wird
     //und ein neues Level geladen werden soll
     private int levelNum = 1;
-    private int instructions = 4;
+    private int instructions = 5;
     private int reloadDelay;
 
     void Awake()
