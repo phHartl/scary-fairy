@@ -255,7 +255,10 @@ public class Player : MovingObj, CooldownObserver, IObserver
                 if (this != null)
                 {
                     resetEnchantments();
-                    moveSpeed = Constants.PLAYER_DEFAULT_MOVEMENTSPEED;
+                    if (cooldownIndex == 3)
+                    {
+                        moveSpeed = Constants.PLAYER_DEFAULT_MOVEMENTSPEED;
+                    }
                     onEnchantmentCD = cdManager.GetBuffCooldown();
                 }
                 break;
