@@ -16,7 +16,6 @@ public class HUDOnPause : MonoBehaviour, IObserver {
         switch (gameEvent)
         {
             case Constants.DISABLE_HUD:
-                Debug.Log("Einmal");
                 HUD = GameObject.FindGameObjectWithTag("HUD");
                 HUD.SetActive(false);
                 break;

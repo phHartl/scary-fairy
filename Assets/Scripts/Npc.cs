@@ -113,14 +113,12 @@ public abstract class Npc : MovingObj
     {
         _hitpoints -= damage;
         checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
     }
 
     public virtual void applyDamage(int damage, string enchantment)
     {
         _hitpoints -= damage;
         checkDeath();
-        print("Enemy took damage, health: " + _hitpoints);
 
         if (enchantment == Constants.FIRE_ENCHANTMENT)
         {
