@@ -9,11 +9,6 @@ public class LoadSceneOnClick : MonoBehaviour {
         Subject.Notify("Current Level");
     }
 
-    public void loadInstructions()
-    {
-        Subject.Notify("Instructions");
-    }
-
     public void loadMainMenu()
     {
         Subject.Notify("Main Menu");
