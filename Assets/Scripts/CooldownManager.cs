@@ -80,7 +80,7 @@ public class CooldownManager : MonoBehaviour {
             uiManager.StartSkillCooldown(cooldownIndex, warriorAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(warriorAbilityCooldowns[cooldownIndex]);
             warriorOnCooldown[cooldownIndex] = false;
-            Subject.Notify("WarriorCDOver", cooldownIndex);
+            Subject.Notify(Constants.WARRIOR_CD_OVER, cooldownIndex);
         }
         else if (playerClassIndex == 1) //Ranger
         {
@@ -88,7 +88,7 @@ public class CooldownManager : MonoBehaviour {
             uiManager.StartSkillCooldown(cooldownIndex, rangerAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(rangerAbilityCooldowns[cooldownIndex]);
             rangerOnCooldown[cooldownIndex] = false;
-            Subject.Notify("RangerCDOver", cooldownIndex);
+            Subject.Notify(Constants.RANGER_CD_OVER, cooldownIndex);
         }
         else if (playerClassIndex == 2) //Fairy
         {
@@ -96,7 +96,7 @@ public class CooldownManager : MonoBehaviour {
             uiManager.StartSkillCooldown(cooldownIndex, fairyAbilityCooldowns[cooldownIndex]);
             yield return new WaitForSeconds(fairyAbilityCooldowns[cooldownIndex]);
             fairyOnCooldown[cooldownIndex] = false;
-            Subject.Notify("FairyCDOver", cooldownIndex);
+            Subject.Notify(Constants.FAIRY_CD_OVER, cooldownIndex);
         }
         else //Target of fairy buff
         {
@@ -104,7 +104,7 @@ public class CooldownManager : MonoBehaviour {
             gameObject.GetComponent<PlayerManager>().ShowBuffIcons(cooldownIndex - 1, buffDurations[cooldownIndex - 1]);
             yield return new WaitForSeconds(buffDurations[cooldownIndex-1]);
             buffOnCooldown = false;
-            Subject.Notify("BuffOver", cooldownIndex);
+            Subject.Notify(Constants.BUFF_OVER, cooldownIndex);
         }
     }
 

@@ -57,8 +57,8 @@ public abstract class Constants : MonoBehaviour {
 
     //RANGER
     public const int RANGER_BASE_DAMAGE = 15;
-    public const int RANGER_MULTISHOT_ARROW_COUNT = 7;
-    public const int RANGER_MULTISHOT_ANGLE = 9;
+    public const int RANGER_MULTISHOT_ARROW_COUNT = 5;
+    public const int RANGER_MULTISHOT_ANGLE = 5;
     public const int RANGER_CLASS_INDEX = 1;
 
     public const float RANGER_ATTACK_COOLDOWN = 1f;
