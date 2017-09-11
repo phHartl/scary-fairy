@@ -27,14 +27,25 @@ public class RangedPlayer : Player, CooldownObserver
         Subject.AddCDObserver(this);
     }
 
+
     //An IEnumerator works similar to a function in this case (Coroutine), but you can pause with a yield
     //This function generates an arrow and then checks which way it should fly depending on the direction the player is facing
     protected override void Attack()
     {
         CheckForEnchantment();
         isAttacking = true;
+        StartCoroutine(checkForStuckAttack());
         isOnCoolDown[0] = true;
         cdManager.StartCooldown(0, Constants.RANGER_CLASS_INDEX);
+    }
+
+    private IEnumerator checkForStuckAttack()
+    {
+        yield return new WaitForSeconds(Constants.RANGER_ATTACK_COOLDOWN);
+        if (isAttacking)
+        {
+            isAttacking = false;
+        }
     }
 
     protected override void FirstAbility()

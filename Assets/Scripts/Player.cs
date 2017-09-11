@@ -48,6 +48,10 @@ public class Player : MovingObj, CooldownObserver, IObserver
 
     protected override void Update()
     {
+        if (isAttacking)
+        {
+            
+        }
         animator.SetFloat("MoveX", Input.GetAxisRaw(axisHorizontal));
         animator.SetFloat("MoveY", Input.GetAxisRaw(axisVertical));
         animator.SetBool("PlayerMoving", isMoving);
@@ -55,6 +59,7 @@ public class Player : MovingObj, CooldownObserver, IObserver
         animator.SetFloat("LastMoveY", lastMove.y);
         animator.SetBool("PlayerAttack", isAttacking);
         animator.SetInteger("Hitpoints", _hitpoints);
+       
     }
 
     protected virtual void FixedUpdate()
